@@ -1,0 +1,19 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# TypeScript
+dist/
+build/
+*.js.map
+
+# IDE and OS
+.vscode/
+.idea/
+*.DS_Store
+*.log
+*.swp
+
+# Environment
+.env
