@@ -9,7 +9,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    queryInterface.createTable('restaurant_menus', {
+    queryInterface.createTable('restaurant_menu_items', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -23,6 +23,7 @@ module.exports = {
           model: 'restaurants',
           key: 'id',
         },
+        onDelete: 'CASCADE',
       },
       name: {
         allowNull: false,
@@ -52,6 +53,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    queryInterface.dropTable('restaurant_menus');
+    queryInterface.dropTable('restaurant_menu_items');
   },
 };

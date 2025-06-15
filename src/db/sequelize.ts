@@ -1,16 +1,17 @@
 import { Sequelize, Dialect } from 'sequelize';
 import dotenv from 'dotenv';
-
+const env = process.env.NODE_ENV || 'development';
 dotenv.config();
+const config = require(__dirname + '/../config.ts')[env];
 
-const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD } = process.env;
+const { host, port, username, password } = config;
 
 const sequelize = new Sequelize({
   dialect: 'postgres' as Dialect,
-  host: DB_HOST,
-  port: Number(DB_PORT),
-  username: DB_USER,
-  password: DB_PASSWORD,
+  host: host,
+  port: Number(port),
+  username: username,
+  password: password,
   logging: false,
 });
 
