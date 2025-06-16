@@ -2,13 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import openAIRouter from './routes/open-ai';
 import { ErrorHandler } from './middlewares/errorHandler';
+import routes from './routes';
 const app = express();
 //cors
 app.use(cors());
 app.use(express.json());
 
 //Routes
-app.use('/open-ai', openAIRouter);
+app.use('/', routes);
 
 const corsOptions = {
   origin: ['http://localhost:3000'],
