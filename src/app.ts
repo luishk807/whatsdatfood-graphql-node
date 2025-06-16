@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import openAIRouter from './routes/open-ai';
 import { ErrorHandler } from './middlewares/errorHandler';
 import routes from './routes';
 const app = express();
