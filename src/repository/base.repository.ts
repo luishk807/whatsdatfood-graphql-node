@@ -1,4 +1,4 @@
-//import sequelize from '../db/models';'
+import db from '../db/models';
 
 class Base {
   model: any;
@@ -18,11 +18,22 @@ class Base {
     });
   }
   async deleteById(id: number) {
-    return await this.model.destroy({
-      where: {
-        id: id,
-      },
-    });
+    const t = await db.sequelize.transaction();
+    try {
+      const resp = await this.model.destroy(
+        {
+          where: {
+            id: id,
+          },
+        },
+        { transaction: t },
+      );
+      await t.commit();
+      return resp;
+    } catch (err) {
+      await t.rollback();
+      return err;
+    }
   }
 }
 
