@@ -10,9 +10,9 @@ class UsersRepo extends Base {
   }
 
   async create(payload: UserInput) {
-    const t = db.sequelize.transaction();
+    const t = await db.sequelize.transaction();
     try {
-      const resp = await this.model.upsert(payload);
+      const resp = await this.model.upsert(payload, { transaction: t });
       await t.commit();
       return resp;
     } catch (err) {
