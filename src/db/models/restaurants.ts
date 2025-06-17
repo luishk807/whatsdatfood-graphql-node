@@ -23,6 +23,10 @@ class Restaurants
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
   public readonly deleted_at!: Date;
+
+  static associate(models: any): void {
+    Restaurants.hasMany(models.RestaurantMenuItems);
+  }
 }
 
 Restaurants.init(

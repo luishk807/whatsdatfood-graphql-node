@@ -1,5 +1,5 @@
 import Base from './base.repository';
-import db from '../db/models';
+import db from '../db/models/index';
 
 import { UserInput } from '../db/models/users';
 import Users from '../db/models/users';

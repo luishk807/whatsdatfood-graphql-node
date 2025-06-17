@@ -26,6 +26,17 @@ class UserSearches
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
   public readonly deleted_at!: Date;
+
+  static associate(models: any): void {
+    UserSearches.belongsTo(models.Users, {
+      foreignKey: 'user_id',
+      as: 'userSearchesUser',
+    });
+    UserSearches.belongsTo(models.Restaurants, {
+      foreignKey: 'restaurant_id',
+      as: 'userSearchesRestaurants',
+    });
+  }
 }
 
 UserSearches.init(

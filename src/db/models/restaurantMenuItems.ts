@@ -32,7 +32,7 @@ class RestaurantMenuItems
   static associate(models: any): void {
     RestaurantMenuItems.belongsTo(models.Restaurants, {
       foreignKey: 'restaurant_id',
-      as: 'RestaurantMenuItemsRestaurant',
+      as: 'restaurantMenuItemsRestaurant',
     });
   }
 }

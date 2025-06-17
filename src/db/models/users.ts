@@ -32,6 +32,10 @@ class Users extends Model<UserInterface, UserInput> implements UserInterface {
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
   public readonly deleted_at!: Date;
+
+  static associate(models: any): void {
+    Users.hasMany(models.UserSearches);
+  }
 }
 
 Users.init(

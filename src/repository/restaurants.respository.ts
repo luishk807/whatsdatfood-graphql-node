@@ -9,7 +9,7 @@ class RestaurantsRepo extends Base {
 
   async create(payload: RestaurantsInput) {
     const t = await db.sequelize.transaction();
-    
+
     try {
       const resp = await this.model.upsert(payload, { transaction: t });
       await t.commit();
