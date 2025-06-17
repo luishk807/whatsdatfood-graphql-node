@@ -1,7 +1,7 @@
 'use strict';
 import { QueryInterface, Sequelize, DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
-module.exports = {
+export default {
   async up(queryInterface: QueryInterface, Sequelize: Sequelize) {
     /**
      * Add altering commands here.
@@ -32,15 +32,15 @@ module.exports = {
       image: {
         type: DataTypes.TEXT,
       },
-      createdAt: {
+      created_at: {
         type: DataTypes.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
-      updatedAt: {
+      updated_at: {
         type: DataTypes.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
-      deletedAt: {
+      deleted_at: {
         type: DataTypes.DATE,
       },
     });

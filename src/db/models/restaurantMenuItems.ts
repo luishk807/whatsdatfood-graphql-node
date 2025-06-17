@@ -11,14 +11,14 @@ interface RestaurantsMenuItemsAttributes {
   deletedAt?: Date;
 }
 
-export interface RestaurantMenuInput
+export interface RestaurantMenuItemsInput
   extends Optional<RestaurantsMenuItemsAttributes, 'id'> {}
 
-export interface RestaurantMenuOutput
+export interface RestaurantMenuItemsOutput
   extends Required<RestaurantsMenuItemsAttributes> {}
 
 class RestaurantMenuItems
-  extends Model<RestaurantsMenuItemsAttributes, RestaurantMenuInput>
+  extends Model<RestaurantsMenuItemsAttributes, RestaurantMenuItemsInput>
   implements RestaurantsMenuItemsAttributes
 {
   public id!: number;

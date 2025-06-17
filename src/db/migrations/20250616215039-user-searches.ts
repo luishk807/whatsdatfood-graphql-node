@@ -1,5 +1,4 @@
 'use strict';
-
 import { QueryInterface, Sequelize, DataTypes } from 'sequelize';
 
 /** @type {import('sequelize-cli').Migration} */
@@ -11,16 +10,29 @@ export default {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.createTable('restaurants', {
+    queryInterface.createTable('user_searches', {
       id: {
+        type: DataTypes.BIGINT,
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
       },
-      name: {
+      user_id: {
+        type: DataTypes.BIGINT,
         allowNull: false,
-        type: DataTypes.STRING,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+      },
+      restaurant_id: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        references: {
+          model: 'restaurants',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
       },
       created_at: {
         type: DataTypes.DATE,
@@ -43,6 +55,6 @@ export default {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable('restaurants');
+    queryInterface.dropTable('user_searches');
   },
 };
