@@ -5,6 +5,7 @@ const restRepo = new Restaurants();
 
 const RestaurantServices = {
   async create(payload: RestaurantsInput) {
+    console.log('heee', payload);
     return await restRepo.create(payload);
   },
 

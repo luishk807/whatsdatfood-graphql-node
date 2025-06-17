@@ -14,11 +14,11 @@ export default {
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
       },
       restaurant_id: {
         allowNull: false,
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         references: {
           model: 'restaurants',
           key: 'id',

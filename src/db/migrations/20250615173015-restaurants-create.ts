@@ -16,7 +16,7 @@ export default {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
       },
       name: {
         allowNull: false,
