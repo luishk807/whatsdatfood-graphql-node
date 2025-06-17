@@ -4,9 +4,9 @@ import sequelizeConnection from '../sequelize';
 interface RestaurantInterface {
   id: number;
   name: string;
-  createdA?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date;
+  created_at?: Date;
+  updated_at?: Date;
+  deleted_at?: Date;
 }
 
 export interface RestaurantsInput extends Optional<RestaurantInterface, 'id'> {}
@@ -20,9 +20,9 @@ class Restaurants
   public name!: string;
 
   // timestamps!
-  public readonly createAt!: Date;
-  public readonly updatedAt!: Date;
-  public readonly deletedAt!: Date;
+  public readonly created_at!: Date;
+  public readonly updated_at!: Date;
+  public readonly deleted_at!: Date;
 }
 
 Restaurants.init(

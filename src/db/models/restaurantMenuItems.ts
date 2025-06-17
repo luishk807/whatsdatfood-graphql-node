@@ -6,9 +6,9 @@ interface RestaurantsMenuItemsAttributes {
   restaurant_id: number;
   name: string;
   image: Text;
-  createdAt?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date;
+  created_at?: Date;
+  updated_at?: Date;
+  deleted_at?: Date;
 }
 
 export interface RestaurantMenuItemsInput
@@ -26,9 +26,9 @@ class RestaurantMenuItems
   public restaurant_id!: number;
   public image!: Text;
 
-  public readonly createdAt?: Date;
-  public readonly updatedAt?: Date;
-  public readonly deletedAt?: Date;
+  public readonly created_at!: Date;
+  public readonly updated_at!: Date;
+  public readonly deleted_at!: Date;
   static associate(models: any): void {
     RestaurantMenuItems.belongsTo(models.Restaurants, {
       foreignKey: 'restaurant_id',
@@ -60,13 +60,13 @@ RestaurantMenuItems.init(
     image: {
       type: DataTypes.TEXT,
     },
-    createdAt: {
+    created_at: {
       type: DataTypes.DATE,
     },
-    updatedAt: {
+    updated_at: {
       type: DataTypes.DATE,
     },
-    deletedAt: {
+    deleted_at: {
       type: DataTypes.DATE,
     },
   },

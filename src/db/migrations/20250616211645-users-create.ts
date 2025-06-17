@@ -12,9 +12,10 @@ export default {
      */
     queryInterface.createTable('users', {
       id: {
-        type: DataTypes.BIGINT,
         allowNull: false,
         primaryKey: true,
+        autoIncrement: true,
+        type: DataTypes.BIGINT,
       },
       first_name: {
         type: DataTypes.STRING,

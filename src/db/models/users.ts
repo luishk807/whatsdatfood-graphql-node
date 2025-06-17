@@ -10,9 +10,9 @@ interface UserInterface {
   email: string;
   verification: string;
   dob: Date;
-  createdA?: Date;
-  updatedAt?: Date;
-  deletedAt?: Date;
+  created_at?: Date;
+  updated_at?: Date;
+  deleted_at?: Date;
 }
 
 export interface UserInput extends Optional<UserInterface, 'id'> {}
@@ -29,9 +29,9 @@ class Users extends Model<UserInterface, UserInput> implements UserInterface {
   public dob!: Date;
 
   // timestamps!
-  public readonly createAt!: Date;
-  public readonly updatedAt!: Date;
-  public readonly deletedAt!: Date;
+  public readonly created_at!: Date;
+  public readonly updated_at!: Date;
+  public readonly deleted_at!: Date;
 }
 
 Users.init(
