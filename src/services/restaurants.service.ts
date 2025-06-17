@@ -12,6 +12,10 @@ const RestaurantServices = {
   async getAll() {
     return await restRepo.getAll();
   },
+
+  async findByName(name: string) {
+    return await restRepo.findByName(name)
+  }
 };
 
 export default RestaurantServices;

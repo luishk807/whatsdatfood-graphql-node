@@ -24,3 +24,15 @@ export const getAllRestaurants = async (
     data: resp,
   });
 };
+
+export const getAllResturantByName = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { restaurant } = req.query;
+  const resp = await restaurantServices.findByName(restaurant as string);
+  res.json({
+    data: resp,
+  });
+};

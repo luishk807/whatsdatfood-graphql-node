@@ -1,7 +1,10 @@
 import Base from './base.repository';
+import { Op } from 'sequelize';
 import { RestaurantsInput } from '../db/models/restaurants';
 import Restaurants from '../db/models/restaurants';
 import db from '../db/models';
+import { LIMIT, OFFSET } from '../constants/sequelize';
+import { getPageOffset } from '../utils/sequelize';
 class RestaurantsRepo extends Base {
   constructor() {
     super(Restaurants);
@@ -18,6 +21,20 @@ class RestaurantsRepo extends Base {
       await t.rollback();
       return err;
     }
+  }
+
+  async findByName(name: string, limit: number = LIMIT, page: number = OFFSET) {
+    const offset = getPageOffset(limit, page);
+    console.log('j', name);
+    return await this.model.findAll({
+      where: {
+        name: {
+          [Op.iLike]: `%${name}%`,
+        },
+      },
+      limit: limit,
+      offset: offset,
+    });
   }
 }
 

@@ -1,4 +1,6 @@
 import db from '../db/models';
+import { LIMIT, OFFSET } from '../constants/sequelize';
+import { getPageOffset } from '../utils/sequelize';
 
 class Base {
   model: any;
@@ -6,15 +8,22 @@ class Base {
     this.model = model;
   }
 
-  async getAll() {
-    return await this.model.findAll();
+  async getAll(limit: number = LIMIT, page: number = 1) {
+    const offset = getPageOffset(limit, page);
+    return await this.model.findAll({
+      limit,
+      offset,
+    });
   }
 
-  async getById(id: number) {
+  async getById(id: number, limit: number = LIMIT, page: number = 1) {
+    const offset = getPageOffset(limit, page);
     return await this.model.findAll({
       where: {
         id: id,
       },
+      limit,
+      offset,
     });
   }
   async deleteById(id: number) {
