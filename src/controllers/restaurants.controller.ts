@@ -30,8 +30,12 @@ export const getAllResturantByName = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const { restaurant } = req.query;
-  const resp = await restaurantServices.findByName(restaurant as string);
+  const { restaurant, page, limit } = req.query;
+  const resp = await restaurantServices.findByName(
+    String(restaurant),
+    Number(page),
+    Number(limit),
+  );
   res.json({
     data: resp,
   });

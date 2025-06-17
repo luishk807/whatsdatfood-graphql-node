@@ -23,7 +23,7 @@ class RestaurantsRepo extends Base {
     }
   }
 
-  async findByName(name: string, limit: number = LIMIT, page: number = OFFSET) {
+  async findByName(name: string, page: number = LIMIT, limit: number = OFFSET) {
     const offset = getPageOffset(limit, page);
     console.log('j', name);
     return await this.model.findAll({
