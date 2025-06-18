@@ -29,6 +29,12 @@ export default {
         allowNull: false,
         type: DataTypes.STRING,
       },
+      description: {
+        type: DataTypes.TEXT,
+      },
+      category: {
+        type: DataTypes.STRING,
+      },
       image: {
         type: DataTypes.TEXT,
       },

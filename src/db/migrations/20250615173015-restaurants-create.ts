@@ -22,6 +22,21 @@ export default {
         allowNull: false,
         type: DataTypes.STRING,
       },
+      address: {
+        type: DataTypes.STRING,
+      },
+      city: {
+        type: DataTypes.STRING,
+      },
+      state: {
+        type: DataTypes.STRING,
+      },
+      country: {
+        type: DataTypes.STRING,
+      },
+      postal_code: {
+        type: DataTypes.STRING,
+      },
       created_at: {
         type: DataTypes.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),

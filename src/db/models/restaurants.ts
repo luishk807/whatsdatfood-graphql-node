@@ -4,6 +4,11 @@ import sequelizeConnection from '../sequelize';
 interface RestaurantInterface {
   id: number;
   name: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  postal_code?: string;
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
@@ -18,6 +23,11 @@ class Restaurants
 {
   public id!: number;
   public name!: string;
+  public address!: string;
+  public city!: string;
+  public state!: string;
+  public country!: string;
+  public postal_code!: string;
 
   // timestamps!
   public readonly created_at!: Date;
@@ -38,6 +48,21 @@ Restaurants.init(
     },
     name: {
       allowNull: false,
+      type: DataTypes.STRING,
+    },
+    address: {
+      type: DataTypes.STRING,
+    },
+    city: {
+      type: DataTypes.STRING,
+    },
+    state: {
+      type: DataTypes.STRING,
+    },
+    country: {
+      type: DataTypes.STRING,
+    },
+    postal_code: {
       type: DataTypes.STRING,
     },
   },

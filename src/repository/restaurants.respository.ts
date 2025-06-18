@@ -1,10 +1,11 @@
 import Base from './base.repository';
-import { Op } from 'sequelize';
+import { Op, Sequelize, literal, QueryTypes } from 'sequelize';
 import { RestaurantsInput } from '../db/models/restaurants';
 import Restaurants from '../db/models/restaurants';
 import db from '../db/models';
 import { LIMIT, OFFSET } from '../constants/sequelize';
 import { getPageOffset } from '../utils/sequelize';
+import { mainModule } from 'process';
 class RestaurantsRepo extends Base {
   constructor() {
     super(Restaurants);
@@ -14,7 +15,18 @@ class RestaurantsRepo extends Base {
     const t = await db.sequelize.transaction();
 
     try {
-      const resp = await this.model.upsert(payload, { transaction: t });
+      const resp = await db.sequelize.query(
+        `INSERT INTO restaurants (name, address, city, state, country, postal_code, created_at, updated_at) values(:name, :address, :city, :state, :country, :postal_code, NOW(), NOW())`,
+        {
+          replacements: {
+            ...payload,
+          },
+        },
+        {
+          transaction: t,
+        },
+      );
+      //const resp = await this.model.create(payload, { transaction: t });
       await t.commit();
       return resp;
     } catch (err) {
@@ -23,7 +35,11 @@ class RestaurantsRepo extends Base {
     }
   }
 
-  async findByName(name: string, page: number = LIMIT, limit: number = OFFSET) {
+  async findByNameMatch(
+    name: string,
+    page: number = LIMIT,
+    limit: number = OFFSET,
+  ) {
     const offset = getPageOffset(limit, page);
     console.log('j', name);
     return await this.model.findAll({
@@ -35,6 +51,35 @@ class RestaurantsRepo extends Base {
       limit: limit,
       offset: offset,
     });
+  }
+
+  async findByName(name: string, page: number = LIMIT, limit: number = OFFSET) {
+    const offset = getPageOffset(limit, page);
+    console.log('j', name);
+    // return await this.model.findAll({
+    //   where: {
+    //     name: name,
+    //   },
+    //   limit: limit,
+    //   offset: offset,
+    // });
+
+    return await db.sequelize.query(
+      `SELECT 
+        * 
+      FROM 
+        restaurants 
+      WHERE lower(name) like :name 
+    `,
+      {
+        replacements: {
+          name: `%${name.toLocaleLowerCase()}%`,
+        },
+        limit: limit,
+        offset: offset,
+        type: QueryTypes.SELECT,
+      },
+    );
   }
 }
 

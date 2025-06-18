@@ -6,6 +6,8 @@ interface RestaurantsMenuItemsAttributes {
   restaurant_id: number;
   name: string;
   image: Text;
+  description?: Text;
+  category?: string;
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
@@ -25,6 +27,8 @@ class RestaurantMenuItems
   public name!: string;
   public restaurant_id!: number;
   public image!: Text;
+  public category!: string;
+  public description!: Text;
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
@@ -55,6 +59,12 @@ RestaurantMenuItems.init(
     },
     name: {
       allowNull: false,
+      type: DataTypes.STRING,
+    },
+    description: {
+      type: DataTypes.TEXT,
+    },
+    category: {
       type: DataTypes.STRING,
     },
     image: {
