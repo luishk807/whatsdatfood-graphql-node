@@ -9,34 +9,29 @@ export default {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    queryInterface.createTable('restaurant_menu_items', {
+    queryInterface.createTable('restaurant_menu_item_images', {
       id: {
-        allowNull: false,
+        type: DataTypes.BIGINT,
         primaryKey: true,
-        autoIncrement: true,
-        type: DataTypes.BIGINT,
-      },
-      restaurant_id: {
         allowNull: false,
+        autoIncrement: true,
+      },
+      restaurant_menu_item_id: {
         type: DataTypes.BIGINT,
+        allowNull: false,
         references: {
-          model: 'restaurants',
+          model: 'restaurant_menu_items',
           key: 'id',
         },
         onDelete: 'CASCADE',
       },
       name: {
-        allowNull: false,
-        type: DataTypes.STRING,
-      },
-      description: {
         type: DataTypes.TEXT,
+        allowNull: false,
       },
-      price: {
-        type: DataTypes.DOUBLE,
-      },
-      category: {
-        type: DataTypes.STRING,
+      url: {
+        type: DataTypes.TEXT,
+        allowNull: false,
       },
       created_at: {
         type: DataTypes.DATE,
@@ -59,6 +54,6 @@ export default {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    queryInterface.dropTable('restaurant_menu_items');
+    queryInterface.dropTable('restaurant_menu_item_images');
   },
 };

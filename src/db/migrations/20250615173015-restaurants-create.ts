@@ -18,6 +18,9 @@ export default {
         primaryKey: true,
         type: DataTypes.BIGINT,
       },
+      slug: {
+        type: DataTypes.TEXT,
+      },
       name: {
         allowNull: false,
         type: DataTypes.STRING,

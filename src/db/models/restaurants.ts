@@ -4,6 +4,7 @@ import sequelizeConnection from '../sequelize';
 interface RestaurantInterface {
   id: number;
   name: string;
+  slug?: Text;
   address?: string;
   city?: string;
   state?: string;
@@ -22,6 +23,7 @@ class Restaurants
   implements RestaurantInterface
 {
   public id!: number;
+  public slug!: Text;
   public name!: string;
   public address!: string;
   public city!: string;
@@ -49,6 +51,9 @@ Restaurants.init(
     name: {
       allowNull: false,
       type: DataTypes.STRING,
+    },
+    slug: {
+      type: DataTypes.TEXT,
     },
     address: {
       type: DataTypes.STRING,

@@ -16,7 +16,7 @@ class RestaurantsRepo extends Base {
 
     try {
       const resp = await db.sequelize.query(
-        `INSERT INTO restaurants (name, address, city, state, country, postal_code, created_at, updated_at) values(:name, :address, :city, :state, :country, :postal_code, NOW(), NOW())`,
+        `INSERT INTO restaurants (name, slug, address, city, state, country, postal_code, created_at, updated_at) values(:name, :slug, :address, :city, :state, :country, :postal_code, NOW(), NOW())`,
         {
           replacements: {
             ...payload,
@@ -55,15 +55,6 @@ class RestaurantsRepo extends Base {
 
   async findByName(name: string, page: number = LIMIT, limit: number = OFFSET) {
     const offset = getPageOffset(limit, page);
-    console.log('j', name);
-    // return await this.model.findAll({
-    //   where: {
-    //     name: name,
-    //   },
-    //   limit: limit,
-    //   offset: offset,
-    // });
-
     return await db.sequelize.query(
       `SELECT 
         * 

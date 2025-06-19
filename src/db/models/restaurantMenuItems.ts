@@ -2,10 +2,9 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import sequelizeConnection from '../sequelize';
 
 interface RestaurantsMenuItemsAttributes {
-  id: number;
-  restaurant_id: number;
+  id: bigint;
+  restaurant_id: bigint;
   name: string;
-  image: Text;
   description?: Text;
   category?: string;
   created_at?: Date;
@@ -23,10 +22,9 @@ class RestaurantMenuItems
   extends Model<RestaurantsMenuItemsAttributes, RestaurantMenuItemsInput>
   implements RestaurantsMenuItemsAttributes
 {
-  public id!: number;
+  public id!: bigint;
   public name!: string;
-  public restaurant_id!: number;
-  public image!: Text;
+  public restaurant_id!: bigint;
   public category!: string;
   public description!: Text;
 
@@ -47,11 +45,11 @@ RestaurantMenuItems.init(
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
     },
     restaurant_id: {
       allowNull: false,
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       references: {
         model: 'restaurants',
         key: 'id',
@@ -66,9 +64,6 @@ RestaurantMenuItems.init(
     },
     category: {
       type: DataTypes.STRING,
-    },
-    image: {
-      type: DataTypes.TEXT,
     },
     created_at: {
       type: DataTypes.DATE,
