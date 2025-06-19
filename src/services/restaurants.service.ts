@@ -15,6 +15,9 @@ const RestaurantServices = {
   async findByName(name: string, page?: number, limit?: number) {
     return await restRepo.findByName(name, page, limit);
   },
+  async findBySlug(slug: string) {
+    return await restRepo.findBySlug(slug);
+  },
 };
 
 export default RestaurantServices;

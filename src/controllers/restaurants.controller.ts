@@ -14,6 +14,18 @@ export const createRestaurant = async (
   });
 };
 
+export const getRestaurantBySlug = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { restaurant } = req.query;
+  console.log('fff');
+  const resp = await restaurantServices.findBySlug(String(restaurant));
+  console.log(resp, 'xxx');
+  res.status(200).json(resp);
+};
+
 export const getAllRestaurants = async (
   req: Request,
   res: Response,

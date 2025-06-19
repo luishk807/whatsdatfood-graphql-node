@@ -1,11 +1,11 @@
 import Base from './base.repository';
+import { RestaurantsOutput } from '../db/models/restaurants';
 import { Op, Sequelize, literal, QueryTypes } from 'sequelize';
 import { RestaurantsInput } from '../db/models/restaurants';
 import Restaurants from '../db/models/restaurants';
 import db from '../db/models';
 import { LIMIT, OFFSET } from '../constants/sequelize';
 import { getPageOffset } from '../utils/sequelize';
-import { mainModule } from 'process';
 class RestaurantsRepo extends Base {
   constructor() {
     super(Restaurants);
@@ -33,6 +33,14 @@ class RestaurantsRepo extends Base {
       await t.rollback();
       return err;
     }
+  }
+
+  async findBySlug(slug: string): Promise<RestaurantsOutput> {
+    return await this.model.findOne({
+      where: {
+        slug: slug,
+      },
+    });
   }
 
   async findByNameMatch(
