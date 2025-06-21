@@ -1,0 +1,11 @@
+import { gql } from 'graphql-tag';
+import { mergeTypeDefs } from '@graphql-tools/merge';
+import { restaurantDefs } from './schemas/restaurants.schema';
+import { userDefs } from './schemas/users.schema';
+
+const baseTypeDefs = gql`
+  type Query
+  type Mutation
+`;
+
+export const typeDefs = mergeTypeDefs([baseTypeDefs, restaurantDefs, userDefs]);
