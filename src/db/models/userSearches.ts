@@ -4,7 +4,7 @@ import sequelizeConnection from '../sequelize';
 interface UserSearchesInterface {
   id: number;
   user_id: number;
-  restaurant_id: string;
+  restaurant_id: number;
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
@@ -20,7 +20,7 @@ class UserSearches
 {
   public id!: number;
   public user_id!: number;
-  public restaurant_id!: string;
+  public restaurant_id!: number;
 
   // timestamps!
   public readonly created_at!: Date;

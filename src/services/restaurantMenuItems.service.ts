@@ -7,6 +7,19 @@ const RestaurantMenuItemsFn = {
   async create(payload: RestaurantMenuItemsInput) {
     return await RestaurantItemRepo.create(payload);
   },
+  async findById(id: number) {
+    return await RestaurantItemRepo.getOneById(id);
+  },
+  async findItemsByRestaurantId(id: number, limit?: number, offset?: number) {
+    return await RestaurantItemRepo.findAllItemsByRestaurantId(
+      id,
+      limit,
+      offset,
+    );
+  },
+  async findAllById(id: number) {
+    return await RestaurantItemRepo.getOneById(id);
+  },
   async getAll() {
     return await RestaurantItemRepo.getAll();
   },

@@ -49,7 +49,6 @@ class RestaurantsRepo extends Base {
     limit: number = OFFSET,
   ) {
     const offset = getPageOffset(limit, page);
-    console.log('j', name);
     return await this.model.findAll({
       where: {
         name: {

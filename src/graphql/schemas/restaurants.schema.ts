@@ -9,27 +9,51 @@ export const restaurantDefs = gql`
     state: String
     country: String
     postal_code: String
+    items: [RestaurantMenuItems]
   }
 
   type RestaurantMenuItems {
     id: ID!
-    restaurant_id: Int!
+    retaurant_id: ID!
     name: String
-    url: String
     category: String
     created_at: String
     updated_at: String
     deleted_at: String
+    restaurant: Restaurant
+    images: [RestaurantMenuItemImages]
   }
   type RestaurantMenuItemImages {
     id: ID!
-    restaurant_menu_id: Int!
+    restaurant_item_id: ID!
     name: String
+    url: String
     description: String
     category: String
     created_at: String
     updated_at: String
     deleted_at: String
+    restaurantItem: RestaurantMenuItems
+  }
+
+  input createRestauranInput {
+    name: String!
+    slug: String
+    address: String
+    city: String
+    state: String
+    country: String
+    postal_code: String
+  }
+
+  input createRestauranItemsInput {
+    name: String!
+    url: String
+    category: String
+    created_at: String
+    updated_at: String
+    deleted_at: String
+    restaurant_id: ID!
   }
 
   extend type Query {
@@ -39,14 +63,7 @@ export const restaurantDefs = gql`
   }
 
   extend type Mutation {
-    restaurantCreate(
-      name: String!
-      slug: String!
-      address: String
-      city: String
-      state: String
-      country: String
-      postal_code: String
-    ): Restaurant
+    addRestaurant(input: createRestauranInput): Restaurant
+    addRestaurantItems(input: createRestauranItemsInput): RestaurantMenuItems
   }
 `;

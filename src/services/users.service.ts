@@ -7,6 +7,9 @@ const UserServices = {
   async create(payload: UserInput) {
     return await UserRepo.create(payload);
   },
+  async findById(id: number) {
+    return await UserRepo.getOneById(id);
+  },
   async getAll() {
     return await UserRepo.getAll();
   },

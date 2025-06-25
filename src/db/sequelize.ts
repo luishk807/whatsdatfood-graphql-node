@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 const env = process.env.NODE_ENV || 'development';
 dotenv.config();
-const config = require(__dirname + '/../config.ts')[env];
+const config = require(__dirname + '/../config')[env];
 
 const { host, port, username, password, database } = config;
 

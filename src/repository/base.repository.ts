@@ -16,7 +16,14 @@ class Base {
     });
   }
 
-  async getById(id: number, limit: number = LIMIT, page: number = 1) {
+  async getOneById(id: number) {
+    return await this.model.findOne({
+      where: {
+        id: id,
+      },
+    });
+  }
+  async getAllById(id: number, limit: number = LIMIT, page: number = 1) {
     const offset = getPageOffset(limit, page);
     return await this.model.findAll({
       where: {

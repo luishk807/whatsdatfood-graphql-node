@@ -12,6 +12,10 @@ const RestaurantServices = {
     return await restRepo.getAll();
   },
 
+  async findById(id: number) {
+    return await restRepo.getOneById(id);
+  },
+
   async findByName(name: string, page?: number, limit?: number) {
     return await restRepo.findByName(name, page, limit);
   },
