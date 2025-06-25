@@ -1,10 +1,10 @@
 import app from './app';
-import config from './config/config';
-import { initDB } from './db';
+import config from 'config/config';
+import { initDB } from 'db';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServer } from '@apollo/server';
-import { resolvers } from './graphql/resolvers';
-import { typeDefs } from './graphql/typeDefs';
+import { resolvers } from 'graphql/resolvers';
+import { typeDefs } from 'graphql/typeDefs';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 
 interface MyContext {
@@ -13,7 +13,6 @@ interface MyContext {
 }
 
 async function startApolloServer() {
-
   const server = new ApolloServer<MyContext>({
     typeDefs,
     resolvers,
@@ -22,7 +21,6 @@ async function startApolloServer() {
 
   await server.start();
   // graphqlServer.applyMiddleware({ app, path: '/graphql' });
-
 
   app.use(
     '/graphql',

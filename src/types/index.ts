@@ -46,6 +46,10 @@ export type createRestaurantInput = {
   postal_code: string;
 };
 
+export type createRestaurantArgInput = {
+  input: createRestaurantInput;
+};
+
 export type createUserInputType = {
   first_name: string;
   last_name: string;
@@ -54,6 +58,10 @@ export type createUserInputType = {
   email: string;
   verification: string;
   dob: Date;
+};
+
+export type createUserInputTypeArgInput = {
+  input: createUserInputType;
 };
 
 export type createUserSearchesInputType = {

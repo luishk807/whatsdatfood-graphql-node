@@ -1,5 +1,5 @@
-import { UserInput } from '../db/models/users';
-import Users from '../repository/users.respository';
+import { UserInput } from 'db/models/users';
+import Users from 'repository/users.respository';
 
 const UserRepo = new Users();
 

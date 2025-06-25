@@ -1,12 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import { RestaurantsInput } from '../db/models/restaurants';
-import restaurantServices from '../services/restaurants.service';
+import { RestaurantsInput } from 'db/models/restaurants';
+import restaurantServices from 'services/restaurants.service';
 export const createRestaurant = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  console.log(req.body);
   const payload: RestaurantsInput = req.body;
   const resp = await restaurantServices.create(payload);
   res.status(200).json({
@@ -20,9 +19,7 @@ export const getRestaurantBySlug = async (
   next: NextFunction,
 ) => {
   const { restaurant } = req.query;
-  console.log('fff');
   const resp = await restaurantServices.findBySlug(String(restaurant));
-  console.log(resp, 'xxx');
   res.status(200).json(resp);
 };
 

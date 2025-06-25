@@ -1,12 +1,12 @@
-import RestaurantServices from '../../services/restaurants.service';
-import RestaurantMenuItems from '../../services/restaurantMenuItems.service';
+import RestaurantServices from 'services/restaurants.service';
+import RestaurantMenuItems from 'services/restaurantMenuItems.service';
 import { IResolvers } from '@graphql-tools/utils'; // or your GraphQL resolver typings
 import {
   RestaurantType,
   RestaurantItemType,
-  createRestaurantInput,
-} from '../../types';
-import { RestaurantsOutput } from '../../db/models/restaurants';
+  createRestaurantArgInput,
+} from 'types';
+import { RestaurantsOutput } from 'db/models/restaurants';
 export const restaurantResolvers: IResolvers = {
   Query: {
     restaurants: async (): Promise<RestaurantType[]> =>
@@ -40,9 +40,10 @@ export const restaurantResolvers: IResolvers = {
   Mutation: {
     addRestaurant: async (
       _parent: any,
-      args: createRestaurantInput,
+      args: createRestaurantArgInput,
     ): Promise<RestaurantType> => {
-      return await RestaurantServices.create({ ...args });
+      const { input } = args;
+      return await RestaurantServices.create({ ...input });
     },
   },
 };

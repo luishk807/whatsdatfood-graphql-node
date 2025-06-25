@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import openaiRouter from './open-ai.route';
-import restauntRouter from './restaurant.route';
-import userRouter from './users.route';
-import restaurantMenuItemRoute from './resturantItems.route';
+import openaiRouter from 'routes/open-ai.route';
+import restauntRouter from 'routes/restaurant.route';
+import userRouter from 'routes/users.route';
+import restaurantMenuItemRoute from 'routes/resturantItems.route';
 const router = Router();
 
 router.use('/open-ai', openaiRouter);

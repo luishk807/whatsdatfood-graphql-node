@@ -3,7 +3,7 @@ import { RestaurantMenuItemsInput } from '../db/models/restaurantMenuItems';
 import RestaurantMenuItems from '../db/models/restaurantMenuItems';
 import { LIMIT } from '../constants/sequelize';
 import db from '../db/models';
-import { getPageOffset } from '../utils/sequelize';
+import { getPageOffset } from '../helpers/sequelize';
 class RestaurantMenuItemsRepo extends Base {
   constructor() {
     super(RestaurantMenuItems);

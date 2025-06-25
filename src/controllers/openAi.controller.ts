@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import OpenAiService from '../services/openAi.service';
+import OpenAiService from 'services/openAi.service';
 export const getAIMenu = async (
   req: Request,
   res: Response,

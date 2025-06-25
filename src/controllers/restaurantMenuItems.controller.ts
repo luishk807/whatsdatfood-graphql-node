@@ -1,4 +1,4 @@
-import RestaurantMenuItemServices from '../services/restaurantMenuItems.service';
+import RestaurantMenuItemServices from 'services/restaurantMenuItems.service';
 import { Request, Response, NextFunction } from 'express';
 
 export const createRetaurantMenuItems = async (

@@ -1,5 +1,5 @@
-import RestaurantMenuItems from '../repository/restaurantMenu.repository';
-import { RestaurantMenuItemsInput } from '../db/models/restaurantMenuItems';
+import RestaurantMenuItems from 'repository/restaurantMenu.repository';
+import { RestaurantMenuItemsInput } from 'db/models/restaurantMenuItems';
 
 const RestaurantItemRepo = new RestaurantMenuItems();
 

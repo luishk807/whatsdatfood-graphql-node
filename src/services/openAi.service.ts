@@ -1,6 +1,7 @@
 import OpenAI from 'openai';
-import { getSlug, _get, getBuiltAddress } from '../utils';
-import RestaurantServices from './restaurants.service';
+import { _get } from 'helpers';
+import { buildRestaurantPayload } from 'helpers/sequelize';
+import RestaurantServices from 'services/restaurants.service';
 
 const OpenAiFn = {
   async getAIMenu(restName: string, address: string) {
@@ -55,28 +56,8 @@ const OpenAiFn = {
       const dataJson = JSON.parse(cleaned);
       if (dataJson && dataJson.length) {
         for (let item of dataJson) {
-          const address = getBuiltAddress({
-            address: _get(item, 'address'),
-            city: _get(item, 'city'),
-            state: _get(item, 'state'),
-            country: _get(item, 'country'),
-            postal_code: _get(item, 'postal_code'),
-          });
-          const slug = getSlug(`${_get(item, 'name')} ${address}`);
-          const payload = {
-            name: _get(item, 'name'),
-            address: _get(item, 'address'),
-            city: _get(item, 'city'),
-            state: _get(item, 'state'),
-            country: _get(item, 'country'),
-            slug,
-            postal_code: _get(item, 'postal_code'),
-          };
-          item = {
-            ...item,
-            slug: slug,
-          };
-          await RestaurantServices.create(payload);
+          const restaurantPayload = buildRestaurantPayload(item);
+          await RestaurantServices.create(restaurantPayload);
         }
       }
       return dataJson;

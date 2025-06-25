@@ -1,6 +1,6 @@
 import slugify from 'slugify';
 import _ from 'lodash';
-import { getBuiltAddressType } from '../types';
+import { getBuiltAddressType } from 'types';
 export const getSlug = (value: string) => {
   let textData: Text | undefined;
   if (!value) {

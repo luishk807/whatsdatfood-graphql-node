@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import sequelizeConnection from '../sequelize';
+import sequelizeConnection from 'db/sequelize';
 
 interface RestaurantsMenuItemImagesAttributes {
   id: bigint;

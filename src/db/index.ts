@@ -1,5 +1,5 @@
-import sequelize from './sequelize';
-import Restaurants from './models/restaurants';
+import sequelize from 'db/sequelize';
+import Restaurants from 'db/models/restaurants';
 export const initDB = async () => {
   try {
     await sequelize.authenticate();

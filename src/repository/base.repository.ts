@@ -1,6 +1,6 @@
 import db from '../db/models';
 import { LIMIT, OFFSET } from '../constants/sequelize';
-import { getPageOffset } from '../utils/sequelize';
+import { getPageOffset } from '../helpers/sequelize';
 
 class Base {
   model: any;

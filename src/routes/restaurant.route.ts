@@ -4,7 +4,7 @@ import {
   getAllRestaurants,
   getAllResturantByName,
   getRestaurantBySlug,
-} from '../controllers/restaurants.controller';
+} from 'controllers/restaurants.controller';
 const router = express.Router();
 
 router.get('/', getAllRestaurants);

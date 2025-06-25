@@ -5,7 +5,8 @@ import { RestaurantsInput } from '../db/models/restaurants';
 import Restaurants from '../db/models/restaurants';
 import db from '../db/models';
 import { LIMIT, OFFSET } from '../constants/sequelize';
-import { getPageOffset } from '../utils/sequelize';
+import { getPageOffset } from '../helpers/sequelize';
+import { _get } from '../helpers';
 class RestaurantsRepo extends Base {
   constructor() {
     super(Restaurants);
@@ -16,19 +17,19 @@ class RestaurantsRepo extends Base {
 
     try {
       const resp = await db.sequelize.query(
-        `INSERT INTO restaurants (name, slug, address, city, state, country, postal_code, created_at, updated_at) values(:name, :slug, :address, :city, :state, :country, :postal_code, NOW(), NOW())`,
+        `INSERT INTO restaurants (name, slug, address, city, state, country, postal_code, created_at, updated_at) values(:name, :slug, :address, :city, :state, :country, :postal_code, NOW(), NOW())
+         RETURNING *`,
         {
           replacements: {
             ...payload,
           },
-        },
-        {
           transaction: t,
+          type: db.Sequelize.QueryTypes.INSERT,
         },
       );
-      //const resp = await this.model.create(payload, { transaction: t });
       await t.commit();
-      return resp;
+      const resp_data = _get(resp, '0.0');
+      return resp_data;
     } catch (err) {
       await t.rollback();
       return err;

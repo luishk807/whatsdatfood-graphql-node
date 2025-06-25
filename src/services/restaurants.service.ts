@@ -1,11 +1,12 @@
-import { RestaurantsInput } from '../db/models/restaurants';
-import Restaurants from '../repository/restaurants.respository';
-
+import { RestaurantsInput } from 'db/models/restaurants';
+import Restaurants from 'repository/restaurants.respository';
+import { buildRestaurantPayload } from 'helpers/sequelize';
 const restRepo = new Restaurants();
 
 const RestaurantServices = {
   async create(payload: RestaurantsInput) {
-    return await restRepo.create(payload);
+    const new_payload = buildRestaurantPayload(payload);
+    return await restRepo.create(new_payload);
   },
 
   async getAll() {
