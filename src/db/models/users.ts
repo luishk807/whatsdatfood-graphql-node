@@ -8,7 +8,7 @@ interface UserInterface {
   password: string;
   phone: string;
   email: string;
-  verification: string;
+  verification?: string;
   dob: Date;
   created_at?: Date;
   updated_at?: Date;

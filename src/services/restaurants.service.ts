@@ -1,6 +1,6 @@
 import { RestaurantsInput } from 'db/models/restaurants';
 import Restaurants from 'repository/restaurants.respository';
-import { buildRestaurantPayload } from 'helpers/sequelize';
+import { buildRestaurantPayload } from 'helpers/restaurants.sequelize';
 const restRepo = new Restaurants();
 
 const RestaurantServices = {

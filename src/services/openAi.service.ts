@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 import { _get } from 'helpers';
-import { buildRestaurantPayload } from 'helpers/sequelize';
+import { buildRestaurantPayload } from 'helpers/restaurants.sequelize';
 import RestaurantServices from 'services/restaurants.service';
 
 const OpenAiFn = {

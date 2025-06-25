@@ -13,8 +13,9 @@ class UsersRepo extends Base {
     const t = await db.sequelize.transaction();
     try {
       const resp = await this.model.upsert(payload, { transaction: t });
+      console.log(resp);
       await t.commit();
-      return resp;
+      return resp[0];
     } catch (err) {
       await t.rollback();
       return err;
