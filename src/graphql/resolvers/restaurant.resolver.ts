@@ -7,6 +7,8 @@ import {
   createRestaurantArgInput,
 } from 'types';
 import { RestaurantsOutput } from 'db/models/restaurants';
+import DataLoader from 'dataloader';
+
 export const restaurantResolvers: IResolvers = {
   Query: {
     restaurants: async (): Promise<RestaurantType[]> =>
@@ -23,15 +25,29 @@ export const restaurantResolvers: IResolvers = {
       await RestaurantServices.findByName(args.name),
   },
   Restaurant: {
-    items: async (_parent: RestaurantType): Promise<RestaurantItemType[]> => {
-      return await RestaurantMenuItems.findItemsByRestaurantId(_parent.id);
+    items: async (
+      _parent: RestaurantType,
+      _args: any,
+      context: {
+        restaurantRestaurantItemsDataLoader: DataLoader<
+          number,
+          RestaurantItemType[]
+        >;
+      },
+      {},
+    ): Promise<RestaurantItemType[]> => {
+      return context.restaurantRestaurantItemsDataLoader.load(_parent.id);
     },
   },
   RestaurantMenuItems: {
     restaurant: async (
       parent: RestaurantItemType,
-    ): Promise<RestaurantItemType | null> => {
-      return await RestaurantServices.findById(parent.restaurant_id);
+      _args: any,
+      context: {
+        restaurantItemRestaurant: DataLoader<number, RestaurantType | null>;
+      },
+    ): Promise<RestaurantType | null> => {
+      return context.restaurantItemRestaurant.load(parent.restaurant_id);
     },
     images: (): any[] => {
       return [];

@@ -6,10 +6,14 @@ import { ApolloServer } from '@apollo/server';
 import { resolvers } from 'graphql/resolvers';
 import { typeDefs } from 'graphql/typeDefs';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
-
+import DataLoader from 'dataloader';
+import RestaurantMenuItems from 'services/restaurantMenuItems.service';
+import RestaurantServices from 'services/restaurants.service';
+import { RestaurantType, RestaurantItemType } from 'types';
 interface MyContext {
   userId?: string;
-  // add more as needed
+  restaurantRestaurantItemsDataLoader: DataLoader<number, RestaurantItemType[]>;
+  restaurantItemRestaurant: DataLoader<number, RestaurantType | null>;
 }
 
 async function startApolloServer() {
@@ -27,7 +31,24 @@ async function startApolloServer() {
     expressMiddleware(server, {
       context: async ({ req }): Promise<MyContext> => {
         const token = req.headers.authorization || '';
-        return { userId: token || 'mock-user-id' };
+
+        const restaurantRestaurantItemsDataLoader = new DataLoader(
+          (ids: readonly number[]) =>
+            Promise.all(
+              ids.map((id) => RestaurantMenuItems.findItemsByRestaurantId(id)),
+            ),
+        );
+
+        const restaurantItemRestaurant = new DataLoader(
+          (ids: readonly number[]) =>
+            Promise.all(ids.map((id) => RestaurantServices.findById(id))),
+        );
+
+        return {
+          userId: token || 'mock-user-id',
+          restaurantRestaurantItemsDataLoader,
+          restaurantItemRestaurant,
+        };
       },
     }),
   );
