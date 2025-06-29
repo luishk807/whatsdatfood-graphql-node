@@ -1,5 +1,6 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import bycript from 'bcrypt';
+import { NotAuthorized } from 'graphql/customErrors';
 import { UserType } from 'types';
 
 export const createJSONWebToken = (obj: any) => {
@@ -23,6 +24,9 @@ export const createHashPassword = async (password: any) => {
 
 export const authenticate = (req: any) => {
   const authheader = req.headers['authorization'];
+  if (!authheader) {
+    throw new NotAuthorized('not authorized');
+  }
   const token: string = authheader.split(' ')[1];
 
   const env_token: string | undefined = process.env.ACCESS_TOKEN_SECRET || '';

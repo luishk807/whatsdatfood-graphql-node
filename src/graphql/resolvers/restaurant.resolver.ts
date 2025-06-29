@@ -7,21 +7,37 @@ import {
 } from 'types';
 import { RestaurantsOutput } from 'db/models/restaurants';
 import DataLoader from 'dataloader';
+import { NotFoundError } from 'graphql/customErrors';
 
 export const restaurantResolvers: IResolvers = {
   Query: {
-    restaurants: async (): Promise<RestaurantType[]> =>
-      await RestaurantServices.getAll(),
+    restaurants: async (): Promise<RestaurantType[]> => {
+      const resp = await RestaurantServices.getAll();
+      if (!resp) {
+        throw new NotFoundError('No restaurant available');
+      }
+      return resp;
+    },
     restaurantBySlug: async (
       _parent: any,
       args: { slug: string },
-    ): Promise<RestaurantsOutput | null> =>
-      await RestaurantServices.findBySlug(args.slug),
+    ): Promise<RestaurantsOutput | null> => {
+      const resp = await RestaurantServices.findBySlug(args.slug);
+      if (!resp) {
+        throw new NotFoundError('Restaurant not found');
+      }
+      return resp;
+    },
     restaurantByName: async (
       _parent: any,
       args: { name: string },
-    ): Promise<RestaurantsOutput | null> =>
-      await RestaurantServices.findByName(args.name),
+    ): Promise<RestaurantsOutput | null> => {
+      const resp = await RestaurantServices.findByName(args.name);
+      if (!resp) {
+        throw new NotFoundError('Restaurant not found');
+      }
+      return resp;
+    },
   },
   Restaurant: {
     items: async (
