@@ -8,6 +8,7 @@ export const userDefs = gql`
     phone: String!
     email: String!
     verification: String
+    role: Int!
     dob: String!
     searches: [UserSearches]
   }
@@ -28,6 +29,7 @@ export const userDefs = gql`
     last_name: String!
     password: String!
     phone: String!
+    role: Int!
     email: String!
     dob: String!
   }

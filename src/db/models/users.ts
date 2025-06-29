@@ -8,6 +8,7 @@ interface UserInterface {
   password: string;
   phone: string;
   email: string;
+  role: number;
   verification?: string;
   dob: Date;
   created_at?: Date;
@@ -15,7 +16,7 @@ interface UserInterface {
   deleted_at?: Date;
 }
 
-export interface UserInput extends Optional<UserInterface, 'id'> {}
+export interface UserInput extends Optional<UserInterface, 'id' | 'role'> {}
 export interface UserOutput extends Required<UserInterface> {}
 
 class Users extends Model<UserInterface, UserInput> implements UserInterface {
@@ -24,6 +25,7 @@ class Users extends Model<UserInterface, UserInput> implements UserInterface {
   public last_name!: string;
   public password!: string;
   public phone!: string;
+  public role!: number;
   public email!: string;
   public verification!: string;
   public dob!: Date;
@@ -59,6 +61,11 @@ Users.init(
     },
     phone: {
       type: DataTypes.STRING,
+    },
+    role: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      defaultValue: 1,
     },
     password: {
       type: DataTypes.TEXT,

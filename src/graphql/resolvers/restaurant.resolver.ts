@@ -1,5 +1,4 @@
 import RestaurantServices from 'services/restaurants.service';
-import RestaurantMenuItems from 'services/restaurantMenuItems.service';
 import { IResolvers } from '@graphql-tools/utils'; // or your GraphQL resolver typings
 import {
   RestaurantType,

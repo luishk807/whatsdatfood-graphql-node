@@ -4,7 +4,7 @@ import sequelizeConnection from 'db/sequelize';
 interface RestaurantInterface {
   id: number;
   name: string;
-  slug?: Text;
+  slug?: string;
   address?: string;
   city?: string;
   state?: string;
@@ -15,7 +15,8 @@ interface RestaurantInterface {
   deleted_at?: Date;
 }
 
-export interface RestaurantsInput extends Optional<RestaurantInterface, 'id'> {}
+export interface RestaurantsInput
+  extends Optional<RestaurantInterface, 'id' | 'slug'> {}
 export interface RestaurantsOutput extends Required<RestaurantInterface> {}
 
 class Restaurants
@@ -23,7 +24,7 @@ class Restaurants
   implements RestaurantInterface
 {
   public id!: number;
-  public slug!: Text;
+  public slug!: string;
   public name!: string;
   public address!: string;
   public city!: string;

@@ -13,8 +13,14 @@ export type UserType = {
   password: string;
   phone: string;
   email: string;
+  role: number;
   verification: string;
   dob: Date;
+};
+
+export type UserRoleType = {
+  id: number;
+  name: string;
 };
 
 export type UserSearchesType = {
@@ -38,7 +44,7 @@ export type RestaurantType = {
 
 export type createRestaurantInput = {
   name: string;
-  slug: Text;
+  slug: string;
   address: string;
   city: string;
   state: string;
@@ -55,9 +61,18 @@ export type createUserInputType = {
   last_name: string;
   password: string;
   phone: string;
+  role: number;
   email: string;
   verification: string;
   dob: Date;
+};
+
+export type createUserRoleInputType = {
+  name: string;
+};
+
+export type createUserRoleInputTypeArgInput = {
+  input: createUserRoleInputType;
 };
 
 export type createUserInputTypeArgInput = {

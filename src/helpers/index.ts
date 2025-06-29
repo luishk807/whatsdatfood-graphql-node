@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { getBuiltAddressType } from 'types';
 import bycript from 'bcrypt';
 export const getSlug = (value: string) => {
-  let textData: Text | undefined;
+  let textData: string | undefined;
   if (!value) {
     return textData;
   }
@@ -45,5 +45,5 @@ export const getBuiltAddress: getBuiltAddressType = (address) => {
 
 export const _get = (obj: any, target: any): any => _.get(obj, target);
 
-export const getStrToText = (value: string): Text | undefined =>
-  value as unknown as Text;
+export const getStrToText = (value: string | undefined): string | undefined =>
+  value;

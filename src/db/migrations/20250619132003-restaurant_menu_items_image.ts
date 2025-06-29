@@ -9,7 +9,7 @@ export default {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    queryInterface.createTable('restaurant_menu_item_images', {
+    await queryInterface.createTable('restaurant_menu_item_images', {
       id: {
         type: DataTypes.BIGINT,
         primaryKey: true,
@@ -54,6 +54,6 @@ export default {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    queryInterface.dropTable('restaurant_menu_item_images');
+    await queryInterface.dropTable('restaurant_menu_item_images');
   },
 };

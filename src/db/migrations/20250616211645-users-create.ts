@@ -10,7 +10,7 @@ export default {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    queryInterface.createTable('users', {
+    await queryInterface.createTable('users', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -40,6 +40,11 @@ export default {
         type: DataTypes.DATEONLY,
         allowNull: false,
       },
+      role: {
+        type: DataTypes.BIGINT,
+        allowNull: true,
+        defaultValue: 1,
+      },
       verification: {
         type: DataTypes.TEXT,
       },
@@ -55,6 +60,18 @@ export default {
         type: DataTypes.DATE,
       },
     });
+
+    await queryInterface.addConstraint('users', {
+      fields: ['role'],
+      type: 'foreign key',
+      name: 'fk_users_role_user_roles_id', // custom constraint name
+      references: {
+        table: 'user_roles',
+        field: 'id',
+      },
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE',
+    });
   },
 
   async down(queryInterface: QueryInterface, Sequelize: Sequelize) {
@@ -64,6 +81,6 @@ export default {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    queryInterface.dropTable('users');
+    await queryInterface.dropTable('users');
   },
 };
