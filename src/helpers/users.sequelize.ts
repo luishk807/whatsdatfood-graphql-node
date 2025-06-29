@@ -1,6 +1,6 @@
 import { _get } from '.';
 import { UserInput } from 'db/models/users';
-import { createHashPassword } from 'helpers';
+import { createHashPassword } from 'helpers/login';
 import { USER_ROLE_DEFAULT } from 'constants/sequelize';
 export const buildUserPayload = async (item: UserInput) => {
   const password = await createHashPassword(_get(item, 'password'));

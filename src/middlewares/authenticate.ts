@@ -1,27 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { authenticate } from 'helpers/login';
 
 declare module 'express' {
   interface Request {
     user?: any;
   }
 }
-export const authenticate = (
+export const authenticateMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const authheader = req.headers['authorization'];
-  const token: string | undefined =
-    (authheader && authheader.split(' ')[1]) || '';
+  const token = authenticate(req);
 
   if (token === null) return res.sendStatus(401);
 
-  const env_token: string | undefined = process.env.ACCESS_TOKEN_SECRET || '';
-
-  jwt.verify(token, env_token, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
+  req.user = token;
+  next();
 };

@@ -9,9 +9,10 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import DataLoader from 'dataloader';
 import RestaurantMenuItems from 'services/restaurantMenuItems.service';
 import RestaurantServices from 'services/restaurants.service';
-import { RestaurantType, RestaurantItemType } from 'types';
+import { authenticate } from 'helpers/login';
+import { RestaurantType, RestaurantItemType, UserType } from 'types';
 interface MyContext {
-  userId?: string;
+  user: UserType | null;
   restaurantRestaurantItemsDataLoader: DataLoader<number, RestaurantItemType[]>;
   restaurantItemRestaurant: DataLoader<number, RestaurantType | null>;
 }
@@ -30,7 +31,7 @@ async function startApolloServer() {
     '/graphql',
     expressMiddleware(server, {
       context: async ({ req }): Promise<MyContext> => {
-        const token = req.headers.authorization || '';
+        const userData = authenticate(req);
 
         const restaurantRestaurantItemsDataLoader = new DataLoader(
           (ids: readonly number[]) =>
@@ -45,7 +46,7 @@ async function startApolloServer() {
         );
 
         return {
-          userId: token || 'mock-user-id',
+          user: userData,
           restaurantRestaurantItemsDataLoader,
           restaurantItemRestaurant,
         };

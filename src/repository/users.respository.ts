@@ -21,6 +21,16 @@ class UsersRepo extends Base {
       return err;
     }
   }
+  async findUserByPassword(email: string, password: string) {
+    const findUser = await this.model.findOne({
+      where: {
+        email: email,
+        password: password,
+      },
+    });
+
+    return findUser ? findUser : null;
+  }
 }
 
 export default UsersRepo;

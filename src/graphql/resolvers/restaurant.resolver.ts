@@ -56,7 +56,11 @@ export const restaurantResolvers: IResolvers = {
     addRestaurant: async (
       _parent: any,
       args: createRestaurantArgInput,
+      context: any,
     ): Promise<RestaurantType> => {
+      if (!context.user) {
+        //check authtenthication
+      }
       const { input } = args;
       return await RestaurantServices.create({ ...input });
     },

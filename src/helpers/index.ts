@@ -1,7 +1,7 @@
 import slugify from 'slugify';
 import _ from 'lodash';
 import { getBuiltAddressType } from 'types';
-import bycript from 'bcrypt';
+
 export const getSlug = (value: string) => {
   let textData: string | undefined;
   if (!value) {
@@ -11,17 +11,6 @@ export const getSlug = (value: string) => {
   return getStrToText(slug);
 };
 
-export const createHashPassword = async (password: any) => {
-  try {
-    const saltRounds = 10;
-    const salt = await bycript.genSalt(saltRounds);
-    const hashedPassword = await bycript.hash(password, salt);
-    return hashedPassword;
-  } catch (error) {
-    console.error('Error hashing password:', error);
-    throw error;
-  }
-};
 export const getBuiltAddress: getBuiltAddressType = (address) => {
   let new_address = '';
   const { address: c_address, city, country, state, postal_code } = address;

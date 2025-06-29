@@ -15,7 +15,11 @@ export const userResolvers = {
       async (
         _parent: any,
         args: createUserInputTypeArgInput,
+        context: any,
       ): Promise<UserType> => {
+        if (!context.user) {
+          //check authtenthication
+        }
         const { input } = args;
         console.log(input);
         return await UserServices.create(input);

@@ -45,6 +45,7 @@ export const userDefs = gql`
   }
 
   extend type Mutation {
+    login(username: String!, password: String!): User
     addUser(input: CreateUserInput): User
     addUserSearches(input: createUserSearchInput): UserSearches
   }
