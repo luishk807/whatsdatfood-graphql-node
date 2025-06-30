@@ -21,11 +21,10 @@ class UsersRepo extends Base {
       return err;
     }
   }
-  async findUserByPassword(email: string, password: string) {
+  async findUserByEmail(email: string): Promise<Users | null> {
     const findUser = await this.model.findOne({
       where: {
         email: email,
-        password: password,
       },
     });
 

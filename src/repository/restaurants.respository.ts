@@ -68,7 +68,7 @@ class RestaurantsRepo extends Base {
         * 
       FROM 
         restaurants 
-      WHERE lower(name) like :name 
+      WHERE lower(name) ilike :name 
     `,
       {
         replacements: {

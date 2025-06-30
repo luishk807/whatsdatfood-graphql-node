@@ -8,7 +8,8 @@
     "skipLibCheck": true,
     "baseUrl": "./src",
     "paths": {
-      "*": ["*"]
+      "*": ["*"],
+      "enum": ["enum/index"]
     }
   },
   "include": ["src"]

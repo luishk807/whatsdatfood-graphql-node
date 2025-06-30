@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import bycript from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { NotAuthorized } from 'graphql/customErrors';
 import { UserType } from 'types';
 
@@ -10,16 +10,20 @@ export const createJSONWebToken = (obj: any) => {
   });
 };
 
-export const createHashPassword = async (password: any) => {
+export const createHashPassword = async (password: string) => {
   try {
     const saltRounds = 10;
-    const salt = await bycript.genSalt(saltRounds);
-    const hashedPassword = await bycript.hash(password, salt);
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(password, salt);
     return hashedPassword;
   } catch (error) {
     console.error('Error hashing password:', error);
     throw error;
   }
+};
+
+export const comparePassword = async (password1: string, password2: string) => {
+  return bcrypt.compare(password1, password2);
 };
 
 export const authenticate = (req: any) => {

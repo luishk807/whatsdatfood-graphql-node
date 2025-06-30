@@ -1,9 +1,11 @@
 import RestaurantServices from 'services/restaurants.service';
+import OpenAiResturant from 'services/openAi.service';
 import { IResolvers } from '@graphql-tools/utils'; // or your GraphQL resolver typings
 import {
   RestaurantType,
   RestaurantItemType,
   createRestaurantArgInput,
+  ResturantAIResponse,
 } from 'types';
 import { RestaurantsOutput } from 'db/models/restaurants';
 import DataLoader from 'dataloader';
@@ -37,6 +39,15 @@ export const restaurantResolvers: IResolvers = {
         throw new NotFoundError('Restaurant not found');
       }
       return resp;
+    },
+    aiRestaurant: async (
+      _parent: any,
+      _args: { name: string },
+      context: {
+        aiRestaurant: DataLoader<string, ResturantAIResponse[]>;
+      },
+    ) => {
+      return context.aiRestaurant.load(_args.name);
     },
   },
   Restaurant: {

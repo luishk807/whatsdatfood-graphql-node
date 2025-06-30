@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { createJSONWebToken } from 'helpers';
+import { createJSONWebToken } from 'helpers/login';
 
 export const login = (req: Request, res: Response, next: NextFunction) => {
   const username = req.body.username;

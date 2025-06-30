@@ -32,7 +32,7 @@ export const getBuiltAddress: getBuiltAddressType = (address) => {
   return new_address.trim();
 };
 
-export const _get = (obj: any, target: any): any => _.get(obj, target);
+export const _get = (obj: any, target: any): any => _.get(obj, target, '');
 
 export const getStrToText = (value: string | undefined): string | undefined =>
   value;

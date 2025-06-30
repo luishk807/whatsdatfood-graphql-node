@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelizeConnection from 'db/sequelize';
+import { UserRole } from 'enum';
 
 interface UserInterface {
   id: number;
@@ -49,23 +50,27 @@ Users.init(
     },
     first_name: {
       allowNull: false,
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
     },
     last_name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     email: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(255),
       allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
     },
     phone: {
       type: DataTypes.STRING,
     },
     role: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER,
       allowNull: true,
-      defaultValue: 1,
+      defaultValue: UserRole.USER,
     },
     password: {
       type: DataTypes.TEXT,

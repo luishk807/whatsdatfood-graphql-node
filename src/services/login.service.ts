@@ -1,17 +1,22 @@
-import { createHashPassword, createJSONWebToken } from 'helpers/login';
+import { createJSONWebToken, comparePassword } from 'helpers/login';
 import UserRepository from 'repository/users.respository';
 const UserRepo = new UserRepository();
 
 const LoginServices = {
   async login(email: string, password: string) {
-    const has_password = await createHashPassword(password);
-    const foundUser = UserRepo.findUserByPassword(email, has_password);
+    const user = await UserRepo.findUserByEmail(email);
 
-    if (!foundUser) {
+    if (!user) {
       throw new Error('Invalid email and password');
     }
 
-    const token = createJSONWebToken(foundUser);
+    const passwordMatch = await comparePassword(password, user.password);
+
+    if (!passwordMatch) {
+      throw new Error('Invalid email and password');
+    }
+
+    const token = createJSONWebToken(user);
     return token;
   },
 };

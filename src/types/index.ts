@@ -94,4 +94,13 @@ export type RestaurantItemType = {
   updated_at: string;
 };
 
+export type ResturantAIResponse = {
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  postal_code: string;
+};
+
 export type getBuiltAddressType = (address: addressType) => string;

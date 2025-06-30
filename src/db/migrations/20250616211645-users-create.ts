@@ -18,7 +18,7 @@ export default {
         type: DataTypes.BIGINT,
       },
       first_name: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
       last_name: {
@@ -26,8 +26,12 @@ export default {
         allowNull: false,
       },
       email: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING(255),
         allowNull: false,
+        unique: true,
+        validate: {
+          isEmail: true,
+        },
       },
       phone: {
         type: DataTypes.STRING,
@@ -41,7 +45,7 @@ export default {
         allowNull: false,
       },
       role: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.INTEGER,
         allowNull: true,
         defaultValue: 1,
       },

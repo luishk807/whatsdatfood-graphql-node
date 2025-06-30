@@ -9,13 +9,20 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import DataLoader from 'dataloader';
 import RestaurantMenuItems from 'services/restaurantMenuItems.service';
 import RestaurantServices from 'services/restaurants.service';
+import OpenAiResturant from 'services/openAi.service';
 import { authenticate } from 'helpers/login';
 import { GraphQLError } from 'graphql';
-import { RestaurantType, RestaurantItemType, UserType } from 'types';
+import {
+  RestaurantType,
+  RestaurantItemType,
+  UserType,
+  ResturantAIResponse,
+} from 'types';
 interface MyContext {
   user: UserType | null;
   restaurantRestaurantItemsDataLoader: DataLoader<number, RestaurantItemType[]>;
   restaurantItemRestaurant: DataLoader<number, RestaurantType | null>;
+  aiRestaurant: DataLoader<string, ResturantAIResponse[] | []>;
 }
 
 async function startApolloServer() {
@@ -46,11 +53,18 @@ async function startApolloServer() {
             Promise.all(ids.map((id) => RestaurantServices.findById(id))),
         );
 
+        const aiRestaurantData = new DataLoader((names: readonly string[]) =>
+          Promise.all(
+            names.map((name) => OpenAiResturant.getAIRestaurantList(name)),
+          ),
+        );
+
         return {
           // user: userData,
           user: null,
           restaurantRestaurantItemsDataLoader,
           restaurantItemRestaurant,
+          aiRestaurant: aiRestaurantData,
         };
       },
     }),
