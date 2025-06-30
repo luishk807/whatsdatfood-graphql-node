@@ -6,27 +6,15 @@ import { ApolloServer } from '@apollo/server';
 import { resolvers } from 'graphql/resolvers';
 import { typeDefs } from 'graphql/typeDefs';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
+import { GraphQLServerContext } from 'interfaces';
 import DataLoader from 'dataloader';
 import RestaurantMenuItems from 'services/restaurantMenuItems.service';
 import RestaurantServices from 'services/restaurants.service';
 import OpenAiResturant from 'services/openAi.service';
 import { authenticate } from 'helpers/login';
-import { GraphQLError } from 'graphql';
-import {
-  RestaurantType,
-  RestaurantItemType,
-  UserType,
-  ResturantAIResponse,
-} from 'types';
-interface MyContext {
-  user: UserType | null;
-  restaurantRestaurantItemsDataLoader: DataLoader<number, RestaurantItemType[]>;
-  restaurantItemRestaurant: DataLoader<number, RestaurantType | null>;
-  aiRestaurant: DataLoader<string, ResturantAIResponse[] | []>;
-}
 
 async function startApolloServer() {
-  const server = new ApolloServer<MyContext>({
+  const server = new ApolloServer<GraphQLServerContext>({
     typeDefs,
     resolvers,
     plugins: [ApolloServerPluginLandingPageLocalDefault()],
@@ -38,7 +26,7 @@ async function startApolloServer() {
   app.use(
     '/graphql',
     expressMiddleware(server, {
-      context: async ({ req }): Promise<MyContext> => {
+      context: async ({ req }): Promise<GraphQLServerContext> => {
         //const userData = authenticate(req);
 
         const restaurantRestaurantItemsDataLoader = new DataLoader(
