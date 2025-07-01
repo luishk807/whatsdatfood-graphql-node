@@ -1,5 +1,6 @@
 import { _get } from '.';
 import { RestaurantsInput } from 'db/models/restaurants';
+import { RestaurantMenuItemsInput } from 'db/models/restaurantMenuItems';
 import { getSlug, getBuiltAddress } from '.';
 
 export const buildRestaurantPayload = (item: RestaurantsInput) => {
@@ -19,5 +20,13 @@ export const buildRestaurantPayload = (item: RestaurantsInput) => {
     name: _get(item, 'name'),
     slug,
     ...address_data,
+  };
+};
+export const buildRestaurantItemPayload = (item: RestaurantMenuItemsInput) => {
+  return {
+    name: _get(item, 'name'),
+    category: _get(item, 'category'),
+    description: _get(item, 'description'),
+    restaurant_id: _get(item, 'restaurant_id'),
   };
 };

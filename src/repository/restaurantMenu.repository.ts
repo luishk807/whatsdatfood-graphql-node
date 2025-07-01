@@ -8,7 +8,6 @@ class RestaurantMenuItemsRepo extends Base {
   constructor() {
     super(RestaurantMenuItems);
   }
-
   async findAllItemsByRestaurantId(
     id: number,
     limit: number = LIMIT,
@@ -23,11 +22,33 @@ class RestaurantMenuItemsRepo extends Base {
       offset: offset,
     });
   }
+
+  async destroyItemsByRestaurantId(id: number) {
+    return await this.model.destroy({
+      restaurant_id: id,
+    });
+  }
+
   async create(payload: RestaurantMenuItemsInput) {
     const t = await db.sequelize.transaction();
 
     try {
       const resp = await this.model.upsert(payload, { transaction: t });
+      await t.commit();
+      return resp;
+    } catch (err) {
+      await t.rollback();
+      return err;
+    }
+  }
+  async bulkCreate(payload: RestaurantMenuItemsInput[]) {
+    const t = await db.sequelize.transaction();
+
+    try {
+      const resp = await this.model.bulkCreate(payload, {
+        transaction: t,
+        returning: true,
+      });
       await t.commit();
       return resp;
     } catch (err) {

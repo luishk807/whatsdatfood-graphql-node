@@ -1,36 +1,101 @@
 import OpenAI from 'openai';
 import { _get } from 'helpers';
-import { ResturantAIResponse, RestaurantType } from 'types';
-import { buildRestaurantPayload } from 'helpers/restaurants.sequelize';
+import {
+  RestaurantAIResponse,
+  RestaurantMenuItemsAIResponse,
+  RestaurantItemType,
+  RestaurantType,
+} from 'types';
+import {
+  buildRestaurantPayload,
+  buildRestaurantItemPayload,
+} from 'helpers/restaurants.sequelize';
 import RestaurantServices from 'services/restaurants.service';
+import { getBuiltAddress } from 'helpers';
+import RestaurantMenuItemsFn from 'services/restaurantMenuItems.service';
+
+const openAiKey: string | undefined = process.env.OPENAI_KEY;
 
 const OpenAiFn = {
-  async getAIMenu(restName: string, address: string) {
-    const openAiKey: string | undefined = process.env.OPENAI_KEY;
+  async getAIRestaurantMenu(slug: string) {
+    const restData = await RestaurantServices.findBySlug(slug);
 
-    const ai_question = `get me menu of ${restName} ${address} restaurant, put in an array of object as { name, address, menu: [{ name, category, image, description}]. Respond only with valid JSON. No extra text. only from one restaurant, the closest match`;
+    if (!restData) {
+      throw new Error('No restaurant available');
+    }
+
+    const {
+      id: restId,
+      name,
+      address,
+      city,
+      state,
+      country,
+      postal_code,
+    } = restData;
+
+    const wholeAddress = getBuiltAddress({
+      address,
+      city,
+      state,
+      country,
+      postal_code,
+    });
+
+    // const ai_question = `get me menu of ${restName} ${address} restaurant, put in an array of object as { name, address, menu: [{ name, category, image, description}]. Respond only with valid JSON. No extra text. only from one restaurant, the closest match`;
     // the above provide a shorter version somehow
-    //get me complete menu of Peter Luger Steak House US restaurant, put in an array of object as { name, address, menu: [{ name, price, category, top_choice (top choice): true or false}]. Respond only with valid JSON. No extra text. only from one restaurant, the closest match
+    const ai_question = `get me complete menu of ${name} ${wholeAddress} restaurant, put in an array of object as { name, address, menu: [{ name, price, category, top_choice (top choice): true or false}]. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
 
     const openai = new OpenAI({
       apiKey: openAiKey,
     });
 
     const response = await openai.chat.completions.create({
-      model: 'gpt-4.1',
+      model: 'gpt-4o-search-preview',
       messages: [
         {
-          role: 'system',
+          role: 'user',
           content: ai_question,
         },
       ],
-      temperature: 0,
     });
 
-    const data = JSON.parse(response.choices[0].message.content as string);
-    const resp = await RestaurantServices.create({ name: restName });
+    const data = response.choices[0].message.content as string;
+    const cleaned = data.replace(/```json|```/g, '').trim();
+    const dataJson = JSON.parse(cleaned);
+    const results: RestaurantMenuItemsAIResponse[] = [];
 
-    return JSON.parse(response.choices[0].message.content as string);
+    if (dataJson && dataJson.length) {
+      for (let item of dataJson) {
+        const menuItems =
+          await RestaurantMenuItemsFn.findItemsByRestaurantId(restId);
+
+        if (!menuItems) {
+          const restaurantItemPayload = buildRestaurantItemPayload({
+            ...item,
+            restaurant_id: restId,
+          });
+          results.push({
+            name: _get(restaurantItemPayload, 'name'),
+            category: _get(restaurantItemPayload, 'category'),
+            description: _get(restaurantItemPayload, 'description'),
+            restaurant_id: _get(restaurantItemPayload, 'restaurant_id'),
+          });
+          await RestaurantMenuItemsFn.create(restaurantItemPayload);
+        } else {
+          await RestaurantMenuItemsFn.destroyItemByRestaurantId(restId);
+          menuItems.forEach((restaurant: RestaurantItemType) => {
+            results.push({
+              name: _get(restaurant, 'name'),
+              category: _get(restaurant, 'category'),
+              description: _get(restaurant, 'description'),
+              restaurant_id: _get(restaurant, 'restaurant_id'),
+            });
+          });
+        }
+      }
+    }
+    return results;
   },
   async getAIRestaurantList(restName: string) {
     const foundRest = await RestaurantServices.findByName(restName);
@@ -40,12 +105,12 @@ const OpenAiFn = {
         name: _get(rest, 'name'),
         address: _get(rest, 'address'),
         city: _get(rest, 'city'),
+        slug: _get(rest, 'slug'),
         state: _get(rest, 'state'),
         country: _get(rest, 'country'),
         postal_code: _get(rest, 'postal_code'),
       }));
     } else {
-      const openAiKey: string | undefined = process.env.OPENAI_KEY;
       const ai_question = `get the list of all restaurants of with the name exactly ${restName} in nyc as [{ name, address, city, state, country, postal_code}]. Respond only with valid JSON schema. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only. give me only the top 10`;
       const openai = new OpenAI({
         apiKey: openAiKey,
@@ -63,7 +128,7 @@ const OpenAiFn = {
       const cleaned = data.replace(/```json|```/g, '').trim();
       const dataJson = JSON.parse(cleaned);
 
-      const results: ResturantAIResponse[] = [];
+      const results: RestaurantAIResponse[] = [];
 
       if (dataJson && dataJson.length) {
         for (let item of dataJson) {
@@ -71,15 +136,16 @@ const OpenAiFn = {
           const restData = await RestaurantServices.findByName(rest_name);
 
           if (!restData) {
-            results.push({
-              name: _get(item, 'name'),
-              address: _get(item, 'address'),
-              city: _get(item, 'city'),
-              state: _get(item, 'state'),
-              country: _get(item, 'country'),
-              postal_code: _get(item, 'postal_code'),
-            });
             const restaurantPayload = buildRestaurantPayload(item);
+            results.push({
+              name: _get(restaurantPayload, 'name'),
+              address: _get(restaurantPayload, 'address'),
+              city: _get(restaurantPayload, 'city'),
+              slug: _get(restaurantPayload, 'slug'),
+              state: _get(restaurantPayload, 'state'),
+              country: _get(restaurantPayload, 'country'),
+              postal_code: _get(restaurantPayload, 'postal_code'),
+            });
             await RestaurantServices.create(restaurantPayload);
           } else {
             restData.forEach((restaurant: RestaurantType) => {
@@ -88,6 +154,7 @@ const OpenAiFn = {
                 address: _get(restaurant, 'address'),
                 city: _get(restaurant, 'city'),
                 state: _get(restaurant, 'state'),
+                slug: _get(restaurant, 'slug'),
                 country: _get(restaurant, 'country'),
                 postal_code: _get(restaurant, 'postal_code'),
               });

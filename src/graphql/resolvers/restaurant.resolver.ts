@@ -5,7 +5,7 @@ import {
   RestaurantType,
   RestaurantItemType,
   createRestaurantArgInput,
-  ResturantAIResponse,
+  RestaurantAIResponse,
 } from 'types';
 import { RestaurantsOutput } from 'db/models/restaurants';
 import DataLoader from 'dataloader';
@@ -44,7 +44,7 @@ export const restaurantResolvers: IResolvers = {
       _parent: any,
       _args: { name: string },
       context: {
-        aiRestaurant: DataLoader<string, ResturantAIResponse[]>;
+        aiRestaurant: DataLoader<string, RestaurantAIResponse[]>;
       },
     ) => {
       return context.aiRestaurant.load(_args.name);

@@ -47,12 +47,20 @@ async function startApolloServer() {
           ),
         );
 
+        const aiRestaurantMenuItemData = new DataLoader(
+          (slugs: readonly string[]) =>
+            Promise.all(
+              slugs.map((slug) => OpenAiResturant.getAIRestaurantMenu(slug)),
+            ),
+        );
+
         return {
           // user: userData,
           user: null,
           restaurantRestaurantItemsDataLoader,
           restaurantItemRestaurant,
           aiRestaurant: aiRestaurantData,
+          aiRestaurantMenuItem: aiRestaurantMenuItemData,
         };
       },
     }),

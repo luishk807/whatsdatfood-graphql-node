@@ -42,6 +42,16 @@ export type RestaurantType = {
   updated_at: string;
 };
 
+export type RestaurantItemType = {
+  id?: number;
+  name: string;
+  category: string;
+  description: string;
+  restaurant_id?: number;
+  created_at?: string;
+  updated_at?: string;
+};
+
 export type createRestaurantInput = {
   name: string;
   slug: string;
@@ -85,22 +95,21 @@ export type createUserSearchesInputType = {
   restaurant_id: number;
 };
 
-export type RestaurantItemType = {
-  id: number;
-  name: string;
-  category: string;
-  restaurant_id: number;
-  created_at: string;
-  updated_at: string;
-};
-
-export type ResturantAIResponse = {
+export type RestaurantAIResponse = {
   name: string;
   address: string;
   city: string;
+  slug: string;
   state: string;
   country: string;
   postal_code: string;
+};
+
+export type RestaurantMenuItemsAIResponse = {
+  name: string;
+  description: string;
+  category: string;
+  restaurant_id?: number;
 };
 
 export type getBuiltAddressType = (address: addressType) => string;

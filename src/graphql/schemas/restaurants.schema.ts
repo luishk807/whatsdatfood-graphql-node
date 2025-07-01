@@ -3,7 +3,7 @@ export const restaurantDefs = gql`
   type Restaurant {
     id: ID!
     name: String!
-    slug: String!
+    slug: String
     address: String
     city: String
     state: String
@@ -16,6 +16,7 @@ export const restaurantDefs = gql`
     id: ID!
     retaurant_id: ID!
     name: String
+    description: String
     category: String
     created_at: String
     updated_at: String
@@ -28,7 +29,6 @@ export const restaurantDefs = gql`
     restaurant_item_id: ID!
     name: String
     url: String
-    description: String
     category: String
     created_at: String
     updated_at: String
@@ -36,13 +36,21 @@ export const restaurantDefs = gql`
     restaurantItem: RestaurantMenuItems
   }
 
-  type ResturantAIResponse {
+  type RestaurantAIResponse {
     name: String!
     address: String!
     city: String!
+    slug: String
     state: String!
     country: String!
     postal_code: String!
+  }
+
+  type RestaurantMenuItemsAIResponse {
+    name: String
+    category: String
+    description: String
+    images: [RestaurantMenuItemImages]
   }
 
   input createRestauranInput {
@@ -69,7 +77,8 @@ export const restaurantDefs = gql`
     restaurants: [Restaurant]
     restaurantBySlug(slug: String): Restaurant
     restaurantByName(name: String): [Restaurant]
-    aiRestaurant(name: String): [ResturantAIResponse]
+    aiRestaurant(name: String): [RestaurantAIResponse]
+    aiRestaurantMenus(slug: String): [RestaurantMenuItemsAIResponse]
   }
 
   extend type Mutation {
