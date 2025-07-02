@@ -1,4 +1,5 @@
 import DataLoader from 'dataloader';
+import { RestaurantsOutput } from 'db/models/restaurants';
 
 import {
   RestaurantType,
@@ -13,4 +14,8 @@ export interface GraphQLServerContext {
   restaurantItemRestaurant: DataLoader<number, RestaurantType | null>;
   aiRestaurantNameList: DataLoader<string, RestaurantAIResponse[] | []>;
   aiRestaurantDataBySlug: DataLoader<string, RestaurantAIResponse>;
+}
+
+export interface RestaurantsWithItemsOutput extends RestaurantsOutput {
+  restRestaurantItems: RestaurantItemType[];
 }

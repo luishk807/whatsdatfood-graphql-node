@@ -1,18 +1,14 @@
 import Base from './base.repository';
-import { RestaurantType, RestaurantItemType } from 'types';
 import { Op } from 'sequelize';
 import { RestaurantsInput } from 'db/models/restaurants';
 import Restaurants from 'db/models/restaurants';
 import db from 'db/models';
 import { dbAliases } from 'db/index';
 import { LIMIT, PAGE } from 'constants/sequelize';
-import { getPageOffset } from 'helpers/sequelize';
+import { getPageOffset, normalizeApostrophes } from 'helpers/sequelize';
 import { _get } from 'helpers';
-import { RestaurantsOutput } from 'db/models/restaurants';
+import { RestaurantsWithItemsOutput } from 'interfaces';
 
-export interface RestaurantsWithItemsOutput extends RestaurantsOutput {
-  restRestaurantItems: RestaurantItemType[];
-}
 class RestaurantsRepo extends Base {
   constructor() {
     super(Restaurants);
@@ -93,11 +89,12 @@ class RestaurantsRepo extends Base {
 
   async findByName(name: string, page: number = PAGE, limit: number = LIMIT) {
     console.log(db.aliases);
+    const normalizedName = normalizeApostrophes(name); // fix issues with names with apostrophe
     const offset = getPageOffset(limit, page);
     return await db.Restaurants.findAll({
       where: {
         name: {
-          [Op.iLike]: `%${name.toLowerCase()}%`,
+          [Op.iLike]: `%${normalizedName.toLowerCase()}%`,
         },
       },
       include: [
