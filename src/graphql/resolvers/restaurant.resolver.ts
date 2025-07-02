@@ -4,16 +4,18 @@ import { IResolvers } from '@graphql-tools/utils'; // or your GraphQL resolver t
 import {
   RestaurantType,
   RestaurantItemType,
+  RestaurantMenuItemsAIResponse,
   createRestaurantArgInput,
   RestaurantAIResponse,
 } from 'types';
+import { dbAliases } from 'db/index';
 import { RestaurantsOutput } from 'db/models/restaurants';
 import DataLoader from 'dataloader';
 import { NotFoundError } from 'graphql/customErrors';
 
 export const restaurantResolvers: IResolvers = {
   Query: {
-    restaurants: async (): Promise<RestaurantType[]> => {
+    restaurants: async (): Promise<RestaurantsOutput[]> => {
       const resp = await RestaurantServices.getAll();
       if (!resp) {
         throw new NotFoundError('No restaurant available');
@@ -49,20 +51,38 @@ export const restaurantResolvers: IResolvers = {
     ) => {
       return context.aiRestaurant.load(_args.name);
     },
+    // aiRestaurantBySlug: async (
+    //   _parent: any,
+    //   args: { slug: string },
+    //   context: {
+    //     aiRestaurantBySlug: DataLoader<string, RestaurantAIResponse[]>;
+    //   },
+    // ): Promise<RestaurantsOutput | null> => {
+    //   return context.aiRestaurantBySlug.load(args.slug);
+    // },
   },
   Restaurant: {
-    items: async (
-      _parent: RestaurantType,
+    restRestaurantItems: async (
+      _parent: RestaurantAIResponse,
       _args: any,
-      context: {
-        restaurantRestaurantItemsDataLoader: DataLoader<
-          number,
-          RestaurantItemType[]
-        >;
-      },
       {},
-    ): Promise<RestaurantItemType[]> => {
-      return context.restaurantRestaurantItemsDataLoader.load(_parent.id);
+    ): Promise<RestaurantMenuItemsAIResponse[]> => {
+      const key = dbAliases.restaurant
+        .restaurantItems as keyof RestaurantAIResponse;
+      const value = _parent[key];
+      return Array.isArray(value) ? value : [];
+    },
+  },
+  RestaurantAIResponse: {
+    restRestaurantItems: async (
+      _parent: RestaurantAIResponse,
+      _args: any,
+      {},
+    ): Promise<RestaurantMenuItemsAIResponse[]> => {
+      const key = dbAliases.restaurant
+        .restaurantItems as keyof RestaurantAIResponse;
+      const value = _parent[key];
+      return Array.isArray(value) ? value : [];
     },
   },
   RestaurantMenuItems: {
@@ -73,7 +93,11 @@ export const restaurantResolvers: IResolvers = {
         restaurantItemRestaurant: DataLoader<number, RestaurantType | null>;
       },
     ): Promise<RestaurantType | null> => {
-      return context.restaurantItemRestaurant.load(parent.restaurant_id);
+      if (parent.restaurant_id) {
+        return context.restaurantItemRestaurant.load(parent.restaurant_id);
+      } else {
+        return null;
+      }
     },
     images: (): any[] => {
       return [];

@@ -47,7 +47,7 @@ async function startApolloServer() {
           ),
         );
 
-        const aiRestaurantMenuItemData = new DataLoader(
+        const aiRestaurantBySlugData = new DataLoader(
           (slugs: readonly string[]) =>
             Promise.all(
               slugs.map((slug) => OpenAiResturant.getAIRestaurantMenu(slug)),
@@ -60,7 +60,7 @@ async function startApolloServer() {
           restaurantRestaurantItemsDataLoader,
           restaurantItemRestaurant,
           aiRestaurant: aiRestaurantData,
-          aiRestaurantMenuItem: aiRestaurantMenuItemData,
+          // aiRestaurantBySlug: aiRestaurantBySlugData,
         };
       },
     }),

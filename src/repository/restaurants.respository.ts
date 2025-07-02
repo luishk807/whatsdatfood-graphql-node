@@ -1,15 +1,29 @@
 import Base from './base.repository';
-import { RestaurantsOutput } from '../db/models/restaurants';
+import { RestaurantsOutput } from 'db/models/restaurants';
+import RestaurantMenuItems from 'db/models/restaurantMenuItems';
 import { Op, Sequelize, literal, QueryTypes } from 'sequelize';
-import { RestaurantsInput } from '../db/models/restaurants';
-import Restaurants from '../db/models/restaurants';
-import db from '../db/models';
-import { LIMIT, OFFSET } from '../constants/sequelize';
-import { getPageOffset } from '../helpers/sequelize';
-import { _get } from '../helpers';
+import { RestaurantsInput } from 'db/models/restaurants';
+import Restaurants from 'db/models/restaurants';
+import db from 'db/models';
+import { dbAliases } from 'db/index';
+import { LIMIT, PAGE } from 'constants/sequelize';
+import { getPageOffset } from 'helpers/sequelize';
+import { _get } from 'helpers';
 class RestaurantsRepo extends Base {
   constructor() {
     super(Restaurants);
+  }
+
+  async getAll(limit: number = LIMIT, page: number = PAGE) {
+    const offset = getPageOffset(limit, page);
+    return await this.model.findAll({
+      limit,
+      offset,
+      include: {
+        model: RestaurantMenuItems,
+        as: dbAliases.restaurant.restaurantItems,
+      },
+    });
   }
 
   async create(payload: RestaurantsInput) {
@@ -41,13 +55,17 @@ class RestaurantsRepo extends Base {
       where: {
         slug: slug,
       },
+      include: {
+        model: RestaurantMenuItems,
+        as: dbAliases.restaurant.restaurantItems,
+      },
     });
   }
 
   async findByNameMatch(
     name: string,
-    page: number = LIMIT,
-    limit: number = OFFSET,
+    page: number = PAGE,
+    limit: number = LIMIT,
   ) {
     const offset = getPageOffset(limit, page);
     return await this.model.findAll({
@@ -56,29 +74,33 @@ class RestaurantsRepo extends Base {
           [Op.iLike]: `%${name}%`,
         },
       },
+      include: {
+        model: db.RestaurantMenuItems,
+        as: dbAliases.restaurant.restaurantItems,
+      },
       limit: limit,
       offset: offset,
     });
   }
 
-  async findByName(name: string, page: number = LIMIT, limit: number = OFFSET) {
+  async findByName(name: string, page: number = PAGE, limit: number = LIMIT) {
+    console.log(db.aliases);
     const offset = getPageOffset(limit, page);
-    return await db.sequelize.query(
-      `SELECT 
-        * 
-      FROM 
-        restaurants 
-      WHERE lower(name) ilike :name 
-    `,
-      {
-        replacements: {
-          name: `%${name.toLocaleLowerCase()}%`,
+    return await db.Restaurants.findAll({
+      where: {
+        name: {
+          [Op.iLike]: `%${name.toLowerCase()}%`,
         },
-        limit: limit,
-        offset: offset,
-        type: QueryTypes.SELECT,
       },
-    );
+      include: [
+        {
+          model: db.RestaurantMenuItems,
+          as: dbAliases.restaurant.restaurantItems, // make sure this matches your association alias
+        },
+      ],
+      limit,
+      offset,
+    });
   }
 }
 

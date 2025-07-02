@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelizeConnection from 'db/sequelize';
+import { dbAliases } from 'db/index';
 
 interface RestaurantInterface {
   id: number;
@@ -38,7 +39,10 @@ class Restaurants
   public readonly deleted_at!: Date;
 
   static associate(models: any): void {
-    Restaurants.hasMany(models.RestaurantMenuItems);
+    Restaurants.hasMany(models.RestaurantMenuItems, {
+      foreignKey: 'restaurant_id',
+      as: dbAliases.restaurant.restaurantItems,
+    });
   }
 }
 

@@ -1,7 +1,7 @@
 import Base from './base.repository';
 import { RestaurantMenuItemsInput } from '../db/models/restaurantMenuItems';
 import RestaurantMenuItems from '../db/models/restaurantMenuItems';
-import { LIMIT } from '../constants/sequelize';
+import { LIMIT, PAGE } from '../constants/sequelize';
 import db from '../db/models';
 import { getPageOffset } from '../helpers/sequelize';
 class RestaurantMenuItemsRepo extends Base {
@@ -11,7 +11,7 @@ class RestaurantMenuItemsRepo extends Base {
   async findAllItemsByRestaurantId(
     id: number,
     limit: number = LIMIT,
-    page: number = 1,
+    page: number = PAGE,
   ) {
     const offset = getPageOffset(limit, page);
     return await this.model.findAll({

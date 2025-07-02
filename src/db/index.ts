@@ -10,3 +10,12 @@ export const initDB = async () => {
     console.error('Unable to conecct to the database: ', err);
   }
 };
+
+export const dbAliases = {
+  restaurant: {
+    restaurantItems: 'restRestaurantItems',
+  },
+  restaurantItems: {
+    restaurant: 'restaurantItemRestaurant',
+  },
+};

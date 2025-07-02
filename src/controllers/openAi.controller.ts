@@ -6,12 +6,9 @@ export const getAIMenu = async (
   next: NextFunction,
 ) => {
   try {
-    const { restaurant, address } = req.query;
+    const { slug } = req.query;
 
-    const resp = await OpenAiService.getAIMenu(
-      restaurant as string,
-      address as string,
-    );
+    const resp = await OpenAiService.getAIRestaurantMenu(slug as string);
     res.json(resp);
   } catch (error) {
     console.error(error);

@@ -10,6 +10,7 @@ import {
   buildRestaurantPayload,
   buildRestaurantItemPayload,
 } from 'helpers/restaurants.sequelize';
+import { dbAliases } from 'db/index';
 import RestaurantServices from 'services/restaurants.service';
 import { getBuiltAddress } from 'helpers';
 import RestaurantMenuItemsFn from 'services/restaurantMenuItems.service';
@@ -42,6 +43,7 @@ const OpenAiFn = {
       postal_code,
     });
 
+    console.log(restData);
     // const ai_question = `get me menu of ${restName} ${address} restaurant, put in an array of object as { name, address, menu: [{ name, category, image, description}]. Respond only with valid JSON. No extra text. only from one restaurant, the closest match`;
     // the above provide a shorter version somehow
     const ai_question = `get me complete menu of ${name} ${wholeAddress} restaurant, put in an array of object as { name, address, menu: [{ name, price, category, top_choice (top choice): true or false}]. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
@@ -95,13 +97,23 @@ const OpenAiFn = {
         }
       }
     }
-    return results;
+    return {
+      name,
+      address,
+      city,
+      state,
+      country,
+      postal_code,
+      items: results,
+    };
   },
   async getAIRestaurantList(restName: string) {
     const foundRest = await RestaurantServices.findByName(restName);
 
-    if (foundRest.length) {
+    if (foundRest && foundRest.length) {
+      const itemKey = dbAliases.restaurant.restaurantItems;
       return foundRest.map((rest: RestaurantType) => ({
+        id: _get(rest, 'id'),
         name: _get(rest, 'name'),
         address: _get(rest, 'address'),
         city: _get(rest, 'city'),
@@ -109,6 +121,7 @@ const OpenAiFn = {
         state: _get(rest, 'state'),
         country: _get(rest, 'country'),
         postal_code: _get(rest, 'postal_code'),
+        [itemKey]: _get(rest, itemKey),
       }));
     } else {
       const ai_question = `get the list of all restaurants of with the name exactly ${restName} in nyc as [{ name, address, city, state, country, postal_code}]. Respond only with valid JSON schema. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only. give me only the top 10`;

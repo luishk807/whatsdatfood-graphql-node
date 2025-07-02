@@ -1,17 +1,6 @@
 import { gql } from 'graphql-tag';
+import db from 'db/models';
 export const restaurantDefs = gql`
-  type Restaurant {
-    id: ID!
-    name: String!
-    slug: String
-    address: String
-    city: String
-    state: String
-    country: String
-    postal_code: String
-    items: [RestaurantMenuItems]
-  }
-
   type RestaurantMenuItems {
     id: ID!
     retaurant_id: ID!
@@ -24,6 +13,19 @@ export const restaurantDefs = gql`
     restaurant: Restaurant
     images: [RestaurantMenuItemImages]
   }
+
+  type Restaurant {
+    id: ID!
+    name: String!
+    slug: String
+    address: String
+    city: String
+    state: String
+    country: String
+    postal_code: String
+    restRestaurantItems: [RestaurantMenuItems]
+  }
+
   type RestaurantMenuItemImages {
     id: ID!
     restaurant_item_id: ID!
@@ -36,6 +38,13 @@ export const restaurantDefs = gql`
     restaurantItem: RestaurantMenuItems
   }
 
+  type RestaurantMenuItemsAIResponse {
+    name: String
+    category: String
+    description: String
+    images: [RestaurantMenuItemImages]
+  }
+
   type RestaurantAIResponse {
     name: String!
     address: String!
@@ -44,13 +53,7 @@ export const restaurantDefs = gql`
     state: String!
     country: String!
     postal_code: String!
-  }
-
-  type RestaurantMenuItemsAIResponse {
-    name: String
-    category: String
-    description: String
-    images: [RestaurantMenuItemImages]
+    restRestaurantItems: [RestaurantMenuItems]
   }
 
   input createRestauranInput {
@@ -78,7 +81,7 @@ export const restaurantDefs = gql`
     restaurantBySlug(slug: String): Restaurant
     restaurantByName(name: String): [Restaurant]
     aiRestaurant(name: String): [RestaurantAIResponse]
-    aiRestaurantMenus(slug: String): [RestaurantMenuItemsAIResponse]
+    # aiRestaurantBySlug(slug: String): [RestaurantAIResponse]
   }
 
   extend type Mutation {
