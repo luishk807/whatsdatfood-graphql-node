@@ -22,44 +22,24 @@ export const restaurantResolvers: IResolvers = {
       }
       return resp;
     },
-    restaurantBySlug: async (
+    aiRestaurantBySlug: async (
       _parent: any,
       args: { slug: string },
-    ): Promise<RestaurantsOutput | null> => {
-      const resp = await RestaurantServices.findBySlug(args.slug);
-      if (!resp) {
-        throw new NotFoundError('Restaurant not found');
-      }
-      return resp;
+      context: {
+        aiRestaurantDataBySlug: DataLoader<string, RestaurantAIResponse>;
+      },
+    ): Promise<RestaurantAIResponse | null> => {
+      return context.aiRestaurantDataBySlug.load(args.slug);
     },
-    restaurantByName: async (
-      _parent: any,
-      args: { name: string },
-    ): Promise<RestaurantsOutput | null> => {
-      const resp = await RestaurantServices.findByName(args.name);
-      if (!resp) {
-        throw new NotFoundError('Restaurant not found');
-      }
-      return resp;
-    },
-    aiRestaurant: async (
+    aiRestaurantNameList: async (
       _parent: any,
       _args: { name: string },
       context: {
-        aiRestaurant: DataLoader<string, RestaurantAIResponse[]>;
+        aiRestaurantNameList: DataLoader<string, RestaurantAIResponse[]>;
       },
     ) => {
-      return context.aiRestaurant.load(_args.name);
+      return context.aiRestaurantNameList.load(_args.name);
     },
-    // aiRestaurantBySlug: async (
-    //   _parent: any,
-    //   args: { slug: string },
-    //   context: {
-    //     aiRestaurantBySlug: DataLoader<string, RestaurantAIResponse[]>;
-    //   },
-    // ): Promise<RestaurantsOutput | null> => {
-    //   return context.aiRestaurantBySlug.load(args.slug);
-    // },
   },
   Restaurant: {
     restRestaurantItems: async (
@@ -75,20 +55,20 @@ export const restaurantResolvers: IResolvers = {
   },
   RestaurantAIResponse: {
     restRestaurantItems: async (
-      _parent: RestaurantAIResponse,
-      _args: any,
+      parent: RestaurantAIResponse,
+      args: any,
       {},
     ): Promise<RestaurantMenuItemsAIResponse[]> => {
       const key = dbAliases.restaurant
         .restaurantItems as keyof RestaurantAIResponse;
-      const value = _parent[key];
+      const value = parent[key];
       return Array.isArray(value) ? value : [];
     },
   },
   RestaurantMenuItems: {
-    restaurant: async (
+    restaurantItemRest: async (
       parent: RestaurantItemType,
-      _args: any,
+      args: any,
       context: {
         restaurantItemRestaurant: DataLoader<number, RestaurantType | null>;
       },
@@ -99,7 +79,7 @@ export const restaurantResolvers: IResolvers = {
         return null;
       }
     },
-    images: (): any[] => {
+    restaurantItemRestImages: (): any[] => {
       return [];
     },
   },

@@ -1,4 +1,5 @@
 'use strict';
+import { DATE } from 'sequelize';
 import { QueryInterface, Sequelize, DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
@@ -29,9 +30,21 @@ export default {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      url: {
+      url_m: {
         type: DataTypes.TEXT,
         allowNull: false,
+      },
+      url_s: {
+        type: DataTypes.TEXT,
+      },
+      owner: {
+        type: DataTypes.STRING,
+      },
+      license: {
+        type: DataTypes.STRING,
+      },
+      flickr_id: {
+        type: DataTypes.STRING,
       },
       created_at: {
         type: DataTypes.DATE,

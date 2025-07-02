@@ -25,6 +25,10 @@ export default {
         },
         onDelete: 'CASCADE',
       },
+      top_choice: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
       name: {
         allowNull: false,
         type: DataTypes.STRING,

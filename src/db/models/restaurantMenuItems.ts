@@ -1,11 +1,13 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelizeConnection from 'db/sequelize';
-
+import { dbAliases } from 'db/index';
 interface RestaurantsMenuItemsAttributes {
   id: bigint;
   restaurant_id: bigint;
   name: string;
-  description?: Text;
+  top_choice?: boolean;
+  description?: string;
+  price?: number;
   category?: string;
   created_at?: Date;
   updated_at?: Date;
@@ -24,9 +26,11 @@ class RestaurantMenuItems
 {
   public id!: bigint;
   public name!: string;
+  public top_choice!: boolean;
   public restaurant_id!: bigint;
   public category!: string;
-  public description!: Text;
+  public price?: number;
+  public description!: string;
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
@@ -34,7 +38,7 @@ class RestaurantMenuItems
   static associate(models: any): void {
     RestaurantMenuItems.belongsTo(models.Restaurants, {
       foreignKey: 'restaurant_id',
-      as: 'restaurantMenuItemsRestaurant',
+      as: dbAliases.restaurantItems.restaurant,
     });
   }
 }
@@ -59,8 +63,15 @@ RestaurantMenuItems.init(
       allowNull: false,
       type: DataTypes.STRING,
     },
+    top_choice: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     description: {
       type: DataTypes.TEXT,
+    },
+    price: {
+      type: DataTypes.DOUBLE,
     },
     category: {
       type: DataTypes.STRING,

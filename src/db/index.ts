@@ -16,6 +16,10 @@ export const dbAliases = {
     restaurantItems: 'restRestaurantItems',
   },
   restaurantItems: {
-    restaurant: 'restaurantItemRestaurant',
+    restaurant: 'restaurantItemRest',
+    restaurantItemImages: 'restaurantItemRestImages',
+  },
+  restaurantItemImages: {
+    restaurantItem: 'restaurantItemImageRestItem',
   },
 };

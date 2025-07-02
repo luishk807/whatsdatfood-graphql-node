@@ -29,14 +29,34 @@ export type UserSearchesType = {
   restaurant_id: number;
 };
 
+export type RestaurantMenuItemImages = {
+  id: number;
+  restaurant_item_id: number;
+  name: string;
+  url_m: string;
+  url_s: string;
+  owner: String;
+  license: String;
+  flickr_id: String;
+  category: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string;
+  restaurantItemImageRestItem: RestaurantItemType;
+};
+
 export type RestaurantItemType = {
   id?: number;
   name: string;
   category: string;
+  price?: number;
+  top_choice?: boolean;
   description: string;
   restaurant_id?: number;
   created_at?: string;
   updated_at?: string;
+  restaurantItemRest?: RestaurantType;
+  restaurantItemRestImages?: [RestaurantMenuItemImages];
 };
 
 export type RestaurantType = {
@@ -99,6 +119,8 @@ export type createUserSearchesInputType = {
 export type RestaurantMenuItemsAIResponse = {
   name: string;
   description: string;
+  top_choice?: boolean;
+  price?: number;
   category: string;
   restaurant_id?: number;
 };

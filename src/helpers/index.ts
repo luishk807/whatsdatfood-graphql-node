@@ -11,6 +11,19 @@ export const getSlug = (value: string) => {
   return getStrToText(slug);
 };
 
+export const convertStringToNumber = (str: string) => {
+  let price = 0;
+
+  if (str) {
+    if (typeof str === 'number') {
+      price = str;
+    } else if (typeof str === 'string') {
+      const cleaned = str.replace(/[^0-9.]/g, '');
+      price = cleaned && !isNaN(Number(cleaned)) ? parseFloat(cleaned) : 0;
+    }
+  }
+  return price;
+};
 export const getBuiltAddress: getBuiltAddressType = (address) => {
   let new_address = '';
   const { address: c_address, city, country, state, postal_code } = address;

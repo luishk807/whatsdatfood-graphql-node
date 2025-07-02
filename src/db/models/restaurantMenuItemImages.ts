@@ -4,8 +4,12 @@ import sequelizeConnection from 'db/sequelize';
 interface RestaurantsMenuItemImagesAttributes {
   id: bigint;
   restaurant_menu_item_id?: bigint;
-  name?: Text;
-  url?: Text;
+  name?: string;
+  url_m?: string;
+  url_s?: string;
+  owner?: string;
+  license?: string;
+  flickr_id?: string;
   category?: string;
   created_at?: Date;
   updated_at?: Date;
@@ -27,8 +31,12 @@ class RestaurantMenuItemImages
 {
   public id!: bigint;
   public restaurantMenuItemId!: bigint;
-  public name!: Text;
-  public url!: Text;
+  public name!: string;
+  public url_m!: string;
+  public url_s!: string;
+  public owner!: string;
+  public license!: string;
+  public flickr_id!: string;
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
@@ -62,9 +70,21 @@ RestaurantMenuItemImages.init(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    url: {
+    owner: {
+      type: DataTypes.STRING,
+    },
+    license: {
+      type: DataTypes.STRING,
+    },
+    flickr_id: {
+      type: DataTypes.STRING,
+    },
+    url_m: {
       type: DataTypes.TEXT,
       allowNull: false,
+    },
+    url_s: {
+      type: DataTypes.TEXT,
     },
     created_at: {
       type: DataTypes.DATE,

@@ -11,6 +11,6 @@ export interface GraphQLServerContext {
   user: UserType | null;
   restaurantRestaurantItemsDataLoader: DataLoader<number, RestaurantItemType[]>;
   restaurantItemRestaurant: DataLoader<number, RestaurantType | null>;
-  aiRestaurant: DataLoader<string, RestaurantAIResponse[] | []>;
-  // aiRestaurantBySlug: DataLoader<string, RestaurantAIResponse[] | []>;
+  aiRestaurantNameList: DataLoader<string, RestaurantAIResponse[] | []>;
+  aiRestaurantDataBySlug: DataLoader<string, RestaurantAIResponse>;
 }

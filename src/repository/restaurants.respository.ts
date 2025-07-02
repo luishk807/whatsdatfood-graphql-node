@@ -1,7 +1,6 @@
 import Base from './base.repository';
-import { RestaurantsOutput } from 'db/models/restaurants';
-import RestaurantMenuItems from 'db/models/restaurantMenuItems';
-import { Op, Sequelize, literal, QueryTypes } from 'sequelize';
+import { RestaurantType, RestaurantItemType } from 'types';
+import { Op } from 'sequelize';
 import { RestaurantsInput } from 'db/models/restaurants';
 import Restaurants from 'db/models/restaurants';
 import db from 'db/models';
@@ -9,6 +8,11 @@ import { dbAliases } from 'db/index';
 import { LIMIT, PAGE } from 'constants/sequelize';
 import { getPageOffset } from 'helpers/sequelize';
 import { _get } from 'helpers';
+import { RestaurantsOutput } from 'db/models/restaurants';
+
+export interface RestaurantsWithItemsOutput extends RestaurantsOutput {
+  restRestaurantItems: RestaurantItemType[];
+}
 class RestaurantsRepo extends Base {
   constructor() {
     super(Restaurants);
@@ -19,10 +23,12 @@ class RestaurantsRepo extends Base {
     return await this.model.findAll({
       limit,
       offset,
-      include: {
-        model: RestaurantMenuItems,
-        as: dbAliases.restaurant.restaurantItems,
-      },
+      include: [
+        {
+          model: db.RestaurantMenuItems,
+          as: dbAliases.restaurant.restaurantItems,
+        },
+      ],
     });
   }
 
@@ -50,16 +56,16 @@ class RestaurantsRepo extends Base {
     }
   }
 
-  async findBySlug(slug: string): Promise<RestaurantsOutput> {
-    return await this.model.findOne({
+  async findBySlug(slug: string): Promise<RestaurantsWithItemsOutput> {
+    return (await this.model.findOne({
       where: {
         slug: slug,
       },
       include: {
-        model: RestaurantMenuItems,
+        model: db.RestaurantMenuItems,
         as: dbAliases.restaurant.restaurantItems,
       },
-    });
+    })) as unknown as RestaurantsWithItemsOutput;
   }
 
   async findByNameMatch(
@@ -74,10 +80,12 @@ class RestaurantsRepo extends Base {
           [Op.iLike]: `%${name}%`,
         },
       },
-      include: {
-        model: db.RestaurantMenuItems,
-        as: dbAliases.restaurant.restaurantItems,
-      },
+      include: [
+        {
+          model: db.RestaurantMenuItems,
+          as: dbAliases.restaurant.restaurantItems,
+        },
+      ],
       limit: limit,
       offset: offset,
     });

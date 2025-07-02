@@ -41,16 +41,19 @@ async function startApolloServer() {
             Promise.all(ids.map((id) => RestaurantServices.findById(id))),
         );
 
-        const aiRestaurantData = new DataLoader((names: readonly string[]) =>
-          Promise.all(
-            names.map((name) => OpenAiResturant.getAIRestaurantList(name)),
-          ),
+        const aiRestaurantNameListData = new DataLoader(
+          (names: readonly string[]) =>
+            Promise.all(
+              names.map((name) => OpenAiResturant.getAIRestaurantList(name)),
+            ),
         );
 
-        const aiRestaurantBySlugData = new DataLoader(
+        const aiRestaurantDataBySlugData = new DataLoader(
           (slugs: readonly string[]) =>
             Promise.all(
-              slugs.map((slug) => OpenAiResturant.getAIRestaurantMenu(slug)),
+              slugs.map((slug) =>
+                OpenAiResturant.getAIRestaurantMenuBySlug(slug),
+              ),
             ),
         );
 
@@ -59,8 +62,8 @@ async function startApolloServer() {
           user: null,
           restaurantRestaurantItemsDataLoader,
           restaurantItemRestaurant,
-          aiRestaurant: aiRestaurantData,
-          // aiRestaurantBySlug: aiRestaurantBySlugData,
+          aiRestaurantNameList: aiRestaurantNameListData,
+          aiRestaurantDataBySlug: aiRestaurantDataBySlugData,
         };
       },
     }),

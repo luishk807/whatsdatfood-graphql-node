@@ -8,7 +8,7 @@ export const getAIMenu = async (
   try {
     const { slug } = req.query;
 
-    const resp = await OpenAiService.getAIRestaurantMenu(slug as string);
+    const resp = await OpenAiService.getAIRestaurantMenuBySlug(slug as string);
     res.json(resp);
   } catch (error) {
     console.error(error);

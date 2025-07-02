@@ -1,15 +1,15 @@
 import Base from 'repository/base.repository';
-import { RestaurantMenuItemsInput } from 'db/models/restaurantMenuItems';
-import RestaurantMenuItems from 'db/models/restaurantMenuItems';
+import { RestaurantMenuItemImagesInput } from 'db/models/restaurantMenuItemImages';
+import RestaurantMenuItemImages from 'db/models/restaurantMenuItemImages';
 import { LIMIT, PAGE } from 'constants/sequelize';
 import db from 'db/models';
 import { dbAliases } from 'db/index';
 import { getPageOffset } from 'helpers/sequelize';
 class RestaurantMenuItemsRepo extends Base {
   constructor() {
-    super(RestaurantMenuItems);
+    super(RestaurantMenuItemImages);
   }
-  async findAllItemsByRestaurantId(
+  async findAllItemImagesByRestItemId(
     id: number,
     limit: number = LIMIT,
     page: number = PAGE,
@@ -17,18 +17,12 @@ class RestaurantMenuItemsRepo extends Base {
     const offset = getPageOffset(limit, page);
     return await this.model.findAll({
       where: {
-        restaurant_id: id,
+        restaurant_menu_item_id: id,
       },
-      include: [
-        {
-          model: db.RestaurantMenuItems,
-          as: dbAliases.restaurantItems.restaurant,
-        },
-        {
-          model: db.RestaurantItemImages,
-          as: dbAliases.restaurantItems.restaurantItemImages,
-        },
-      ],
+      include: {
+        model: db.RestaurantMenuItems,
+        as: dbAliases.restaurantItemImages.restaurantItem,
+      },
       limit: limit,
       offset: offset,
     });
@@ -40,7 +34,7 @@ class RestaurantMenuItemsRepo extends Base {
     });
   }
 
-  async create(payload: RestaurantMenuItemsInput) {
+  async create(payload: RestaurantMenuItemImagesInput) {
     const t = await db.sequelize.transaction();
 
     try {
@@ -52,7 +46,7 @@ class RestaurantMenuItemsRepo extends Base {
       return err;
     }
   }
-  async bulkCreate(payload: RestaurantMenuItemsInput[]) {
+  async bulkCreate(payload: RestaurantMenuItemImagesInput[]) {
     const t = await db.sequelize.transaction();
 
     try {
