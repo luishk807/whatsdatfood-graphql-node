@@ -20,6 +20,69 @@ const itemKey = dbAliases.restaurant
   .restaurantItems as keyof RestaurantAIResponse;
 
 const OpenAiFn = {
+  async askAIQuestion(ai_question: string) {
+    const openai = new OpenAI({
+      apiKey: openAiKey,
+    });
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o-search-preview',
+      messages: [
+        {
+          role: 'user',
+          content: ai_question,
+        },
+      ],
+    });
+
+    console.log('ask ai', response.choices[0].message);
+    const data = response.choices[0].message.content as string;
+
+    const jsonMatch = data.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      console.error('AI response has no JSON block:', data);
+      throw new Error('No JSON found in AI response');
+    }
+
+    const jsonStr = jsonMatch[0];
+
+    // if (!jsonStr.trim().endsWith('}') && !jsonStr.trim().endsWith(']')) {
+    //   console.error('AI JSON block appears truncated:', jsonStr);
+    //   throw new Error('AI response incomplete or truncated.');
+    // }
+    // const cleaned = data.replace(/```json|```/g, '').trim();
+    let dataJson;
+    try {
+      dataJson = JSON.parse(jsonStr);
+    } catch (err) {
+      console.error('Failed to parse AI response:', jsonStr);
+      throw new Error('Invalid JSON returned from OpenAI.');
+    }
+
+    const menu = _get(dataJson, '0.menu');
+    return menu;
+  },
+  async fetchFullMenuPaginated(ai_question: string, batchSize: number = 20) {
+    const results = [];
+    let offset = 0;
+
+    while (true) {
+      const question = `${ai_question} from item ${offset + 1} with ${batchSize} items.`;
+
+      const response = await this.askAIQuestion(question); // Your wrapped OpenAI call
+      console.log('results', results);
+      console.log(response.length < batchSize);
+
+      if (!response || response.length === 0) break;
+
+      results.push(...response);
+      offset += response.length;
+
+      if (response.length < batchSize) break;
+    }
+
+    return results;
+  },
   async getAIRestaurantMenuBySlug(slug: string) {
     const restData = await RestaurantServices.findBySlug(slug);
     const results: RestaurantItemType[] = [];
@@ -60,45 +123,9 @@ const OpenAiFn = {
         });
       });
     } else {
-      const ai_question = `get me the first 20 menu items of ${name} ${wholeAddress} restaurant, put in an array of object as { name, address, menu: [{ name, price, description, category, top_choice: true or false}]. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
+      const ai_question = `get me the menu of ${name} ${wholeAddress} restaurant, put in an array of object as { name, address, menu: [{ name, price, description, category, top_choice: true or false}]. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
 
-      const openai = new OpenAI({
-        apiKey: openAiKey,
-      });
-
-      const response = await openai.chat.completions.create({
-        model: 'gpt-4o-search-preview',
-        messages: [
-          {
-            role: 'user',
-            content: ai_question,
-          },
-        ],
-      });
-      const data = response.choices[0].message.content as string;
-
-      const jsonMatch = data.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
-      if (!jsonMatch) {
-        console.error('AI response has no JSON block:', data);
-        throw new Error('No JSON found in AI response');
-      }
-
-      const jsonStr = jsonMatch[0];
-
-      if (!jsonStr.trim().endsWith('}') && !jsonStr.trim().endsWith(']')) {
-        console.error('AI JSON block appears truncated:', jsonStr);
-        throw new Error('AI response incomplete or truncated.');
-      }
-      // const cleaned = data.replace(/```json|```/g, '').trim();
-      let dataJson;
-      try {
-        dataJson = JSON.parse(jsonStr);
-      } catch (err) {
-        console.error('Failed to parse AI response:', jsonStr);
-        throw new Error('Invalid JSON returned from OpenAI.');
-      }
-
-      const menu = _get(dataJson, '0.menu');
+      const menu = await this.fetchFullMenuPaginated(ai_question);
 
       if (menu && menu.length) {
         for (let item of menu) {
@@ -148,22 +175,24 @@ const OpenAiFn = {
       }));
     } else {
       console.log('using ai');
-      const ai_question = `get the list of all restaurants of with the name exactly ${restName} in nyc as [{ name, address, city, state, country, postal_code}]. Respond only with valid JSON schema. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only. give me only the top 10`;
-      const openai = new OpenAI({
-        apiKey: openAiKey,
-      });
-      const response = await openai.chat.completions.create({
-        model: 'gpt-4o-search-preview',
-        messages: [
-          {
-            role: 'user',
-            content: ai_question,
-          },
-        ],
-      });
-      const data = response.choices[0].message.content as string;
-      const cleaned = data.replace(/```json|```/g, '').trim();
-      const dataJson = JSON.parse(cleaned);
+      const ai_question = `get the list of restaurants of with the name exactly ${restName} in nyc as [{ name, address, city, state, country, postal_code}]. Respond only with valid JSON schema. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
+      // const openai = new OpenAI({
+      //   apiKey: openAiKey,
+      // });
+      // const response = await openai.chat.completions.create({
+      //   model: 'gpt-4o-search-preview',
+      //   messages: [
+      //     {
+      //       role: 'user',
+      //       content: ai_question,
+      //     },
+      //   ],
+      // });
+      // const data = response.choices[0].message.content as string;
+      // const cleaned = data.replace(/```json|```/g, '').trim();
+      // const dataJson = JSON.parse(cleaned);
+
+      const dataJson = await this.fetchFullMenuPaginated(ai_question);
 
       const results: RestaurantAIResponse[] = [];
 
