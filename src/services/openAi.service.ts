@@ -63,46 +63,6 @@ const OpenAiFn = {
 
     return dataJson;
   },
-  // async fetchFullMenuPaginated(ai_question: string, batchSize: number = 20) {
-  //   const results: any[] = [];
-  //   let offset = 0;
-  //   let lastBatch: string = '';
-
-  //   while (true) {
-  //     const question = `${ai_question} from item ${offset + 1} with ${batchSize} items.`;
-
-  //     const response = await this.askAIQuestion(question); // Your wrapped OpenAI call
-
-  //     if (!response || response.length === 0) break;
-
-  //     const batchString = JSON.stringify(response);
-  //     if (batchString === lastBatch) {
-  //       console.log('Detected repeated batch. Ending loop.');
-  //       break;
-  //     }
-  //     lastBatch = batchString;
-
-  //     if (Array.isArray(response)) {
-  //       const isDuplicate = results.some(
-  //         (item) => item.name === response[0].name,
-  //       );
-  //       if (isDuplicate) {
-  //         console.log('Detected repeated batch. Ending loop.');
-  //         break;
-  //       }
-  //       results.push(...response);
-  //     } else {
-  //       console.error('AI returned a non-array response:', response);
-  //       break;
-  //     }
-
-  //     offset += response.length;
-
-  //     if (response.length < batchSize) break;
-  //   }
-
-  //   return results;
-  // },
   async fetchFullMenuPaginated(ai_question: string, batchSize: number = 20) {
     const results = new Map();
     let offset = 0;
@@ -124,7 +84,7 @@ const OpenAiFn = {
 
       if (Array.isArray(response)) {
         const name = _get<AIMenuType[], string>(response, 'name');
-        const slug = name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+        const slug = name?.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
         if (!results.has(slug)) {
           results.set(slug, response);
         } else {
@@ -185,21 +145,28 @@ const OpenAiFn = {
     } else {
       const ai_question = `get me the menu of ${name} ${wholeAddress} restaurant, put in an array of object as [{ name, price, description, category, top_choice: true or false}]. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
 
-      const menu = await this.fetchFullMenuPaginated(ai_question);
+      let menu = await this.fetchFullMenuPaginated(ai_question);
 
       if (menu && menu.length) {
+        if (Array.isArray(menu[0])) {
+          menu = menu[0];
+        }
+
         for (let item of menu) {
+          console.log(item, 'checking in menu');
           const restaurantItemPayload = buildRestaurantItemPayload({
             ...item,
             restaurant_id: restId,
           });
-
-          const exists = await RestaurantMenuItemsFn.findByQuery({
+          const query = {
             name: restaurantItemPayload.name,
             restaurant_id: restaurantItemPayload.restaurant_id,
-          });
+          };
 
-          if (exists) {
+          console.log('query to check if exists', query);
+          const exists = await RestaurantMenuItemsFn.findByQuery(query);
+
+          if (!exists) {
             await RestaurantMenuItemsFn.create(restaurantItemPayload);
             results.push({
               name: _get(restaurantItemPayload, 'name'),
@@ -249,14 +216,14 @@ const OpenAiFn = {
 
       const dataJson = await this.fetchFullMenuPaginated(ai_question);
 
-      // const results: RestaurantAIResponse[] = [];
       const results = new Map();
 
       if (dataJson && dataJson.length) {
         for (let item of dataJson) {
-          console.log('item', item);
-          const rest_name = _get(item, 'name');
-          console.log('rest_name', rest_name);
+          if (Array.isArray(item)) {
+            item = item[0];
+          }
+          const rest_name = _get(item, 'name', '');
           const restData = await RestaurantServices.findByName(rest_name);
 
           if (!restData || (restData && !restData.length)) {
@@ -274,17 +241,7 @@ const OpenAiFn = {
                 postal_code: _get(restaurantPayload, 'postal_code'),
               });
             }
-            // results.push({
-            //   name: _get(restaurantPayload, 'name'),
-            //   address: _get(restaurantPayload, 'address'),
-            //   city: _get(restaurantPayload, 'city'),
-            //   slug: slug,
-            //   state: _get(restaurantPayload, 'state'),
-            //   country: _get(restaurantPayload, 'country'),
-            //   postal_code: _get(restaurantPayload, 'postal_code'),
-            // });
           } else {
-            console.log('found sosmthing');
             restData.forEach((restaurant: RestaurantType) => {
               const slug = _get(restaurant, 'slug');
               if (!results.has(slug)) {

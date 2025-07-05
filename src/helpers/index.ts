@@ -45,14 +45,6 @@ export const getBuiltAddress: getBuiltAddressType = (address) => {
   return new_address.trim();
 };
 
-// export const _get = <T, R = unknown>(
-//   obj: T,
-//   path: string,
-//   defaultValue?: R,
-// ): R | undefined => {
-//   return _.get(obj, path, defaultValue) as R | undefined;
-// };
-
 export const _get = <T, R = undefined>(
   obj: T,
   path: string,
