@@ -189,7 +189,8 @@ const OpenAiFn = {
 
       const dataJson = await this.fetchFullMenuPaginated(ai_question);
 
-      const results: RestaurantAIResponse[] = [];
+      // const results: RestaurantAIResponse[] = [];
+      const results = new Map();
 
       if (dataJson && dataJson.length) {
         for (let item of dataJson) {
@@ -198,32 +199,47 @@ const OpenAiFn = {
 
           if (!restData || (restData && !restData.length)) {
             const restaurantPayload = buildRestaurantPayload(item);
-            results.push({
-              name: _get(restaurantPayload, 'name'),
-              address: _get(restaurantPayload, 'address'),
-              city: _get(restaurantPayload, 'city'),
-              slug: _get(restaurantPayload, 'slug'),
-              state: _get(restaurantPayload, 'state'),
-              country: _get(restaurantPayload, 'country'),
-              postal_code: _get(restaurantPayload, 'postal_code'),
-            });
-            await RestaurantServices.create(restaurantPayload);
+            const slug = _get(restaurantPayload, 'slug');
+            if (!results.has(slug)) {
+              await RestaurantServices.create(restaurantPayload);
+              results.set(slug, {
+                name: _get(restaurantPayload, 'name'),
+                address: _get(restaurantPayload, 'address'),
+                city: _get(restaurantPayload, 'city'),
+                slug: slug,
+                state: _get(restaurantPayload, 'state'),
+                country: _get(restaurantPayload, 'country'),
+                postal_code: _get(restaurantPayload, 'postal_code'),
+              });
+            }
+            // results.push({
+            //   name: _get(restaurantPayload, 'name'),
+            //   address: _get(restaurantPayload, 'address'),
+            //   city: _get(restaurantPayload, 'city'),
+            //   slug: slug,
+            //   state: _get(restaurantPayload, 'state'),
+            //   country: _get(restaurantPayload, 'country'),
+            //   postal_code: _get(restaurantPayload, 'postal_code'),
+            // });
           } else {
             restData.forEach((restaurant: RestaurantType) => {
-              results.push({
-                name: _get(restaurant, 'name'),
-                address: _get(restaurant, 'address'),
-                city: _get(restaurant, 'city'),
-                state: _get(restaurant, 'state'),
-                slug: _get(restaurant, 'slug'),
-                country: _get(restaurant, 'country'),
-                postal_code: _get(restaurant, 'postal_code'),
-              });
+              const slug = _get(restaurant, 'slug');
+              if (!results.has(slug)) {
+                results.set(slug, {
+                  name: _get(restaurant, 'name'),
+                  address: _get(restaurant, 'address'),
+                  city: _get(restaurant, 'city'),
+                  slug: slug,
+                  state: _get(restaurant, 'state'),
+                  country: _get(restaurant, 'country'),
+                  postal_code: _get(restaurant, 'postal_code'),
+                });
+              }
             });
           }
         }
       }
-      return results;
+      return Array.from(results.values());
     }
   },
 };

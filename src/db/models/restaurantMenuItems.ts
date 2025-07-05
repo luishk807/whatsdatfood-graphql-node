@@ -58,6 +58,7 @@ RestaurantMenuItems.init(
         model: 'restaurants',
         key: 'id',
       },
+      onDelete: 'CASCADE',
     },
     name: {
       allowNull: false,
