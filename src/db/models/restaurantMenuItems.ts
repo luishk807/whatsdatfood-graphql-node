@@ -40,6 +40,10 @@ class RestaurantMenuItems
       foreignKey: 'restaurant_id',
       as: dbAliases.restaurantItems.restaurant,
     });
+    RestaurantMenuItems.hasMany(models.RestaurantMenuItemImages, {
+      foreignKey: 'restaurant_menu_item_id',
+      as: dbAliases.restaurantItems.restaurantItemImages,
+    });
   }
 }
 

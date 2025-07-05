@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelizeConnection from 'db/sequelize';
+import { dbAliases } from 'db';
 
 interface RestaurantsMenuItemImagesAttributes {
   id: bigint;
@@ -44,7 +45,7 @@ class RestaurantMenuItemImages
   static associate(models: any): void {
     RestaurantMenuItemImages.belongsTo(models.RestaurantMenuItems, {
       foreignKey: 'restaurant_menu_item_id',
-      as: 'restaurantMenuItemImagesRestaurant',
+      as: dbAliases.restaurantItemImages.restaurantItem,
     });
   }
 }

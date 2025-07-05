@@ -89,6 +89,7 @@ export const restaurantDefs = gql`
     restaurants: [Restaurant]
     aiRestaurantBySlug(slug: String): RestaurantAIResponse
     aiRestaurantNameList(name: String): [RestaurantAIResponse]
+    getRestaurantImage(id: ID): RestaurantMenuItemImages
   }
 
   extend type Mutation {

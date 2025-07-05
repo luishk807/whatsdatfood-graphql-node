@@ -1,4 +1,5 @@
 import RestaurantServices from 'services/restaurants.service';
+import RestaurantMenuItemImagesFn from 'services/restaurantMenuItemImages.service';
 import OpenAiResturant from 'services/openAi.service';
 import { IResolvers } from '@graphql-tools/utils'; // or your GraphQL resolver typings
 import {
@@ -39,6 +40,13 @@ export const restaurantResolvers: IResolvers = {
       },
     ) => {
       return context.aiRestaurantNameList.load(_args.name);
+    },
+    getRestaurantImage: async (_: any, args: { id: number }) => {
+      const images = await RestaurantMenuItemImagesFn.findItemImageByRestItemId(
+        args.id,
+      );
+      console.log(images);
+      return images;
     },
   },
   Restaurant: {

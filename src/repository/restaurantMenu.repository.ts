@@ -33,7 +33,19 @@ class RestaurantMenuItemsRepo extends Base {
       offset: offset,
     });
   }
-
+  async getOneById(id: number) {
+    return await this.model.findOne({
+      where: {
+        id: id,
+      },
+      include: [
+        {
+          model: db.Restaurants,
+          as: dbAliases.restaurantItems.restaurant,
+        },
+      ],
+    });
+  }
   async findByQuery(query: RestaurantMenuItemsInput) {
     return await this.model.findOne({ where: query });
   }
