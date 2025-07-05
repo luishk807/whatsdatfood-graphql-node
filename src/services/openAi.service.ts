@@ -14,6 +14,15 @@ import RestaurantServices from 'services/restaurants.service';
 import RestaurantMenuItemsFn from 'services/restaurantMenuItems.service';
 import { getBuiltAddress } from 'helpers';
 
+type AIMenuType = {
+  id?: number;
+  name: string;
+  price: string;
+  description: string;
+  category: string;
+  restaurant_id?: number;
+  top_choice: boolean;
+};
 const openAiKey: string | undefined = process.env.OPENAI_KEY;
 const itemKey = dbAliases.restaurant
   .restaurantItems as keyof RestaurantAIResponse;
@@ -54,8 +63,48 @@ const OpenAiFn = {
 
     return dataJson;
   },
+  // async fetchFullMenuPaginated(ai_question: string, batchSize: number = 20) {
+  //   const results: any[] = [];
+  //   let offset = 0;
+  //   let lastBatch: string = '';
+
+  //   while (true) {
+  //     const question = `${ai_question} from item ${offset + 1} with ${batchSize} items.`;
+
+  //     const response = await this.askAIQuestion(question); // Your wrapped OpenAI call
+
+  //     if (!response || response.length === 0) break;
+
+  //     const batchString = JSON.stringify(response);
+  //     if (batchString === lastBatch) {
+  //       console.log('Detected repeated batch. Ending loop.');
+  //       break;
+  //     }
+  //     lastBatch = batchString;
+
+  //     if (Array.isArray(response)) {
+  //       const isDuplicate = results.some(
+  //         (item) => item.name === response[0].name,
+  //       );
+  //       if (isDuplicate) {
+  //         console.log('Detected repeated batch. Ending loop.');
+  //         break;
+  //       }
+  //       results.push(...response);
+  //     } else {
+  //       console.error('AI returned a non-array response:', response);
+  //       break;
+  //     }
+
+  //     offset += response.length;
+
+  //     if (response.length < batchSize) break;
+  //   }
+
+  //   return results;
+  // },
   async fetchFullMenuPaginated(ai_question: string, batchSize: number = 20) {
-    const results: any[] = [];
+    const results = new Map();
     let offset = 0;
     let lastBatch: string = '';
 
@@ -74,14 +123,14 @@ const OpenAiFn = {
       lastBatch = batchString;
 
       if (Array.isArray(response)) {
-        const isDuplicate = results.some(
-          (item) => item.name === response[0].name,
-        );
-        if (isDuplicate) {
+        const name = _get<AIMenuType[], string>(response, 'name');
+        const slug = name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+        if (!results.has(slug)) {
+          results.set(slug, response);
+        } else {
           console.log('Detected repeated batch. Ending loop.');
           break;
         }
-        results.push(...response);
       } else {
         console.error('AI returned a non-array response:', response);
         break;
@@ -92,7 +141,7 @@ const OpenAiFn = {
       if (response.length < batchSize) break;
     }
 
-    return results;
+    return Array.from(results.values());
   },
   async getAIRestaurantMenuBySlug(slug: string) {
     const restData = await RestaurantServices.findBySlug(slug);
@@ -144,15 +193,25 @@ const OpenAiFn = {
             ...item,
             restaurant_id: restId,
           });
-          results.push({
-            name: _get(restaurantItemPayload, 'name'),
-            category: _get(restaurantItemPayload, 'category'),
-            top_choice: _get(restaurantItemPayload, 'top_choice'),
-            price: _get(restaurantItemPayload, 'price'),
-            description: _get(restaurantItemPayload, 'description'),
-            restaurant_id: _get(restaurantItemPayload, 'restaurant_id'),
+
+          const exists = await RestaurantMenuItemsFn.findByQuery({
+            name: restaurantItemPayload.name,
+            restaurant_id: restaurantItemPayload.restaurant_id,
           });
-          await RestaurantMenuItemsFn.create(restaurantItemPayload);
+
+          if (exists) {
+            await RestaurantMenuItemsFn.create(restaurantItemPayload);
+            results.push({
+              name: _get(restaurantItemPayload, 'name'),
+              category: _get(restaurantItemPayload, 'category'),
+              top_choice: _get(restaurantItemPayload, 'top_choice'),
+              price: _get(restaurantItemPayload, 'price'),
+              description: _get(restaurantItemPayload, 'description'),
+              restaurant_id: _get(restaurantItemPayload, 'restaurant_id'),
+            });
+          } else {
+            console.log('skipping saving item since it already exists');
+          }
         }
       }
     }
@@ -185,6 +244,7 @@ const OpenAiFn = {
         [itemKey]: _get(rest, itemKey),
       }));
     } else {
+      console.log('use ai');
       const ai_question = `get the list of restaurants of with the name exactly ${restName} in nyc as [{ name, address, city, state, country, postal_code}]. Respond only with valid JSON schema. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
 
       const dataJson = await this.fetchFullMenuPaginated(ai_question);
@@ -194,7 +254,9 @@ const OpenAiFn = {
 
       if (dataJson && dataJson.length) {
         for (let item of dataJson) {
+          console.log('item', item);
           const rest_name = _get(item, 'name');
+          console.log('rest_name', rest_name);
           const restData = await RestaurantServices.findByName(rest_name);
 
           if (!restData || (restData && !restData.length)) {
@@ -222,6 +284,7 @@ const OpenAiFn = {
             //   postal_code: _get(restaurantPayload, 'postal_code'),
             // });
           } else {
+            console.log('found sosmthing');
             restData.forEach((restaurant: RestaurantType) => {
               const slug = _get(restaurant, 'slug');
               if (!results.has(slug)) {

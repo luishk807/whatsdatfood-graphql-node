@@ -16,6 +16,9 @@ const RestaurantMenuItemsFn = {
   async findById(id: number) {
     return await RestaurantItemRepo.getOneById(id);
   },
+  async findByQuery(query: RestaurantMenuItemsInput) {
+    return await RestaurantItemRepo.findByQuery(query);
+  },
   async findItemsByRestaurantId(id: number, limit?: number, offset?: number) {
     return await RestaurantItemRepo.findAllItemsByRestaurantId(
       id,

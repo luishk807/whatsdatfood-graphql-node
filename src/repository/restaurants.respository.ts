@@ -53,6 +53,10 @@ class RestaurantsRepo extends Base {
   }
 
   async findBySlug(slug: string): Promise<RestaurantsWithItemsOutput> {
+    if (!slug) {
+      throw new Error('findBySlug Error: name is empty');
+    }
+
     return (await this.model.findOne({
       where: {
         slug: slug,
@@ -69,6 +73,9 @@ class RestaurantsRepo extends Base {
     page: number = PAGE,
     limit: number = LIMIT,
   ) {
+    if (!name) {
+      throw new Error('findByNameMatch Error: name is empty');
+    }
     const offset = getPageOffset(limit, page);
     return await this.model.findAll({
       where: {
@@ -89,6 +96,9 @@ class RestaurantsRepo extends Base {
 
   async findByName(name: string, page: number = PAGE, limit: number = LIMIT) {
     console.log(db.aliases);
+    if (!name) {
+      throw new Error('findByName Error: name is empty');
+    }
     const normalizedName = normalizeApostrophes(name); // fix issues with names with apostrophe
     const offset = getPageOffset(limit, page);
     return await db.Restaurants.findAll({

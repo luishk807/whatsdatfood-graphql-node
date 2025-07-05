@@ -34,6 +34,10 @@ class RestaurantMenuItemsRepo extends Base {
     });
   }
 
+  async findByQuery(query: RestaurantMenuItemsInput) {
+    return await this.model.findOne({ where: query });
+  }
+
   async destroyItemsByRestaurantId(id: number) {
     return await this.model.destroy({
       restaurant_id: id,
