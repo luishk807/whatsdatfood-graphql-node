@@ -1,3 +1,8 @@
+import http from 'http';
+import { WebSocketServer } from 'ws';
+import { useServer } from 'graphql-ws/lib/use/ws';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+
 import app from './app';
 import config from 'config/config';
 import { initDB } from 'db';
@@ -14,14 +19,54 @@ import OpenAiResturant from 'services/openAi.service';
 import { authenticate } from 'helpers/login';
 
 async function startApolloServer() {
-  const server = new ApolloServer<GraphQLServerContext>({
+  const schema = makeExecutableSchema({
     typeDefs,
     resolvers,
-    plugins: [ApolloServerPluginLandingPageLocalDefault()],
+  });
+
+  const server = new ApolloServer<GraphQLServerContext>({
+    schema,
+    plugins: [
+      ApolloServerPluginLandingPageLocalDefault(),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose();
+            },
+          };
+        },
+      },
+    ],
   });
 
   await server.start();
   // graphqlServer.applyMiddleware({ app, path: '/graphql' });
+
+  // 2. Create an HTTP server from Express app
+  const httpServer = http.createServer(app);
+
+  // 3. Create WebSocket server for handling subscriptions
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: '/graphql',
+  });
+
+  // 4. Integrate graphql-ws with the WebSocket server and your schema
+  const serverCleanup = useServer(
+    {
+      schema,
+      context: async (ctx: any, msg: any, args: any) => {
+        // Optionally, you can build context for subscriptions here
+        // e.g., authentication or dataloaders (if needed)
+        return {
+          user: null,
+          // You can share dataloaders here too if you want
+        };
+      },
+    },
+    wsServer,
+  );
 
   app.use(
     '/graphql',

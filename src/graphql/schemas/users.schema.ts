@@ -13,6 +13,10 @@ export const userDefs = gql`
     searches: [UserSearches]
   }
 
+  type Subscription {
+    userAdded: User
+  }
+
   type UserSearches {
     id: ID!
     user_id: ID!
@@ -48,5 +52,9 @@ export const userDefs = gql`
     login(username: String!, password: String!): User
     addUser(input: CreateUserInput): User
     addUserSearches(input: createUserSearchInput): UserSearches
+  }
+
+  extend type Subscription {
+    userAdded: User
   }
 `;
