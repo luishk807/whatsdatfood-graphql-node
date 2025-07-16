@@ -4,6 +4,7 @@ import {
   RestaurantAIResponse,
   RestaurantItemType,
   RestaurantType,
+  gooogleResponseAPIItemTypes,
 } from 'types';
 import {
   buildRestaurantPayload,
@@ -103,6 +104,26 @@ const OpenAiFn = {
 
     return Array.from(results.values());
   },
+  async generateAIImage(ai_question: string) {
+    try {
+      const openai = new OpenAI({
+        apiKey: openAiKey,
+      });
+      const response = await openai.images.generate({
+        model: 'dall-e-3',
+        prompt: `A delicious ${ai_question} bakery, photorealistic, vibrant colors, close-up`,
+        size: '1024x1024',
+        n: 1,
+      });
+      if (response.data && response.data.length > 0) {
+        console.log('Image URL:', response.data[0].url);
+      } else {
+        console.log('No image generated.');
+      }
+    } catch (error) {
+      console.error('Error generating image:', error);
+    }
+  },
   async getAIRestaurantMenuBySlug(slug: string) {
     const restData = await RestaurantServices.findBySlug(slug);
     const results: RestaurantItemType[] = [];
@@ -134,12 +155,21 @@ const OpenAiFn = {
     if (menuItems && menuItems.length) {
       menuItems.forEach((restaurant: RestaurantItemType) => {
         results.push({
+          id: _get(restaurant, 'id'),
           name: _get(restaurant, 'name'),
           category: _get(restaurant, 'category'),
           top_choice: _get(restaurant, 'top_choice'),
           price: _get(restaurant, 'price'),
           description: _get(restaurant, 'description'),
           restaurant_id: _get(restaurant, 'restaurant_id'),
+          restaurantItemUserRatings: _get(
+            restaurant,
+            'restaurantItemUserRatings',
+          ),
+          restaurantItemRestImages: _get(
+            restaurant,
+            'restaurantItemRestImages',
+          ),
         });
       });
     } else {
@@ -169,12 +199,21 @@ const OpenAiFn = {
           if (!exists) {
             await RestaurantMenuItemsFn.create(restaurantItemPayload);
             results.push({
+              id: _get(restaurantItemPayload, 'id'),
               name: _get(restaurantItemPayload, 'name'),
               category: _get(restaurantItemPayload, 'category'),
               top_choice: _get(restaurantItemPayload, 'top_choice'),
               price: _get(restaurantItemPayload, 'price'),
               description: _get(restaurantItemPayload, 'description'),
               restaurant_id: _get(restaurantItemPayload, 'restaurant_id'),
+              restaurantItemUserRatings: _get(
+                restaurantItemPayload,
+                'restaurantItemUserRatings',
+              ),
+              restaurantItemRestImages: _get(
+                restaurantItemPayload,
+                'restaurantItemRestImages',
+              ),
             });
           } else {
             console.log('skipping saving item since it already exists');
@@ -261,6 +300,41 @@ const OpenAiFn = {
       }
       return Array.from(results.values());
     }
+  },
+  async getBestImagesFromList(
+    query: string,
+    images: [gooogleResponseAPIItemTypes],
+  ) {
+    const ai_question = `From the list of images below, return exactly one image with width at least 150 pixels for ${query}, in JSON format as:
+
+    [
+      {
+        "title": string,
+        "link": string,
+        "content_link": string
+      }
+    ]
+
+    - The "link" field must be the direct image URL (the "link" property in the input).
+    - The "content_link" field must be the page hosting the image (the "image.contextLink" property).
+    - Only choose images hosted on well-known, publicly accessible domains such as:
+      - www.newyorker.com
+      - yelp.com
+      - doordash.com
+      - pinterest.com
+      - reddit.c
+      - media.cdn sites (like AWS S3 from trusted domains)
+
+    Avoid choosing images from:
+    - tiktok.com
+    - instagram.com
+    - lemon8-app.com
+    - any platform that may block hotlinking or require user login.
+
+    Return only valid JSON. No extra text.input: ${JSON.stringify(images)}`;
+    const response = await this.askAIQuestion(ai_question); // Your wrapped OpenAI call
+
+    return _get(response, '0');
   },
 };
 

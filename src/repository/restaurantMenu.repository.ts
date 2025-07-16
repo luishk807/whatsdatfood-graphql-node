@@ -28,6 +28,10 @@ class RestaurantMenuItemsRepo extends Base {
           model: db.RestaurantItemImages,
           as: dbAliases.restaurantItems.restaurantItemImages,
         },
+        {
+          model: db.UserRatings,
+          as: dbAliases.restaurantItems.userRatings,
+        },
       ],
       limit: limit,
       offset: offset,
@@ -42,6 +46,14 @@ class RestaurantMenuItemsRepo extends Base {
         {
           model: db.Restaurants,
           as: dbAliases.restaurantItems.restaurant,
+        },
+        {
+          model: db.UserRatings,
+          as: dbAliases.restaurantItems.userRatings,
+        },
+        {
+          model: db.RestaurantMenuItemImages,
+          as: dbAliases.restaurantItems.restaurantItemImages,
         },
       ],
     });

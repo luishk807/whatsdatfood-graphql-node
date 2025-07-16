@@ -8,6 +8,7 @@ import {
   RestaurantMenuItemsAIResponse,
   createRestaurantArgInput,
   RestaurantAIResponse,
+  UserRating,
 } from 'types';
 import { dbAliases } from 'db/index';
 import { RestaurantsOutput } from 'db/models/restaurants';
@@ -73,6 +74,17 @@ export const restaurantResolvers: IResolvers = {
       return Array.isArray(value) ? value : [];
     },
   },
+  RestaurantMenuItemsAIResponse: {
+    restaurantItemUserRatings: async (
+      parent: RestaurantMenuItemsAIResponse,
+      args: any,
+    ) => {
+      return parent.restaurantItemUserRatings || [];
+    },
+    restaurantItemImages: async (parent: RestaurantMenuItemsAIResponse) => {
+      return parent.restaurantItemRestImages || [];
+    },
+  },
   RestaurantMenuItems: {
     restaurantItemRest: async (
       parent: RestaurantItemType,
@@ -87,8 +99,17 @@ export const restaurantResolvers: IResolvers = {
         return null;
       }
     },
-    restaurantItemRestImages: (): any[] => {
-      return [];
+    restaurantItemUserRatings: async (
+      parent: RestaurantItemType,
+      args: any,
+    ) => {
+      if (parent.id === 123) {
+        console.log('testtttt');
+      }
+      return parent.restaurantItemUserRatings || [];
+    },
+    restaurantItemRestImages: async (parent: RestaurantItemType) => {
+      return parent.restaurantItemRestImages || [];
     },
   },
   Mutation: {

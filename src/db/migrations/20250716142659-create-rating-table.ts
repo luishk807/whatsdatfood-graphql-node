@@ -1,5 +1,4 @@
 'use strict';
-import { DATE } from 'sequelize';
 import { QueryInterface, Sequelize, DataTypes } from 'sequelize';
 /** @type {import('sequelize-cli').Migration} */
 export default {
@@ -10,12 +9,16 @@ export default {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.createTable('restaurant_menu_item_images', {
+    await queryInterface.createTable('user_ratings', {
       id: {
         type: DataTypes.BIGINT,
         primaryKey: true,
         allowNull: false,
         autoIncrement: true,
+      },
+      rating: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
       },
       restaurant_menu_item_id: {
         type: DataTypes.BIGINT,
@@ -26,25 +29,14 @@ export default {
         },
         onDelete: 'CASCADE',
       },
-      name: {
-        type: DataTypes.TEXT,
+      user_id: {
+        type: DataTypes.BIGINT,
         allowNull: false,
-      },
-      url_m: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      url_s: {
-        type: DataTypes.TEXT,
-      },
-      owner: {
-        type: DataTypes.STRING,
-      },
-      license: {
-        type: DataTypes.STRING,
-      },
-      content_link: {
-        type: DataTypes.STRING,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
       },
       created_at: {
         type: DataTypes.DATE,
@@ -67,6 +59,6 @@ export default {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable('restaurant_menu_item_images');
+    await queryInterface.dropTable('user_ratings');
   },
 };

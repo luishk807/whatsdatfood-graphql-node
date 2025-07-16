@@ -1,7 +1,15 @@
 import UserServices from 'services/users.service';
+import UserRatingServices from 'services/userRating.services';
 import { createPubSub } from '@graphql-yoga/node';
-import { createUserInputTypeArgInput, RestaurantType, UserType } from 'types';
+import {
+  createUserInputTypeArgInput,
+  createUserRatingInput,
+  updateUserRatingInput,
+  UserRating,
+  UserType,
+} from 'types';
 import { validateUserData } from 'middlewares/user';
+import { SUBSCRIPTION_EVENTS } from 'constants/graphql';
 
 type Events = {
   USER_ADDED: { userAdded: UserType }; // Use your actual UserType here
@@ -9,11 +17,10 @@ type Events = {
 
 const pubsub = createPubSub();
 
-const USER_ADDED = 'USER_ADDED';
-
 export const userResolvers = {
   Query: {
     users: async () => await UserServices.getAll(),
+    ratings: async () => await UserRatingServices.getAll(),
   },
   User: {
     searches: async (parent: UserType) => {
@@ -35,16 +42,33 @@ export const userResolvers = {
         const resp = await UserServices.create(input);
 
         // publish the event
-        pubsub.publish('USER_ADDED', { userAdded: resp });
+        pubsub.publish(SUBSCRIPTION_EVENTS.USER_ADDED, { userAdded: resp });
 
         return resp;
       },
     ),
+    updateUserRating: async (
+      _: any,
+      args: { input: updateUserRatingInput },
+    ): Promise<UserRating> => {
+      const { input } = args;
+      return await UserRatingServices.update(input);
+    },
+    deleteUserRating: async (_: any, args: { id: number }) => {
+      return await UserRatingServices.deleteById(args.id);
+    },
+    addUserRating: async (
+      _: any,
+      args: { input: createUserRatingInput },
+    ): Promise<UserRating> => {
+      const { input } = args;
+      return await UserRatingServices.create(input);
+    },
   },
 
   Subscription: {
     userAdded: {
-      subscribe: () => pubsub.subscribe('USER_ADDED'),
+      subscribe: () => pubsub.subscribe(SUBSCRIPTION_EVENTS.USER_ADDED),
     },
   },
 };

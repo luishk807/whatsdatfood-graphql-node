@@ -9,7 +9,7 @@ interface UserInterface {
   password: string;
   phone: string;
   email: string;
-  role: number;
+  role: bigint;
   verification?: string;
   dob: Date;
   created_at?: Date;
@@ -17,7 +17,7 @@ interface UserInterface {
   deleted_at?: Date;
 }
 
-export interface UserInput extends Optional<UserInterface, 'id' | 'role'> {}
+export interface UserInput extends Optional<UserInterface, 'id'> {}
 export interface UserOutput extends Required<UserInterface> {}
 
 class Users extends Model<UserInterface, UserInput> implements UserInterface {
@@ -26,7 +26,7 @@ class Users extends Model<UserInterface, UserInput> implements UserInterface {
   public last_name!: string;
   public password!: string;
   public phone!: string;
-  public role!: number;
+  public role!: bigint;
   public email!: string;
   public verification!: string;
   public dob!: Date;
@@ -38,6 +38,8 @@ class Users extends Model<UserInterface, UserInput> implements UserInterface {
 
   static associate(models: any): void {
     Users.hasMany(models.UserSearches);
+    Users.hasMany(models.UserRatings);
+    Users.hasOne(models.UserRoles);
   }
 }
 
@@ -68,7 +70,7 @@ Users.init(
       type: DataTypes.STRING,
     },
     role: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: true,
       defaultValue: UserRole.USER,
     },

@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { _get } from 'helpers';
 import pLimit from 'p-limit';
-import dotenv from 'dotenv';
-dotenv.config();
 
 const limit = pLimit(1); // concurrency = 1
 const FLICKR_KEY: string | undefined = process.env.FLICKR_KEY;

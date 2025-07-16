@@ -6,6 +6,7 @@ import { userDefs } from './schemas/users.schema';
 const baseTypeDefs = gql`
   type Query
   type Mutation
+  type Subscription
 `;
 
 export const typeDefs = mergeTypeDefs([baseTypeDefs, restaurantDefs, userDefs]);

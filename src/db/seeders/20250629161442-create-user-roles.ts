@@ -22,6 +22,11 @@ export default {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      {
+        name: 'Guest',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
     ]);
   },
 

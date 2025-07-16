@@ -18,6 +18,13 @@ export type UserType = {
   dob: Date;
 };
 
+export type UserRating = {
+  id?: number;
+  restaurant_menu_item_id: bigint;
+  user_id: bigint;
+  rating: number;
+};
+
 export type UserRoleType = {
   id: number;
   name: string;
@@ -32,12 +39,13 @@ export type UserSearchesType = {
 export type RestaurantMenuItemImages = {
   id: number;
   restaurant_item_id: number;
+  user_id?: bigint;
   name: string;
   url_m: string;
   url_s: string;
   owner: String;
   license: String;
-  flickr_id: String;
+  content_link: String;
   category: string;
   created_at: string;
   updated_at: string;
@@ -57,6 +65,7 @@ export type RestaurantItemType = {
   updated_at?: string;
   restaurantItemRest?: RestaurantType;
   restaurantItemRestImages?: [RestaurantMenuItemImages];
+  restaurantItemUserRatings?: [UserRating];
 };
 
 export type RestaurantType = {
@@ -83,6 +92,19 @@ export type createRestaurantInput = {
   postal_code: string;
 };
 
+export type createUserRatingInput = {
+  restaurant_menu_item_id: bigint;
+  user_id: bigint;
+  rating: number;
+};
+
+export type updateUserRatingInput = {
+  id?: number;
+  restaurant_menu_item_id: bigint;
+  user_id: bigint;
+  rating: number;
+};
+
 export type createRestaurantArgInput = {
   input: createRestaurantInput;
 };
@@ -92,7 +114,7 @@ export type createUserInputType = {
   last_name: string;
   password: string;
   phone: string;
-  role: number;
+  role: bigint;
   email: string;
   verification: string;
   dob: Date;
@@ -123,6 +145,8 @@ export type RestaurantMenuItemsAIResponse = {
   price?: number;
   category: string;
   restaurant_id?: number;
+  restaurantItemUserRatings?: [UserRating];
+  restaurantItemRestImages?: [RestaurantMenuItemImages];
 };
 
 export type RestaurantAIResponse = {
@@ -135,6 +159,31 @@ export type RestaurantAIResponse = {
   country: string;
   postal_code: string;
   restRestaurantItems?: [RestaurantMenuItemsAIResponse];
+};
+
+export type gooogleResponseAPIItemTypes = {
+  kind: string;
+  title: string;
+  htmlTitle: string;
+  link: string;
+  displayLink: string;
+  snippet: string;
+  htmlSnippet: string;
+  mime: string;
+  fileFormat: string;
+  buffer?: Buffer | null;
+  image: {
+    contextLink: string;
+    height: number;
+    width: number;
+    byteSize: number;
+    thumbnailLink: string;
+    thumbnailHeight: number;
+    thumbnailWidth: number;
+  };
+};
+export type googleResponseAPIType = {
+  items: [gooogleResponseAPIItemTypes];
 };
 
 export type getBuiltAddressType = (address: addressType) => string;

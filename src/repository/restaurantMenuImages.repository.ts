@@ -40,7 +40,10 @@ class RestaurantMenuItemsRepo extends Base {
     const t = await db.sequelize.transaction();
 
     try {
-      const resp = await this.model.upsert(payload, { transaction: t });
+      const resp = await this.model.upsert(payload, {
+        transaction: t,
+        returning: true,
+      });
       await t.commit();
       return resp;
     } catch (err) {

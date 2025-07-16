@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelizeConnection from 'db/sequelize';
-
+import { dbAliases } from 'db/index';
 interface UserRolesInterface {
   id: number;
   name: string;

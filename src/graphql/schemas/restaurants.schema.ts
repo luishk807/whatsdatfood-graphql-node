@@ -3,7 +3,7 @@ import db from 'db/models';
 export const restaurantDefs = gql`
   type RestaurantMenuItems {
     id: ID!
-    retaurant_id: ID!
+    restaurant_id: ID!
     name: String
     price: Float
     top_choice: Boolean
@@ -14,6 +14,7 @@ export const restaurantDefs = gql`
     deleted_at: String
     restaurantItemRest: Restaurant
     restaurantItemRestImages: [RestaurantMenuItemImages]
+    restaurantItemUserRatings: [UserRatings]
   }
 
   type Restaurant {
@@ -31,12 +32,12 @@ export const restaurantDefs = gql`
   type RestaurantMenuItemImages {
     id: ID!
     restaurant_item_id: ID!
+    user_id: ID
     name: String
     url_m: String
     url_s: String
     owner: String
     license: String
-    flickr_id: String
     category: String
     created_at: String
     updated_at: String
@@ -49,7 +50,8 @@ export const restaurantDefs = gql`
     category: String
     top_choice: Boolean
     description: String
-    images: [RestaurantMenuItemImages]
+    restaurantItemImages: [RestaurantMenuItemImages]
+    restaurantItemUserRatings: [UserRatings]
   }
 
   type RestaurantAIResponse {
@@ -73,7 +75,7 @@ export const restaurantDefs = gql`
     postal_code: String
   }
 
-  input createRestauranItemsInput {
+  input createRestaurantItemsInput {
     name: String!
     url: String
     category: String
@@ -94,6 +96,6 @@ export const restaurantDefs = gql`
 
   extend type Mutation {
     addRestaurant(input: createRestauranInput): Restaurant
-    addRestaurantItems(input: createRestauranItemsInput): RestaurantMenuItems
+    addRestaurantItems(input: createRestaurantItemsInput): RestaurantMenuItems
   }
 `;

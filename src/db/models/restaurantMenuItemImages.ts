@@ -5,12 +5,13 @@ import { dbAliases } from 'db';
 interface RestaurantsMenuItemImagesAttributes {
   id: bigint;
   restaurant_menu_item_id?: bigint;
+  user_id?: bigint;
   name?: string;
   url_m?: string;
   url_s?: string;
   owner?: string;
   license?: string;
-  flickr_id?: string;
+  content_link?: string;
   category?: string;
   created_at?: Date;
   updated_at?: Date;
@@ -32,12 +33,10 @@ class RestaurantMenuItemImages
 {
   public id!: bigint;
   public restaurantMenuItemId!: bigint;
+  public user_id!: bigint;
   public name!: string;
   public url_m!: string;
   public url_s!: string;
-  public owner!: string;
-  public license!: string;
-  public flickr_id!: string;
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
@@ -46,6 +45,10 @@ class RestaurantMenuItemImages
     RestaurantMenuItemImages.belongsTo(models.RestaurantMenuItems, {
       foreignKey: 'restaurant_menu_item_id',
       as: dbAliases.restaurantItemImages.restaurantItem,
+    });
+    RestaurantMenuItemImages.belongsTo(models.Users, {
+      foreignKey: 'user_id',
+      as: dbAliases.restaurantItemImages.user,
     });
   }
 }
@@ -67,6 +70,16 @@ RestaurantMenuItemImages.init(
       },
       onDelete: 'CASCADE',
     },
+    user_id: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      references: {
+        model: 'users',
+        key: 'id',
+      },
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE',
+    },
     name: {
       type: DataTypes.TEXT,
       allowNull: false,
@@ -77,7 +90,7 @@ RestaurantMenuItemImages.init(
     license: {
       type: DataTypes.STRING,
     },
-    flickr_id: {
+    content_link: {
       type: DataTypes.STRING,
     },
     url_m: {

@@ -23,6 +23,16 @@ class RestaurantsRepo extends Base {
         {
           model: db.RestaurantMenuItems,
           as: dbAliases.restaurant.restaurantItems,
+          include: [
+            {
+              model: db.UserRatings,
+              as: dbAliases.restaurantItems.userRatings,
+            },
+            {
+              model: db.RestaurantMenuItemImages,
+              as: dbAliases.restaurantItems.restaurantItemImages,
+            },
+          ],
         },
       ],
     });
@@ -64,6 +74,16 @@ class RestaurantsRepo extends Base {
       include: {
         model: db.RestaurantMenuItems,
         as: dbAliases.restaurant.restaurantItems,
+        include: [
+          {
+            model: db.UserRatings,
+            as: dbAliases.restaurantItems.userRatings,
+          },
+          {
+            model: db.RestaurantMenuItemImages,
+            as: dbAliases.restaurantItems.restaurantItemImages,
+          },
+        ],
       },
     })) as unknown as RestaurantsWithItemsOutput;
   }

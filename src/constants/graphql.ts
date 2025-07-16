@@ -1,0 +1,3 @@
+export const SUBSCRIPTION_EVENTS = {
+  USER_ADDED: 'USER_ADDED',
+};

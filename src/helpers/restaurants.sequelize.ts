@@ -45,8 +45,8 @@ export const buildRestaurantItemImagePayload = (
     license: _get(item, 'license'),
     owner: _get(item, 'owner'),
     url_m: _get(item, 'url_m'),
+    content_link: _get(item, 'content_link'),
     url_s: _get(item, 'url_s'),
-    flickr_id: _get(item, 'flickr_id'),
     restaurant_menu_item_id: _get(item, 'restaurant_menu_item_id'),
   };
 };

@@ -44,6 +44,10 @@ class RestaurantMenuItems
       foreignKey: 'restaurant_menu_item_id',
       as: dbAliases.restaurantItems.restaurantItemImages,
     });
+    RestaurantMenuItems.hasMany(models.UserRatings, {
+      foreignKey: 'restaurant_menu_item_id',
+      as: dbAliases.restaurantItems.userRatings,
+    });
   }
 }
 

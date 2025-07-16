@@ -6,6 +6,8 @@ import RestaurantMenuItemsRepo from 'repository/restaurantMenu.repository';
 import { RestaurantMenuItemImagesInput } from 'db/models/restaurantMenuItemImages';
 import { FLICKR_METHOD } from 'constants/flickr';
 import { dbAliases } from 'db';
+import { getGoogleImages } from 'api/google';
+import openAI from 'services/openAi.service';
 
 const RestaurantItemImageRepo = new RestaurantMenuItemImages();
 const RestaurantItemRepo = new RestaurantMenuItemsRepo();
@@ -29,30 +31,54 @@ const RestaurantMenuItemImagesFn = {
   async findItemImageByRestItemId(id: number) {
     const dbImages = await RestaurantItemImageRepo.findByRestItemId(id);
     if (dbImages) {
+      console.log('found image');
       return dbImages;
     } else {
+      console.log('not found image');
       const restItemData = await RestaurantItemRepo.getOneById(id);
       if (!restItemData) {
         throw new Error('ERROR: No such restaurant exists');
       } else {
-        console.log('no photo for this image, will search through flickr');
-        // const restaurantInfo = _get(
-        //   restItemData,
-        //   dbAliases.restaurantItems.restaurant,
-        // );
-        // const query = `${restItemData.name} from ${restaurantInfo.name}`;
-        // const images = await this.getRestaurantImageByFlickr(query);
-        // console.log('result', images);
-        // if (images) {
-        //   return images;
-        // } else {
-        //   return null;
-        // }
+        console.log('no photo for this image, will search through google');
+        const restaurantInfo = _get(
+          restItemData,
+          dbAliases.restaurantItems.restaurant,
+        );
+
+        const query = `${restItemData.name} from ${restaurantInfo.name} nyc`;
+        const googleQuery = `${restItemData.name} food photo from ${restaurantInfo.name} nyc (site:pinterest.com OR site:doordash.com)  -site:instagram.com -site:tiktok.com -site:lemon8-app.com`;
+        console.log('**************QUERY***********************');
+        console.log(googleQuery);
+        console.log('**************END QUERY***********************');
+        const resp = await getGoogleImages(googleQuery);
+        const items = _get(resp, 'data.items');
+        console.log(items);
+        if (items) {
+          const image_resp = await openAI.getBestImagesFromList(query, items);
+          console.log(image_resp, 'finals');
+          if (image_resp) {
+            const imagePayload = buildRestaurantItemImagePayload({
+              restaurant_menu_item_id: restItemData.id,
+              url_m: image_resp.link,
+              name: image_resp.title,
+              content_link: image_resp.content_link,
+            });
+            const save_data =
+              await RestaurantItemImageRepo.create(imagePayload);
+            const data_resp = _get(save_data, '0');
+            console.log(data_resp, 'save_data');
+            return data_resp;
+          }
+        }
         return null;
       }
+      // return null;
     }
   },
   async findItemImagesByFlickrId(id: number) {
+    return await RestaurantItemImageRepo.findByFlickrId(id);
+  },
+  async findItemImagesByGoogle(id: number) {
     return await RestaurantItemImageRepo.findByFlickrId(id);
   },
   async findAllImagesByRestaurantId(id: number) {

@@ -8,13 +8,28 @@ export const userDefs = gql`
     phone: String!
     email: String!
     verification: String
-    role: Int
+    role: ID!
     dob: String!
     searches: [UserSearches]
+    ratings: [UserRatings]
+  }
+
+  type UserRatings {
+    id: ID!
+    rating: Float
+    user_id: ID!
+    restaurant_menu_item_id: ID!
+    user: [User]
+    restaurantMenuItem: RestaurantMenuItems
   }
 
   type Subscription {
     userAdded: User
+  }
+
+  type UserRole {
+    id: ID!
+    name: String
   }
 
   type UserSearches {
@@ -33,7 +48,7 @@ export const userDefs = gql`
     last_name: String!
     password: String!
     phone: String!
-    role: Int
+    role: ID!
     email: String!
     dob: String!
   }
@@ -43,14 +58,30 @@ export const userDefs = gql`
     restaurant_id: ID!
   }
 
+  input createUserRatingInput {
+    user_id: ID!
+    restaurant_menu_item_id: ID!
+    rating: Float
+  }
+  input updateUserRatingInput {
+    id: ID!
+    user_id: ID!
+    restaurant_menu_item_id: ID!
+    rating: Float
+  }
+
   extend type Query {
     users: [User]
     user(id: ID): User
+    ratings: [UserRatings]
   }
 
   extend type Mutation {
     login(username: String!, password: String!): User
     addUser(input: CreateUserInput): User
+    addUserRating(input: createUserRatingInput): UserRatings
+    updateUserRating(input: updateUserRatingInput): UserRatings
+    deleteUserRating(id: ID): Boolean
     addUserSearches(input: createUserSearchInput): UserSearches
   }
 
