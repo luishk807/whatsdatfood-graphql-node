@@ -23,6 +23,7 @@ export type UserRating = {
   restaurant_menu_item_id: bigint;
   user_id: bigint;
   rating: number;
+  comment?: string;
 };
 
 export type UserRoleType = {
@@ -96,6 +97,7 @@ export type createUserRatingInput = {
   restaurant_menu_item_id: bigint;
   user_id: bigint;
   rating: number;
+  comment?: string;
 };
 
 export type updateUserRatingInput = {

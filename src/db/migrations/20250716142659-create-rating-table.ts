@@ -20,6 +20,9 @@ export default {
         type: DataTypes.DOUBLE,
         allowNull: false,
       },
+      comment: {
+        type: DataTypes.TEXT,
+      },
       restaurant_menu_item_id: {
         type: DataTypes.BIGINT,
         allowNull: false,

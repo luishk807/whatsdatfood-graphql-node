@@ -62,6 +62,7 @@ export const userDefs = gql`
     user_id: ID!
     restaurant_menu_item_id: ID!
     rating: Float
+    comment: String
   }
   input updateUserRatingInput {
     id: ID!

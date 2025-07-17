@@ -103,9 +103,6 @@ export const restaurantResolvers: IResolvers = {
       parent: RestaurantItemType,
       args: any,
     ) => {
-      if (parent.id === 123) {
-        console.log('testtttt');
-      }
       return parent.restaurantItemUserRatings || [];
     },
     restaurantItemRestImages: async (parent: RestaurantItemType) => {

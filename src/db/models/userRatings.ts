@@ -4,6 +4,7 @@ import { dbAliases } from 'db/index';
 interface UserRatingsInterface {
   id: number;
   rating: number;
+  comment?: string;
   restaurant_menu_item_id: bigint;
   user_id: bigint;
   created_at?: Date;
@@ -21,6 +22,7 @@ class UserRatings
 {
   public id!: number;
   public rating!: number;
+  public comment!: string;
   public restaurant_menu_item_id!: bigint;
   public user_id!: bigint;
 
@@ -51,6 +53,9 @@ UserRatings.init(
     rating: {
       type: DataTypes.DOUBLE,
       allowNull: false,
+    },
+    comment: {
+      type: DataTypes.TEXT,
     },
     restaurant_menu_item_id: {
       type: DataTypes.BIGINT,
