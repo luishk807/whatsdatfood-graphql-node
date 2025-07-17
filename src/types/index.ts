@@ -116,6 +116,7 @@ export type createUserInputType = {
   first_name: string;
   last_name: string;
   password: string;
+  username: string;
   phone: string;
   role: bigint;
   email: string;

@@ -49,8 +49,9 @@ export const userDefs = gql`
     first_name: String!
     last_name: String!
     password: String!
+    username: String!
     phone: String!
-    role: ID!
+    role: ID
     email: String!
     dob: String!
   }
