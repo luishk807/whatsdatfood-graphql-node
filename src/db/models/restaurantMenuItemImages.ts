@@ -7,6 +7,7 @@ interface RestaurantsMenuItemImagesAttributes {
   restaurant_menu_item_id?: bigint;
   user_id?: bigint;
   name?: string;
+  status_id?: number;
   url_m?: string;
   url_s?: string;
   owner?: string;
@@ -36,6 +37,7 @@ class RestaurantMenuItemImages
   public user_id!: bigint;
   public name!: string;
   public url_m!: string;
+  public status_id!: number;
   public url_s!: string;
 
   public readonly created_at!: Date;
@@ -49,6 +51,10 @@ class RestaurantMenuItemImages
     RestaurantMenuItemImages.belongsTo(models.Users, {
       foreignKey: 'user_id',
       as: dbAliases.restaurantItemImages.user,
+    });
+    RestaurantMenuItemImages.belongsTo(models.Statuses, {
+      foreignKey: 'status_id',
+      as: dbAliases.restaurantItemImages.status,
     });
   }
 }
@@ -89,6 +95,15 @@ RestaurantMenuItemImages.init(
     },
     license: {
       type: DataTypes.STRING,
+    },
+    status_id: {
+      type: DataTypes.BIGINT,
+      defaultValue: 1,
+      references: {
+        model: 'statuses',
+        key: 'id',
+      },
+      onDelete: 'SET NULL',
     },
     content_link: {
       type: DataTypes.STRING,

@@ -8,10 +8,12 @@ export const userDefs = gql`
     phone: String!
     email: String!
     verification: String
+    status_id: ID
     role: ID!
     dob: String!
     searches: [UserSearches]
     ratings: [UserRatings]
+    status: Status
   }
 
   type UserRatings {

@@ -12,19 +12,19 @@ export default {
      *   isBetaMember: false
      * }], {});
      */
-    return queryInterface.bulkInsert('user_roles', [
+    return queryInterface.bulkInsert('statuses', [
       {
-        name: 'User',
+        name: 'Active',
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        name: 'Admin',
+        name: 'Aproved',
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        name: 'Guest',
+        name: 'Blocked',
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -38,6 +38,6 @@ export default {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    return queryInterface.bulkDelete('user_roles', {}, {});
+    return queryInterface.bulkDelete('statuses', {}, {});
   },
 };

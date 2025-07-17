@@ -19,13 +19,16 @@ export const dbAliases = {
     restaurant: 'restaurantItemRest',
     restaurantItemImages: 'restaurantItemRestImages',
     userRatings: 'restaurantItemUserRatings',
+    status: 'restaurantItemStatus',
   },
   restaurantItemImages: {
     restaurantItem: 'restaurantItemImageRestItem',
     user: 'restaurantItemImageUser',
+    status: 'restaurantItemImageStatus',
   },
   users: {
     userRole: 'userUserRole',
+    status: 'userStatus',
   },
   userRole: {
     user: 'userRoleUser',
@@ -33,5 +36,6 @@ export const dbAliases = {
   userRatings: {
     user: 'userRatingUser',
     restaurantItem: 'userRatingRestaurantItem',
+    status: 'userRatingStatus',
   },
 };

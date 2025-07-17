@@ -16,6 +16,10 @@ export default {
       defaultValue: 1,
     });
 
+    await queryInterface.addColumn('users', 'status_id', {
+      type: DataTypes.BIGINT,
+    });
+
     // Add foreign key constraint
     await queryInterface.addConstraint('users', {
       fields: ['role'],
@@ -23,6 +27,18 @@ export default {
       name: 'fk_user_users_role_constraint',
       references: {
         table: 'user_roles',
+        field: 'id',
+      },
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE',
+    });
+
+    await queryInterface.addConstraint('users', {
+      fields: ['status_id'],
+      type: 'foreign key',
+      name: 'fk_users_status_constraint',
+      references: {
+        table: 'statuses',
         field: 'id',
       },
       onDelete: 'SET NULL',
@@ -43,11 +59,18 @@ export default {
       'fk_user_users_role_constraint',
     );
 
+    await queryInterface.removeConstraint(
+      'users',
+      'fk_users_status_constraint',
+    );
+
     // Optionally revert column changes
     await queryInterface.changeColumn('users', 'role', {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: null,
     });
+
+    await queryInterface.removeColumn('users', 'status_id');
   },
 };

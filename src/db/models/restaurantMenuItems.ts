@@ -7,6 +7,7 @@ interface RestaurantsMenuItemsAttributes {
   name: string;
   top_choice?: boolean;
   description?: string;
+  status_id?: number;
   price?: number;
   category?: string;
   created_at?: Date;
@@ -30,6 +31,7 @@ class RestaurantMenuItems
   public restaurant_id!: bigint;
   public category!: string;
   public price?: number;
+  public status_id!: number;
   public description!: string;
 
   public readonly created_at!: Date;
@@ -39,6 +41,10 @@ class RestaurantMenuItems
     RestaurantMenuItems.belongsTo(models.Restaurants, {
       foreignKey: 'restaurant_id',
       as: dbAliases.restaurantItems.restaurant,
+    });
+    RestaurantMenuItems.belongsTo(models.Statuses, {
+      foreignKey: 'status_id',
+      as: dbAliases.restaurantItems.status,
     });
     RestaurantMenuItems.hasMany(models.RestaurantMenuItemImages, {
       foreignKey: 'restaurant_menu_item_id',
@@ -78,6 +84,15 @@ RestaurantMenuItems.init(
     },
     description: {
       type: DataTypes.TEXT,
+    },
+    status_id: {
+      type: DataTypes.BIGINT,
+      defaultValue: 1,
+      references: {
+        model: 'statuses',
+        key: 'id',
+      },
+      onDelete: 'SET NULL',
     },
     price: {
       type: DataTypes.DOUBLE,

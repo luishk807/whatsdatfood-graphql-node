@@ -6,6 +6,7 @@ interface UserRatingsInterface {
   rating: number;
   comment?: string;
   restaurant_menu_item_id: bigint;
+  status_id?: number;
   user_id: bigint;
   created_at?: Date;
   updated_at?: Date;
@@ -23,6 +24,7 @@ class UserRatings
   public id!: number;
   public rating!: number;
   public comment!: string;
+  public status_id!: number;
   public restaurant_menu_item_id!: bigint;
   public user_id!: bigint;
 
@@ -39,6 +41,10 @@ class UserRatings
     UserRatings.belongsTo(models.RestaurantMenuItems, {
       foreignKey: 'restaurant_menu_item_id',
       as: dbAliases.userRatings.restaurantItem,
+    });
+    UserRatings.belongsTo(models.Statuses, {
+      foreignKey: 'status_id',
+      as: dbAliases.userRatings.status,
     });
   }
 }
@@ -65,6 +71,15 @@ UserRatings.init(
         key: 'id',
       },
       onDelete: 'CASCADE',
+    },
+    status_id: {
+      type: DataTypes.BIGINT,
+      defaultValue: 1,
+      references: {
+        model: 'statuses',
+        key: 'id',
+      },
+      onDelete: 'SET NULL',
     },
     user_id: {
       type: DataTypes.BIGINT,

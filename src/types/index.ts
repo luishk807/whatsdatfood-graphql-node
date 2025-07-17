@@ -16,6 +16,7 @@ export type UserType = {
   role: number;
   verification: string;
   dob: Date;
+  status_id: number;
 };
 
 export type UserRating = {

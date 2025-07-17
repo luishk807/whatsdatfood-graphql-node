@@ -1,7 +1,7 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelizeConnection from 'db/sequelize';
 import { UserRole } from 'enum';
-
+import { dbAliases } from 'db/index';
 interface UserInterface {
   id: number;
   first_name: string;
@@ -12,6 +12,7 @@ interface UserInterface {
   role: bigint;
   verification?: string;
   dob: Date;
+  status_id?: number;
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
@@ -26,6 +27,7 @@ class Users extends Model<UserInterface, UserInput> implements UserInterface {
   public last_name!: string;
   public password!: string;
   public phone!: string;
+  public status!: number;
   public role!: bigint;
   public email!: string;
   public verification!: string;
@@ -40,6 +42,10 @@ class Users extends Model<UserInterface, UserInput> implements UserInterface {
     Users.hasMany(models.UserSearches);
     Users.hasMany(models.UserRatings);
     Users.hasOne(models.UserRoles);
+    Users.belongsTo(models.Statuses, {
+      foreignKey: 'status_id',
+      as: dbAliases.users.status,
+    });
   }
 }
 
@@ -73,6 +79,15 @@ Users.init(
       type: DataTypes.BIGINT,
       allowNull: true,
       defaultValue: UserRole.USER,
+    },
+    status_id: {
+      type: DataTypes.BIGINT,
+      defaultValue: 1,
+      references: {
+        model: 'statuses',
+        key: 'id',
+      },
+      onDelete: 'SET NULL',
     },
     password: {
       type: DataTypes.TEXT,
