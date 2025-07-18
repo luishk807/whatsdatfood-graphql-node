@@ -4,8 +4,10 @@ export const loginDef = gql`
     success: Boolean
   }
 
+  extend type Query {
+    checkAuth: User
+  }
   extend type Mutation {
     login(username: String!, password: String!): LoginPayload
-    checkAuth: User
   }
 `;

@@ -1,7 +1,12 @@
 import loginService from 'services/login.service';
 import { LoginPayload } from 'types';
-import cookie from 'cookie';
+import { serialize } from 'cookie';
 export const loginResolvers = {
+  Query: {
+    checkAuth: (_: any, __: any, context: any) => {
+      return context.user;
+    },
+  },
   Mutation: {
     login: async (
       _: any,
@@ -17,7 +22,7 @@ export const loginResolvers = {
 
         res.setHeader(
           'Set-Cookie',
-          cookie.serialize('token', token, {
+          serialize('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
@@ -28,9 +33,6 @@ export const loginResolvers = {
       }
 
       return { success: loginResult.success };
-    },
-    checkAuth: (_: any, __: any, context: any) => {
-      return context.user;
     },
   },
 };

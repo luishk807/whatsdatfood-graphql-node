@@ -2,11 +2,16 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { NotAuthorized } from 'graphql/customErrors';
 import { UserType } from 'types';
-import cookie from 'cookie';
+import cookie, { parse } from 'cookie';
 import { _get } from 'helpers';
 
 export const createJSONWebToken = (obj: any) => {
   const env_token: string | undefined = process.env.ACCESS_TOKEN_SECRET || '';
+
+  if (!env_token) {
+    throw new Error('ERROR: missing access token');
+  }
+
   return jwt.sign(obj, env_token, {
     expiresIn: '1h',
   });
@@ -29,8 +34,14 @@ export const comparePassword = async (password1: string, password2: string) => {
 };
 
 export const authenticate = (req: any) => {
-  const cookies = req.headers.cookie ? cookie.parse(req.headers.cookie) : {};
+  if (!req || !req.headers || !req.headers.cookie) {
+    return null;
+  }
+  if (!req.headers.cookie) {
+    return null;
+  }
 
+  const cookies = parse(req.headers.cookie);
   const token = _get(cookies, 'token');
 
   if (!token) {
@@ -61,6 +72,9 @@ export const authenticate = (req: any) => {
     };
     return user;
   } catch (err) {
+    if (err instanceof Error) {
+      throw new Error(err.message);
+    }
     return null;
   }
 };
