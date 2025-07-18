@@ -1,5 +1,6 @@
 import DataLoader from 'dataloader';
 import { RestaurantsOutput } from 'db/models/restaurants';
+import { Response, Request } from 'express';
 
 import {
   RestaurantType,
@@ -9,6 +10,8 @@ import {
 } from 'types';
 
 export interface GraphQLServerContext {
+  res: Response;
+  req: Request;
   user: UserType | null;
   restaurantRestaurantItemsDataLoader: DataLoader<number, RestaurantItemType[]>;
   restaurantItemRestaurant: DataLoader<number, RestaurantType | null>;

@@ -4,7 +4,6 @@ const UserRepo = new UserRepository();
 
 const LoginServices = {
   async login(username: string, password: string) {
-    console.log('hey');
     const user = await UserRepo.findUserByUsername(username);
 
     if (!user) {
@@ -32,8 +31,8 @@ const LoginServices = {
       verification: plainUser.verification,
     });
     return {
+      success: true,
       token,
-      user,
     };
   },
 };

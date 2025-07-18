@@ -189,8 +189,7 @@ export type gooogleResponseAPIItemTypes = {
 };
 
 export type LoginPayload = {
-  token: string;
-  user: UserType;
+  success: boolean;
 };
 export type googleResponseAPIType = {
   items: [gooogleResponseAPIItemTypes];

@@ -72,8 +72,8 @@ export async function setupGraphQL(app: Application, httpServer: http.Server) {
   app.use(
     '/graphql',
     expressMiddleware(server, {
-      context: async ({ req }): Promise<GraphQLServerContext> => {
-        //const userData = authenticate(req);
+      context: async ({ req, res }): Promise<GraphQLServerContext> => {
+        // const userData = authenticate(req);
 
         const restaurantRestaurantItemsDataLoader = new DataLoader(
           (ids: readonly number[]) =>
@@ -104,7 +104,8 @@ export async function setupGraphQL(app: Application, httpServer: http.Server) {
         );
 
         return {
-          // user: userData,
+          req,
+          res,
           user: null,
           restaurantRestaurantItemsDataLoader,
           restaurantItemRestaurant,

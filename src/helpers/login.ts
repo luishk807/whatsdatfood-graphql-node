@@ -2,6 +2,8 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { NotAuthorized } from 'graphql/customErrors';
 import { UserType } from 'types';
+import cookie from 'cookie';
+import { _get } from 'helpers';
 
 export const createJSONWebToken = (obj: any) => {
   const env_token: string | undefined = process.env.ACCESS_TOKEN_SECRET || '';
@@ -27,11 +29,13 @@ export const comparePassword = async (password1: string, password2: string) => {
 };
 
 export const authenticate = (req: any) => {
-  const authheader = req.headers['authorization'];
-  if (!authheader) {
+  const cookies = req.headers.cookie ? cookie.parse(req.headers.cookie) : {};
+
+  const token = _get(cookies, 'token');
+
+  if (!token) {
     throw new NotAuthorized('not authorized');
   }
-  const token: string = authheader.split(' ')[1];
 
   const env_token: string | undefined = process.env.ACCESS_TOKEN_SECRET || '';
 
