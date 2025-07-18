@@ -7,6 +7,7 @@ interface UserInterface {
   first_name: string;
   last_name: string;
   password: string;
+  username: string;
   phone: string;
   email: string;
   role: bigint;
@@ -25,6 +26,7 @@ class Users extends Model<UserInterface, UserInput> implements UserInterface {
   public id!: number;
   public first_name!: string;
   public last_name!: string;
+  public username!: string;
   public password!: string;
   public phone!: string;
   public status!: number;
@@ -62,6 +64,11 @@ Users.init(
     },
     last_name: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    username: {
+      type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
     },
     email: {

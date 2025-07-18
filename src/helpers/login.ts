@@ -44,6 +44,7 @@ export const authenticate = (req: any) => {
 
     const user: UserType = {
       id: decoded.id,
+      username: decoded.username,
       first_name: decoded.first_name,
       last_name: decoded.last_name,
       password: decoded.password,

@@ -30,6 +30,15 @@ class UsersRepo extends Base {
 
     return findUser ? findUser : null;
   }
+  async findUserByUsername(username: string): Promise<Users | null> {
+    const findUser = await this.model.findOne({
+      where: {
+        username: username,
+      },
+    });
+
+    return findUser ? findUser : null;
+  }
 }
 
 export default UsersRepo;

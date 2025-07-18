@@ -10,6 +10,7 @@ export const buildUserPayload = async (item: UserInput) => {
   return {
     first_name: _get(item, 'first_name'),
     last_name: _get(item, 'last_name'),
+    username: _get(item, 'username'),
     password: password,
     role: role ? role : USER_ROLE_DEFAULT,
     phone: _get(item, 'phone'),

@@ -11,12 +11,13 @@ export type UserType = {
   first_name: string;
   last_name: string;
   password: string;
+  username: string;
   phone: string;
   email: string;
-  role: number;
+  role: bigint;
   verification: string;
-  dob: Date;
-  status_id: number;
+  dob?: Date;
+  status_id?: number;
 };
 
 export type UserRating = {
@@ -185,6 +186,11 @@ export type gooogleResponseAPIItemTypes = {
     thumbnailHeight: number;
     thumbnailWidth: number;
   };
+};
+
+export type LoginPayload = {
+  token: string;
+  user: UserType;
 };
 export type googleResponseAPIType = {
   items: [gooogleResponseAPIItemTypes];
