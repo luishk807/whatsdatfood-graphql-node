@@ -3,6 +3,8 @@ import db from '../db/models/index';
 
 import { UserInput } from '../db/models/users';
 import Users from '../db/models/users';
+import { includes } from 'lodash';
+import { dbAliases } from 'db';
 
 class UsersRepo extends Base {
   constructor() {
@@ -26,6 +28,20 @@ class UsersRepo extends Base {
       where: {
         email: email,
       },
+      include: [
+        {
+          model: db.UserRoles,
+          as: dbAliases.users.userRole,
+        },
+        {
+          model: db.UserRatings,
+          as: dbAliases.users.userRatings,
+        },
+        {
+          model: db.Statuses,
+          as: dbAliases.users.status,
+        },
+      ],
     });
 
     return findUser ? findUser : null;
@@ -35,6 +51,20 @@ class UsersRepo extends Base {
       where: {
         username: username,
       },
+      include: [
+        {
+          model: db.UserRoles,
+          as: dbAliases.users.userRole,
+        },
+        {
+          model: db.UserRatings,
+          as: dbAliases.users.userRatings,
+        },
+        {
+          model: db.Statuses,
+          as: dbAliases.users.status,
+        },
+      ],
     });
 
     return findUser ? findUser : null;

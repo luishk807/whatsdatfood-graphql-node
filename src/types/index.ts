@@ -6,6 +6,11 @@ export type addressType = {
   postal_code?: string;
 };
 
+export type StatusType = {
+  id: number;
+  name: string;
+};
+
 export type UserType = {
   id: number;
   first_name: string;
@@ -14,10 +19,13 @@ export type UserType = {
   username: string;
   phone: string;
   email: string;
-  role: bigint;
+  role_id: bigint;
   verification: string;
   dob?: Date;
   status_id?: number;
+  userUserRatings?: [UserRating];
+  userStatus?: StatusType;
+  userUserRole?: UserRoleType;
 };
 
 export type UserRating = {
@@ -119,7 +127,7 @@ export type createUserInputType = {
   password: string;
   username: string;
   phone: string;
-  role: bigint;
+  role_id: bigint;
   email: string;
   verification: string;
   dob: Date;

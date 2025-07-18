@@ -11,6 +11,12 @@ const UserServices = {
   async findById(id: number) {
     return await UserRepo.getOneById(id);
   },
+  async findByEmail(email: string) {
+    return await UserRepo.findUserByEmail(email);
+  },
+  async findByUsername(username: string) {
+    return await UserRepo.findUserByUsername(username);
+  },
   async getAll() {
     return await UserRepo.getAll();
   },

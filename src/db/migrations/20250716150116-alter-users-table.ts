@@ -9,8 +9,10 @@ export default {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
+
+    await queryInterface.renameColumn('users', 'role', 'role_id');
     // Change column type and default
-    await queryInterface.changeColumn('users', 'role', {
+    await queryInterface.changeColumn('users', 'role_id', {
       type: DataTypes.BIGINT,
       allowNull: true,
       defaultValue: 1,
@@ -22,7 +24,7 @@ export default {
 
     // Add foreign key constraint
     await queryInterface.addConstraint('users', {
-      fields: ['role'],
+      fields: ['role_id'],
       type: 'foreign key',
       name: 'fk_user_users_role_constraint',
       references: {
@@ -63,6 +65,7 @@ export default {
       'users',
       'fk_users_status_constraint',
     );
+    await queryInterface.renameColumn('users', 'role_id', 'role');
 
     // Optionally revert column changes
     await queryInterface.changeColumn('users', 'role', {

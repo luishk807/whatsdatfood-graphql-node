@@ -13,8 +13,8 @@ const baseTypeDefs = gql`
 
 export const typeDefs = mergeTypeDefs([
   baseTypeDefs,
+  statusDefs,
   restaurantDefs,
   userDefs,
-  statusDefs,
   loginDef,
 ]);

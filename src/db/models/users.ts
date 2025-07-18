@@ -10,7 +10,7 @@ interface UserInterface {
   username: string;
   phone: string;
   email: string;
-  role: bigint;
+  role_id: bigint;
   verification?: string;
   dob: Date;
   status_id?: number;
@@ -29,8 +29,8 @@ class Users extends Model<UserInterface, UserInput> implements UserInterface {
   public username!: string;
   public password!: string;
   public phone!: string;
-  public status!: number;
-  public role!: bigint;
+  public status_id!: number;
+  public role_id!: bigint;
   public email!: string;
   public verification!: string;
   public dob!: Date;
@@ -41,9 +41,16 @@ class Users extends Model<UserInterface, UserInput> implements UserInterface {
   public readonly deleted_at!: Date;
 
   static associate(models: any): void {
-    Users.hasMany(models.UserSearches);
-    Users.hasMany(models.UserRatings);
-    Users.hasOne(models.UserRoles);
+    Users.hasMany(models.UserSearches, {
+      as: dbAliases.users.userSearches,
+    });
+    Users.hasMany(models.UserRatings, {
+      as: dbAliases.users.userRatings,
+    });
+    Users.belongsTo(models.UserRoles, {
+      foreignKey: 'role_id',
+      as: dbAliases.users.userRole,
+    });
     Users.belongsTo(models.Statuses, {
       foreignKey: 'status_id',
       as: dbAliases.users.status,
@@ -82,7 +89,7 @@ Users.init(
     phone: {
       type: DataTypes.STRING,
     },
-    role: {
+    role_id: {
       type: DataTypes.BIGINT,
       allowNull: true,
       defaultValue: UserRole.USER,

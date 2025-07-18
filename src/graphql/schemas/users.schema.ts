@@ -10,11 +10,12 @@ export const userDefs = gql`
     username: String!
     verification: String
     status_id: ID
-    role: ID!
+    role_id: ID!
     dob: String!
     searches: [UserSearches]
-    ratings: [UserRatings]
-    status: Status
+    userUserRatings: [UserRatings]
+    userStatus: Status
+    userUserRole: UserRole
   }
 
   type UserRatings {
@@ -78,6 +79,8 @@ export const userDefs = gql`
   extend type Query {
     users: [User]
     user(id: ID): User
+    getUserByEmail(email: String): User
+    getUserByUsername(username: String): User
     ratings: [UserRatings]
   }
 

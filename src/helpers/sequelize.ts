@@ -4,6 +4,10 @@ export const getPageOffset = (limit: number, pageNumber: number) => {
   return limit * (pageNumber - 1);
 };
 
+export const getAssociationData = <T>(parent: T, keyStr: keyof T) => {
+  return parent[keyStr];
+};
+
 export const normalizeApostrophes = (str: string) => {
   return str
     .replace(/[\u2018\u2019\u02BC]/g, "'")

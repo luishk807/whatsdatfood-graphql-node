@@ -10,6 +10,8 @@ import {
 } from 'types';
 import { validateUserData } from 'middlewares/user';
 import { SUBSCRIPTION_EVENTS } from 'constants/graphql';
+import { dbAliases } from 'db';
+import { getAssociationData } from 'helpers/sequelize';
 
 type Events = {
   USER_ADDED: { userAdded: UserType }; // Use your actual UserType here
@@ -21,10 +23,41 @@ export const userResolvers = {
   Query: {
     users: async () => await UserServices.getAll(),
     ratings: async () => await UserRatingServices.getAll(),
+    getUserByEmail: async (_: any, args: { email: string }) => {
+      return await UserServices.findByEmail(args.email);
+    },
+    getUserByUsername: async (_: any, args: { username: string }) => {
+      return await UserServices.findByUsername(args.username);
+    },
   },
   User: {
     searches: async (parent: UserType) => {
-      return [];
+      const value = getAssociationData(
+        parent,
+        dbAliases.users.userSearches as keyof UserType,
+      );
+
+      return Array.isArray(value) ? value : [];
+    },
+    userStatus: async (parent: UserType) => {
+      return getAssociationData(
+        parent,
+        dbAliases.users.status as keyof UserType,
+      );
+    },
+    userUserRole: async (parent: UserType) => {
+      return getAssociationData(
+        parent,
+        dbAliases.users.userRole as keyof UserType,
+      );
+    },
+    userUserRatings: async (parent: UserType) => {
+      const value = getAssociationData(
+        parent,
+        dbAliases.users.userRatings as keyof UserType,
+      );
+
+      return Array.isArray(value) ? value : [];
     },
   },
   Mutation: {

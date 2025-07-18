@@ -22,13 +22,16 @@ const LoginServices = {
       id: plainUser.id,
       email: plainUser.email,
       username: plainUser.username,
-      role: plainUser.role,
+      role_id: plainUser.role_id,
       phone: plainUser.phone,
       first_name: plainUser.first_name,
       last_name: plainUser.last_name,
       status_id: plainUser.status_id,
       dob: plainUser.dob,
       verification: plainUser.verification,
+      // userUserRatings: plainUser.UserRating,
+      // userStatus: plainUser.StatusType,
+      // userUserRole: plainUser.UserRoleType,
     });
     return {
       success: true,

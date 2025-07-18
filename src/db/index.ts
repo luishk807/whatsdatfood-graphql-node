@@ -29,6 +29,8 @@ export const dbAliases = {
   users: {
     userRole: 'userUserRole',
     status: 'userStatus',
+    userRatings: 'userUserRatings',
+    userSearches: 'userUserSearches',
   },
   userRole: {
     user: 'userRoleUser',

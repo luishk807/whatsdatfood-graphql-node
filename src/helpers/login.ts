@@ -66,7 +66,7 @@ export const authenticate = (req: any) => {
       phone: decoded.phone,
       email: decoded.email,
       status_id: decoded.status_id,
-      role: decoded.role,
+      role_id: decoded.role_id,
       verification: decoded.verification,
       dob: new Date(decoded.dob),
     };
