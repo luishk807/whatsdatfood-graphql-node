@@ -9,5 +9,6 @@ export const loginDef = gql`
   }
   extend type Mutation {
     login(username: String!, password: String!): LoginPayload
+    logout: LoginPayload
   }
 `;

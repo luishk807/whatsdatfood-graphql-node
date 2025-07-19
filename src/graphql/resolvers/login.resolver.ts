@@ -8,6 +8,27 @@ export const loginResolvers = {
     },
   },
   Mutation: {
+    logout: async (_: any, __: any, context: any): Promise<LoginPayload> => {
+      const { res } = context;
+
+      try {
+        res.setHeader('Set-Cookie', '', {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          expires: new Date(0),
+          path: '/',
+        });
+
+        return { success: true };
+      } catch (err) {
+        if (err instanceof Error) {
+          throw new Error(err.message);
+        }
+
+        return { success: false };
+      }
+    },
     login: async (
       _: any,
       args: { username: string; password: string },
