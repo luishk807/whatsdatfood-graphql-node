@@ -1,6 +1,7 @@
 import { gql } from 'graphql-tag';
 import db from 'db/models';
 export const restaurantDefs = gql`
+  scalar DateTime
   type RestaurantMenuItems {
     id: ID!
     restaurant_id: ID!
@@ -9,9 +10,9 @@ export const restaurantDefs = gql`
     top_choice: Boolean
     description: String
     category: String
-    created_at: String
-    updated_at: String
-    deleted_at: String
+    createdAt: DateTime
+    updatedAt: DateTime
+    deletedAt: DateTime
     restaurantItemRest: Restaurant
     restaurantItemRestImages: [RestaurantMenuItemImages]
     restaurantItemUserRatings: [UserRatings]
@@ -39,9 +40,9 @@ export const restaurantDefs = gql`
     owner: String
     license: String
     category: String
-    created_at: String
-    updated_at: String
-    deleted_at: String
+    createdAt: DateTime
+    updatedAt: DateTime
+    deletedAt: DateTime
     restaurantItemImageRestItem: RestaurantMenuItems
   }
 

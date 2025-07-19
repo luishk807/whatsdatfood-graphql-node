@@ -14,8 +14,10 @@ import { dbAliases } from 'db/index';
 import { RestaurantsOutput } from 'db/models/restaurants';
 import DataLoader from 'dataloader';
 import { NotFoundError } from 'graphql/customErrors';
+import { DateTimeResolver } from 'graphql-scalars';
 
 export const restaurantResolvers: IResolvers = {
+  DateTime: DateTimeResolver,
   Query: {
     restaurants: async (): Promise<RestaurantsOutput[]> => {
       const resp = await RestaurantServices.getAll();

@@ -4,6 +4,7 @@ import { UserRatingsInput } from 'db/models/userRatings';
 import { createHashPassword } from 'helpers/login';
 import { UserRating } from 'types';
 import { USER_ROLE_DEFAULT } from 'constants/sequelize';
+import { dbAliases } from 'db';
 export const buildUserPayload = async (item: UserInput) => {
   const password = await createHashPassword(_get(item, 'password'));
   const role = _get(item, 'role_id');

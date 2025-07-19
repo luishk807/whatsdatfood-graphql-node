@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelizeConnection from 'db/sequelize';
+import { dbAliases } from 'db';
 
 interface UserSearchesInterface {
   id: number;
@@ -30,11 +31,11 @@ class UserSearches
   static associate(models: any): void {
     UserSearches.belongsTo(models.Users, {
       foreignKey: 'user_id',
-      as: 'userSearchesUser',
+      as: dbAliases.userSearches.user,
     });
     UserSearches.belongsTo(models.Restaurants, {
       foreignKey: 'restaurant_id',
-      as: 'userSearchesRestaurants',
+      as: dbAliases.userSearches.restaurant,
     });
   }
 }

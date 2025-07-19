@@ -1,5 +1,6 @@
 import { gql } from 'graphql-tag';
 export const userDefs = gql`
+  scalar DateTime
   type User {
     id: ID!
     first_name: String!
@@ -11,8 +12,10 @@ export const userDefs = gql`
     verification: String
     status_id: ID
     role_id: ID!
+    createdAt: DateTime
+    updatedAt: DateTime
     dob: String!
-    searches: [UserSearches]
+    userUserSearches: [UserSearches]
     userUserRatings: [UserRatings]
     userStatus: Status
     userUserRole: UserRole
@@ -22,9 +25,12 @@ export const userDefs = gql`
     id: ID!
     rating: Float
     user_id: ID!
+    comment: String
+    createdAt: DateTime
+    updatedAt: DateTime
     restaurant_menu_item_id: ID!
     user: [User]
-    restaurantMenuItem: RestaurantMenuItems
+    userRatingRestaurantItem: RestaurantMenuItems
   }
 
   type Subscription {
@@ -42,9 +48,11 @@ export const userDefs = gql`
     restaurant_id: ID!
     user: User
     restaurant: Restaurant
-    created_at: String
-    updated_at: String
-    deleted_at: String
+    createdAt: DateTime
+    updatedAt: DateTime
+    deletedAt: DateTime
+    userSearchesRestaurant: Restaurant
+    userSearchesUser: User
   }
 
   input CreateUserInput {

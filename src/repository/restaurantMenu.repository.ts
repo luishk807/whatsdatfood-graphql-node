@@ -31,6 +31,12 @@ class RestaurantMenuItemsRepo extends Base {
         {
           model: db.UserRatings,
           as: dbAliases.restaurantItems.userRatings,
+          include: [
+            {
+              model: db.RestaurantMenuItems,
+              as: dbAliases.userRatings.restaurantItem,
+            },
+          ],
         },
       ],
       limit: limit,
@@ -50,6 +56,12 @@ class RestaurantMenuItemsRepo extends Base {
         {
           model: db.UserRatings,
           as: dbAliases.restaurantItems.userRatings,
+          include: [
+            {
+              model: db.RestaurantMenuItems,
+              as: dbAliases.userRatings.restaurantItem,
+            },
+          ],
         },
         {
           model: db.RestaurantMenuItemImages,

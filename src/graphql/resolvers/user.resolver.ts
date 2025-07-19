@@ -6,13 +6,14 @@ import {
   createUserRatingInput,
   updateUserRatingInput,
   UserRating,
+  UserSearchesType,
   UserType,
 } from 'types';
 import { validateUserData } from 'middlewares/user';
 import { SUBSCRIPTION_EVENTS } from 'constants/graphql';
 import { dbAliases } from 'db';
 import { getAssociationData } from 'helpers/sequelize';
-
+import { DateTimeResolver } from 'graphql-scalars';
 type Events = {
   USER_ADDED: { userAdded: UserType }; // Use your actual UserType here
 };
@@ -20,6 +21,7 @@ type Events = {
 const pubsub = createPubSub();
 
 export const userResolvers = {
+  DateTime: DateTimeResolver,
   Query: {
     users: async () => await UserServices.getAll(),
     ratings: async () => await UserRatingServices.getAll(),
@@ -31,19 +33,19 @@ export const userResolvers = {
     },
   },
   User: {
-    searches: async (parent: UserType) => {
+    userStatus: async (parent: UserType) => {
+      return getAssociationData(
+        parent,
+        dbAliases.users.status as keyof UserType,
+      );
+    },
+    userUserSearches: async (parent: UserType) => {
       const value = getAssociationData(
         parent,
         dbAliases.users.userSearches as keyof UserType,
       );
 
       return Array.isArray(value) ? value : [];
-    },
-    userStatus: async (parent: UserType) => {
-      return getAssociationData(
-        parent,
-        dbAliases.users.status as keyof UserType,
-      );
     },
     userUserRole: async (parent: UserType) => {
       return getAssociationData(
@@ -58,6 +60,30 @@ export const userResolvers = {
       );
 
       return Array.isArray(value) ? value : [];
+    },
+  },
+  UserRatings: {
+    userRatingRestaurantItem: async (parent: UserRating) => {
+      const value = getAssociationData(
+        parent,
+        dbAliases.userRatings.restaurantItem as keyof UserRating,
+      );
+
+      return value;
+    },
+  },
+  UserSearches: {
+    userSearchesRestaurant: async (parent: UserSearchesType) => {
+      return getAssociationData(
+        parent,
+        dbAliases.userSearches.restaurant as keyof UserSearchesType,
+      );
+    },
+    userSearchesUser: async (parent: UserSearchesType) => {
+      return getAssociationData(
+        parent,
+        dbAliases.userSearches.user as keyof UserSearchesType,
+      );
     },
   },
   Mutation: {
