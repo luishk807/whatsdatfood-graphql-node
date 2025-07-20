@@ -11,8 +11,6 @@ const app: Application = express();
 //cors
 // app.use(cors());
 // app.use(express.json());
-app.use(cookieParser());
-app.use(bodyParser.json());
 
 const corsOptions = {
   origin: ['http://localhost:3000', 'http://localhost:8080'],
@@ -23,6 +21,9 @@ const corsOptions = {
 
 //global error habndler
 app.use(cors(corsOptions));
+
+app.use(cookieParser());
+app.use(bodyParser.json());
 
 //Routes
 app.use('/', routes);

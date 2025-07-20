@@ -31,6 +31,13 @@ export const userResolvers = {
     getUserByUsername: async (_: any, args: { username: string }) => {
       return await UserServices.findByUsername(args.username);
     },
+    checkUsername: async (
+      _: any,
+      args: { username: string },
+    ): Promise<Boolean> => {
+      const resp = await UserServices.findByUsername(args.username);
+      return !!resp;
+    },
   },
   User: {
     userStatus: async (parent: UserType) => {

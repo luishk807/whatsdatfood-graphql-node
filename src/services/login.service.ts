@@ -1,5 +1,7 @@
 import { createJSONWebToken, comparePassword } from 'helpers/login';
 import UserRepository from 'repository/users.respository';
+import { _get } from 'helpers';
+import { dbAliases } from 'db';
 const UserRepo = new UserRepository();
 
 const LoginServices = {
@@ -29,9 +31,20 @@ const LoginServices = {
       status_id: plainUser.status_id,
       dob: plainUser.dob,
       verification: plainUser.verification,
-      // userUserRatings: plainUser.UserRating,
-      // userStatus: plainUser.StatusType,
-      // userUserRole: plainUser.UserRoleType,
+      createdAt: _get(plainUser, 'createdAt'),
+      updatedAt: _get(plainUser, 'updatedAt'),
+      [dbAliases.users.userSearches]: _get(
+        plainUser,
+        dbAliases.users.userSearches,
+        [],
+      ),
+      [dbAliases.users.userRatings]: _get(
+        plainUser,
+        dbAliases.users.userRatings,
+        [],
+      ),
+      [dbAliases.users.status]: _get(plainUser, dbAliases.users.status),
+      [dbAliases.users.userRole]: _get(plainUser, dbAliases.users.userRole),
     });
     return {
       success: true,

@@ -14,7 +14,7 @@ export const userDefs = gql`
     role_id: ID!
     createdAt: DateTime
     updatedAt: DateTime
-    dob: String!
+    dob: DateTime!
     userUserSearches: [UserSearches]
     userUserRatings: [UserRatings]
     userStatus: Status
@@ -90,6 +90,7 @@ export const userDefs = gql`
     getUserByEmail(email: String): User
     getUserByUsername(username: String): User
     ratings: [UserRatings]
+    checkUsername(username: String): Boolean
   }
 
   extend type Mutation {

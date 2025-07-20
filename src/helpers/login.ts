@@ -4,6 +4,7 @@ import { NotAuthorized } from 'graphql/customErrors';
 import { UserType } from 'types';
 import cookie, { parse } from 'cookie';
 import { _get } from 'helpers';
+import { dbAliases } from 'db';
 
 export const createJSONWebToken = (obj: any) => {
   const env_token: string | undefined = process.env.ACCESS_TOKEN_SECRET || '';
@@ -65,10 +66,24 @@ export const authenticate = (req: any) => {
       password: decoded.password,
       phone: decoded.phone,
       email: decoded.email,
+      createdAt: _get(decoded, 'createdAt'),
+      updatedAt: _get(decoded, 'updatedAt'),
       status_id: decoded.status_id,
       role_id: decoded.role_id,
       verification: decoded.verification,
       dob: new Date(decoded.dob),
+      [dbAliases.users.status]: _get(decoded, dbAliases.users.status),
+      [dbAliases.users.userSearches]: _get(
+        decoded,
+        dbAliases.users.userSearches,
+        [],
+      ),
+      [dbAliases.users.userRatings]: _get(
+        decoded,
+        dbAliases.users.userRatings,
+        [],
+      ),
+      [dbAliases.users.userRole]: _get(decoded, dbAliases.users.userRole),
     };
     return user;
   } catch (err) {
