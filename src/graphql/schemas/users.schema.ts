@@ -1,6 +1,7 @@
 import { gql } from 'graphql-tag';
 export const userDefs = gql`
   scalar DateTime
+  scalar Date
   type User {
     id: ID!
     first_name: String!
@@ -21,6 +22,26 @@ export const userDefs = gql`
     userUserRole: UserRole
   }
 
+  type UserResponseType {
+    id: ID!
+    first_name: String!
+    last_name: String!
+    password: String!
+    phone: String!
+    email: String!
+    username: String!
+    verification: String
+    status_id: ID
+    role_id: ID!
+    createdAt: DateTime
+    updatedAt: DateTime
+    dob: Date
+    searches: [UserSearches]
+    ratings: [UserRatingResponseType]
+    status: Status
+    role: UserRole
+  }
+
   type UserRatings {
     id: ID!
     rating: Float
@@ -29,8 +50,20 @@ export const userDefs = gql`
     createdAt: DateTime
     updatedAt: DateTime
     restaurant_menu_item_id: ID!
-    user: [User]
+    user: [UserResponseType]
     userRatingRestaurantItem: RestaurantMenuItems
+  }
+
+  type UserRatingResponseType {
+    id: ID!
+    rating: Float
+    user_id: ID!
+    comment: String
+    createdAt: DateTime
+    updatedAt: DateTime
+    restaurant_menu_item_id: ID!
+    user: [UserResponseType]
+    restaurantItem: RestaurantMenuItemsResponseType
   }
 
   type Subscription {
@@ -53,6 +86,17 @@ export const userDefs = gql`
     deletedAt: DateTime
     userSearchesRestaurant: Restaurant
     userSearchesUser: User
+  }
+
+  type UserSearchesResponseType {
+    id: ID!
+    user_id: ID!
+    restaurant_id: ID!
+    user: UserResponseType
+    createdAt: DateTime
+    updatedAt: DateTime
+    deletedAt: DateTime
+    restaurant: RestaurantResponseType
   }
 
   input CreateUserInput {
@@ -85,11 +129,11 @@ export const userDefs = gql`
   }
 
   extend type Query {
-    users: [User]
-    user(id: ID): User
-    getUserByEmail(email: String): User
-    getUserByUsername(username: String): User
-    ratings: [UserRatings]
+    users: [UserResponseType]
+    user(id: ID): UserResponseType
+    getUserByEmail(email: String): UserResponseType
+    getUserByUsername(username: String): UserResponseType
+    ratings: [UserRatingResponseType]
     checkUsername(username: String): Boolean
   }
 

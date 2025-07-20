@@ -15,6 +15,7 @@ import RestaurantMenuItems from 'services/restaurantMenuItems.service';
 import RestaurantServices from 'services/restaurants.service';
 import OpenAiResturant from 'services/openAi.service';
 import { authenticate } from 'helpers/login';
+import { getDataIfArray } from 'helpers';
 
 export async function setupGraphQL(app: Application, httpServer: http.Server) {
   const schema = makeExecutableSchema({
@@ -106,11 +107,11 @@ export async function setupGraphQL(app: Application, httpServer: http.Server) {
         return {
           req,
           res,
-          user: userData,
+          user: getDataIfArray(userData),
           restaurantRestaurantItemsDataLoader,
           restaurantItemRestaurant,
           aiRestaurantNameList: aiRestaurantNameListData,
-          aiRestaurantDataBySlug: aiRestaurantDataBySlugData,
+          aiRestaurantDataBySlug: getDataIfArray(aiRestaurantDataBySlugData),
         };
       },
     }),

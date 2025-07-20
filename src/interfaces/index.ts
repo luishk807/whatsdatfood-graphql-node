@@ -5,14 +5,15 @@ import { Response, Request } from 'express';
 import {
   RestaurantType,
   RestaurantItemType,
-  UserType,
   RestaurantAIResponse,
-} from 'types';
+} from 'types/restaurant';
+
+import { UserResponseType, UserType } from 'types/user';
 
 export interface GraphQLServerContext {
   res: Response;
   req: Request;
-  user: UserType | null;
+  user: UserResponseType | null;
   restaurantRestaurantItemsDataLoader: DataLoader<number, RestaurantItemType[]>;
   restaurantItemRestaurant: DataLoader<number, RestaurantType | null>;
   aiRestaurantNameList: DataLoader<string, RestaurantAIResponse[] | []>;

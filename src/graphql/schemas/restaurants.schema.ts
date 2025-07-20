@@ -18,6 +18,22 @@ export const restaurantDefs = gql`
     restaurantItemUserRatings: [UserRatings]
   }
 
+  type RestaurantMenuItemsResponseType {
+    id: ID!
+    restaurant_id: ID!
+    name: String
+    price: Float
+    top_choice: Boolean
+    description: String
+    category: String
+    createdAt: DateTime
+    updatedAt: DateTime
+    deletedAt: DateTime
+    restaurant: Restaurant
+    images: [RestaurantMenuItemImagesResponseType]
+    ratings: [UserRatingResponseType]
+  }
+
   type Restaurant {
     id: ID!
     name: String!
@@ -28,6 +44,18 @@ export const restaurantDefs = gql`
     country: String
     postal_code: String
     restRestaurantItems: [RestaurantMenuItems]
+  }
+
+  type RestaurantResponseType {
+    id: ID!
+    name: String!
+    slug: String
+    address: String
+    city: String
+    state: String
+    country: String
+    postal_code: String
+    restaurantItems: [RestaurantMenuItemsResponseType]
   }
 
   type RestaurantMenuItemImages {
@@ -46,13 +74,29 @@ export const restaurantDefs = gql`
     restaurantItemImageRestItem: RestaurantMenuItems
   }
 
+  type RestaurantMenuItemImagesResponseType {
+    id: ID!
+    restaurant_item_id: ID!
+    user_id: ID
+    name: String
+    url_m: String
+    url_s: String
+    owner: String
+    license: String
+    category: String
+    createdAt: DateTime
+    updatedAt: DateTime
+    deletedAt: DateTime
+    restaurantItem: RestaurantMenuItemsResponseType
+  }
+
   type RestaurantMenuItemsAIResponse {
     name: String
     category: String
     top_choice: Boolean
     description: String
-    restaurantItemImages: [RestaurantMenuItemImages]
-    restaurantItemUserRatings: [UserRatings]
+    images: [RestaurantMenuItemImagesResponseType]
+    ratings: [UserRatingResponseType]
   }
 
   type RestaurantAIResponse {
@@ -63,7 +107,7 @@ export const restaurantDefs = gql`
     state: String!
     country: String!
     postal_code: String!
-    restRestaurantItems: [RestaurantMenuItems]
+    restaurantItems: [RestaurantMenuItemsResponseType]
   }
 
   input createRestauranInput {
@@ -89,10 +133,10 @@ export const restaurantDefs = gql`
   }
 
   extend type Query {
-    restaurants: [Restaurant]
+    restaurants: [RestaurantResponseType]
     aiRestaurantBySlug(slug: String): RestaurantAIResponse
     aiRestaurantNameList(name: String): [RestaurantAIResponse]
-    getRestaurantImage(id: ID): RestaurantMenuItemImages
+    getRestaurantImage(id: ID): RestaurantMenuItemImagesResponseType
   }
 
   extend type Mutation {

@@ -3,12 +3,15 @@ import { _get } from 'helpers';
 import {
   RestaurantAIResponse,
   RestaurantItemType,
+  RestaurantResponseType,
   RestaurantType,
-  gooogleResponseAPIItemTypes,
-} from 'types';
+} from 'types/restaurant';
+import { gooogleResponseAPIItemTypes } from 'types';
+
 import {
   buildRestaurantPayload,
   buildRestaurantItemPayload,
+  buildRestaurantItemResponse,
 } from 'helpers/restaurants.sequelize';
 import { dbAliases } from 'db/index';
 import RestaurantServices from 'services/restaurants.service';
@@ -126,7 +129,7 @@ const OpenAiFn = {
   },
   async getAIRestaurantMenuBySlug(slug: string) {
     const restData = await RestaurantServices.findBySlug(slug);
-    const results: RestaurantItemType[] = [];
+    const results = [];
 
     if (!restData) {
       throw new Error('No restaurant available');
@@ -140,7 +143,7 @@ const OpenAiFn = {
       state,
       country,
       postal_code,
-    } = restData;
+    } = Array.isArray(restData) ? restData[0] : restData;
 
     const wholeAddress = getBuiltAddress({
       address,
@@ -150,28 +153,10 @@ const OpenAiFn = {
       postal_code,
     });
 
-    const menuItems = restData[itemKey] as RestaurantItemType[];
+    const menuItems = _get(restData, 'restaurantItems');
 
     if (menuItems && menuItems.length) {
-      menuItems.forEach((restaurant: RestaurantItemType) => {
-        results.push({
-          id: _get(restaurant, 'id'),
-          name: _get(restaurant, 'name'),
-          category: _get(restaurant, 'category'),
-          top_choice: _get(restaurant, 'top_choice'),
-          price: _get(restaurant, 'price'),
-          description: _get(restaurant, 'description'),
-          restaurant_id: _get(restaurant, 'restaurant_id'),
-          restaurantItemUserRatings: _get(
-            restaurant,
-            'restaurantItemUserRatings',
-          ),
-          restaurantItemRestImages: _get(
-            restaurant,
-            'restaurantItemRestImages',
-          ),
-        });
-      });
+      return restData;
     } else {
       const ai_question = `get me the menu of ${name} ${wholeAddress} restaurant, put in an array of object as [{ name, price, description, category, top_choice: true or false}]. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
 
@@ -198,23 +183,8 @@ const OpenAiFn = {
 
           if (!exists) {
             await RestaurantMenuItemsFn.create(restaurantItemPayload);
-            results.push({
-              id: _get(restaurantItemPayload, 'id'),
-              name: _get(restaurantItemPayload, 'name'),
-              category: _get(restaurantItemPayload, 'category'),
-              top_choice: _get(restaurantItemPayload, 'top_choice'),
-              price: _get(restaurantItemPayload, 'price'),
-              description: _get(restaurantItemPayload, 'description'),
-              restaurant_id: _get(restaurantItemPayload, 'restaurant_id'),
-              restaurantItemUserRatings: _get(
-                restaurantItemPayload,
-                'restaurantItemUserRatings',
-              ),
-              restaurantItemRestImages: _get(
-                restaurantItemPayload,
-                'restaurantItemRestImages',
-              ),
-            });
+            const item = buildRestaurantItemResponse(restaurantItemPayload);
+            results.push(item);
           } else {
             console.log('skipping saving item since it already exists');
           }
@@ -230,25 +200,14 @@ const OpenAiFn = {
       state,
       country,
       postal_code,
-      [itemKey]: results,
+      restaurantItems: results,
     };
   },
   async getAIRestaurantList(restName: string) {
     const foundRest = await RestaurantServices.findByName(restName);
-    console.log('getAIRestaurantList', foundRest);
 
-    if (foundRest && foundRest.length) {
-      return foundRest.map((rest: RestaurantType) => ({
-        id: _get(rest, 'id'),
-        name: _get(rest, 'name'),
-        address: _get(rest, 'address'),
-        city: _get(rest, 'city'),
-        slug: _get(rest, 'slug'),
-        state: _get(rest, 'state'),
-        country: _get(rest, 'country'),
-        postal_code: _get(rest, 'postal_code'),
-        [itemKey]: _get(rest, itemKey),
-      }));
+    if (Array.isArray(foundRest) && foundRest.length) {
+      return foundRest;
     } else {
       console.log('use ai');
       const ai_question = `get the list of restaurants of with the name exactly ${restName} in nyc as [{ name, address, city, state, country, postal_code}]. Respond only with valid JSON schema. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
@@ -265,7 +224,7 @@ const OpenAiFn = {
           const rest_name = _get(item, 'name', '');
           const restData = await RestaurantServices.findByName(rest_name);
 
-          if (!restData || (restData && !restData.length)) {
+          if (!restData || (Array.isArray(restData) && !restData.length)) {
             const restaurantPayload = buildRestaurantPayload(item);
             const slug = _get(restaurantPayload, 'slug');
             if (!results.has(slug)) {
@@ -281,20 +240,22 @@ const OpenAiFn = {
               });
             }
           } else {
-            restData.forEach((restaurant: RestaurantType) => {
-              const slug = _get(restaurant, 'slug');
-              if (!results.has(slug)) {
-                results.set(slug, {
-                  name: _get(restaurant, 'name'),
-                  address: _get(restaurant, 'address'),
-                  city: _get(restaurant, 'city'),
-                  slug: slug,
-                  state: _get(restaurant, 'state'),
-                  country: _get(restaurant, 'country'),
-                  postal_code: _get(restaurant, 'postal_code'),
-                });
-              }
-            });
+            if (Array.isArray(restData)) {
+              restData.forEach((restaurant: RestaurantType) => {
+                const slug = _get(restaurant, 'slug');
+                if (!results.has(slug)) {
+                  results.set(slug, {
+                    name: _get(restaurant, 'name'),
+                    address: _get(restaurant, 'address'),
+                    city: _get(restaurant, 'city'),
+                    slug: slug,
+                    state: _get(restaurant, 'state'),
+                    country: _get(restaurant, 'country'),
+                    postal_code: _get(restaurant, 'postal_code'),
+                  });
+                }
+              });
+            }
           }
         }
       }

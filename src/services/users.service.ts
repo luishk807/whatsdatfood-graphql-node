@@ -1,6 +1,9 @@
 import { UserInput } from 'db/models/users';
 import Users from 'repository/users.respository';
-import { buildUserPayload } from 'helpers/users.sequelize';
+import { buildUserPayload, buildUserResponse } from 'helpers/users.sequelize';
+import { _get } from 'helpers';
+import { dbAliases } from 'db';
+import { UserType } from 'types/user';
 const UserRepo = new Users();
 
 const UserServices = {
@@ -9,16 +12,20 @@ const UserServices = {
     return await UserRepo.create(new_payload);
   },
   async findById(id: number) {
-    return await UserRepo.getOneById(id);
+    const resp = await UserRepo.getOneById(id);
+    return buildUserResponse(resp as UserType);
   },
   async findByEmail(email: string) {
-    return await UserRepo.findUserByEmail(email);
+    const resp = await UserRepo.findUserByEmail(email);
+    return buildUserResponse(resp as UserType);
   },
   async findByUsername(username: string) {
-    return await UserRepo.findUserByUsername(username);
+    const resp = await UserRepo.findUserByUsername(username);
+    return buildUserResponse(resp as UserType);
   },
   async getAll() {
-    return await UserRepo.getAll();
+    const resp = await UserRepo.getAll();
+    return buildUserResponse(resp as UserType);
   },
 };
 

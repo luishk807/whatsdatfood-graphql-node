@@ -6,9 +6,10 @@ import {
   createUserRatingInput,
   updateUserRatingInput,
   UserRating,
+  UserResponseType,
   UserSearchesType,
   UserType,
-} from 'types';
+} from 'types/user';
 import { validateUserData } from 'middlewares/user';
 import { SUBSCRIPTION_EVENTS } from 'constants/graphql';
 import { dbAliases } from 'db';
@@ -77,6 +78,16 @@ export const userResolvers = {
       );
 
       return value;
+    },
+  },
+  UserRatingResponseType: {
+    restaurantItem: async (parent: UserType) => {
+      const value = getAssociationData(
+        parent,
+        dbAliases.users.userRatings as keyof UserType,
+      );
+
+      return Array.isArray(value) ? value : [];
     },
   },
   UserSearches: {

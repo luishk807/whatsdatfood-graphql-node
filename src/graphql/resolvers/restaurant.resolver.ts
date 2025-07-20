@@ -4,12 +4,13 @@ import OpenAiResturant from 'services/openAi.service';
 import { IResolvers } from '@graphql-tools/utils'; // or your GraphQL resolver typings
 import {
   RestaurantType,
+  RestaurantResponseType,
   RestaurantItemType,
   RestaurantMenuItemsAIResponse,
   createRestaurantArgInput,
   RestaurantAIResponse,
-  UserRating,
-} from 'types';
+  RestaurantItemResponseType,
+} from 'types/restaurant';
 import { dbAliases } from 'db/index';
 import { RestaurantsOutput } from 'db/models/restaurants';
 import DataLoader from 'dataloader';
@@ -19,12 +20,12 @@ import { DateTimeResolver } from 'graphql-scalars';
 export const restaurantResolvers: IResolvers = {
   DateTime: DateTimeResolver,
   Query: {
-    restaurants: async (): Promise<RestaurantsOutput[]> => {
+    restaurants: async (): Promise<RestaurantResponseType[]> => {
       const resp = await RestaurantServices.getAll();
       if (!resp) {
         throw new NotFoundError('No restaurant available');
       }
-      return resp;
+      return Array.isArray(resp) ? resp : [];
     },
     aiRestaurantBySlug: async (
       _parent: any,
@@ -64,27 +65,32 @@ export const restaurantResolvers: IResolvers = {
       return Array.isArray(value) ? value : [];
     },
   },
+  RestaurantResponseType: {
+    restaurantItems: async (
+      _parent: RestaurantResponseType,
+      _args: any,
+      {},
+    ): Promise<RestaurantItemResponseType[]> => {
+      const value = _parent.restaurantItems;
+      return Array.isArray(value) ? value : [];
+    },
+  },
   RestaurantAIResponse: {
-    restRestaurantItems: async (
+    restaurantItems: async (
       parent: RestaurantAIResponse,
       args: any,
       {},
     ): Promise<RestaurantMenuItemsAIResponse[]> => {
-      const key = dbAliases.restaurant
-        .restaurantItems as keyof RestaurantAIResponse;
-      const value = parent[key];
+      const value = parent.restaurantItems;
       return Array.isArray(value) ? value : [];
     },
   },
   RestaurantMenuItemsAIResponse: {
-    restaurantItemUserRatings: async (
-      parent: RestaurantMenuItemsAIResponse,
-      args: any,
-    ) => {
-      return parent.restaurantItemUserRatings || [];
+    ratings: async (parent: RestaurantMenuItemsAIResponse, args: any) => {
+      return parent.ratings || [];
     },
-    restaurantItemImages: async (parent: RestaurantMenuItemsAIResponse) => {
-      return parent.restaurantItemRestImages || [];
+    images: async (parent: RestaurantMenuItemsAIResponse) => {
+      return parent.images || [];
     },
   },
   RestaurantMenuItems: {

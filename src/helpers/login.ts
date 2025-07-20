@@ -1,9 +1,10 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { NotAuthorized } from 'graphql/customErrors';
-import { UserType } from 'types';
+import { UserType } from 'types/user';
 import cookie, { parse } from 'cookie';
 import { _get } from 'helpers';
+import { buildUserResponse } from 'helpers/users.sequelize';
 import { dbAliases } from 'db';
 
 export const createJSONWebToken = (obj: any) => {
@@ -58,33 +59,7 @@ export const authenticate = (req: any) => {
       return null;
     }
 
-    const user: UserType = {
-      id: decoded.id,
-      username: decoded.username,
-      first_name: decoded.first_name,
-      last_name: decoded.last_name,
-      password: decoded.password,
-      phone: decoded.phone,
-      email: decoded.email,
-      createdAt: _get(decoded, 'createdAt'),
-      updatedAt: _get(decoded, 'updatedAt'),
-      status_id: decoded.status_id,
-      role_id: decoded.role_id,
-      verification: decoded.verification,
-      dob: new Date(decoded.dob),
-      [dbAliases.users.status]: _get(decoded, dbAliases.users.status),
-      [dbAliases.users.userSearches]: _get(
-        decoded,
-        dbAliases.users.userSearches,
-        [],
-      ),
-      [dbAliases.users.userRatings]: _get(
-        decoded,
-        dbAliases.users.userRatings,
-        [],
-      ),
-      [dbAliases.users.userRole]: _get(decoded, dbAliases.users.userRole),
-    };
+    const user = buildUserResponse(decoded as UserType);
     return user;
   } catch (err) {
     if (err instanceof Error) {

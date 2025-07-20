@@ -24,6 +24,10 @@ export const convertStringToNumber = (str: string) => {
   }
   return price;
 };
+
+export const getDataIfArray = <T>(data: T) =>
+  Array.isArray(data) ? data[0] : data;
+
 export const getBuiltAddress: getBuiltAddressType = (address) => {
   let new_address = '';
   const { address: c_address, city, country, state, postal_code } = address;
