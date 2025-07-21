@@ -53,6 +53,7 @@ export type UserRating = {
   rating: number;
   createdAt?: Date;
   updatedAt?: Date;
+  title?: string;
   comment?: string;
   userRatingRestaurantItem?: RestaurantItemType;
 };
@@ -64,6 +65,7 @@ export type UserRatingResponseType = {
   rating: number;
   createdAt?: Date;
   updatedAt?: Date;
+  title?: string;
   comment?: string;
   restaurantItem?: RestaurantItemResponseType;
 };
@@ -94,6 +96,7 @@ export type createUserRatingInput = {
   user_id: bigint;
   rating: number;
   comment?: string;
+  title?: string;
 };
 
 export type updateUserRatingInput = {
@@ -101,6 +104,8 @@ export type updateUserRatingInput = {
   restaurant_menu_item_id: bigint;
   user_id: bigint;
   rating: number;
+  comment?: string;
+  title?: string;
 };
 
 export type createUserInputType = {

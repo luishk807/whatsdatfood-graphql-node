@@ -26,6 +26,7 @@ export const buildUserRatingPayload = async (item: UserRatingsInput) => {
     rating: parseFloat(_get(item, 'rating')),
     user_id: _get(item, 'user_id'),
     comment: _get(item, 'comment'),
+    title: _get(item, 'title'),
     restaurant_menu_item_id: _get(item, 'restaurant_menu_item_id'),
   };
 

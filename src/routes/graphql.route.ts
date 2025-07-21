@@ -74,7 +74,18 @@ export async function setupGraphQL(app: Application, httpServer: http.Server) {
     '/graphql',
     expressMiddleware(server, {
       context: async ({ req, res }): Promise<GraphQLServerContext> => {
-        const userData = authenticate(req);
+        const body = req.body;
+        const operationName = body?.operationName;
+        console.log(operationName, 'operation');
+        const isPublicOperation = ['login', 'signup'].includes(operationName);
+        let userData = null;
+        try {
+          userData = authenticate(req);
+        } catch (err) {
+          if (!isPublicOperation) {
+            throw err;
+          }
+        }
 
         const restaurantRestaurantItemsDataLoader = new DataLoader(
           (ids: readonly number[]) =>

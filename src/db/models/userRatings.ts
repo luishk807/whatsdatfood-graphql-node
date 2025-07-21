@@ -5,6 +5,7 @@ interface UserRatingsInterface {
   id: number;
   rating: number;
   comment?: string;
+  title?: string;
   restaurant_menu_item_id: bigint;
   status_id?: number;
   user_id: bigint;
@@ -23,6 +24,7 @@ class UserRatings
 {
   public id!: number;
   public rating!: number;
+  public title!: string;
   public comment!: string;
   public status_id!: number;
   public restaurant_menu_item_id!: bigint;
@@ -59,6 +61,9 @@ UserRatings.init(
     rating: {
       type: DataTypes.DOUBLE,
       allowNull: false,
+    },
+    title: {
+      type: DataTypes.STRING,
     },
     comment: {
       type: DataTypes.TEXT,

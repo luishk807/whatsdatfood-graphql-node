@@ -47,6 +47,7 @@ export const userDefs = gql`
     rating: Float
     user_id: ID!
     comment: String
+    title: String
     createdAt: DateTime
     updatedAt: DateTime
     restaurant_menu_item_id: ID!
@@ -59,6 +60,7 @@ export const userDefs = gql`
     rating: Float
     user_id: ID!
     comment: String
+    title: String
     createdAt: DateTime
     updatedAt: DateTime
     restaurant_menu_item_id: ID!
@@ -117,6 +119,7 @@ export const userDefs = gql`
 
   input createUserRatingInput {
     user_id: ID!
+    title: String
     restaurant_menu_item_id: ID!
     rating: Float
     comment: String
@@ -124,6 +127,8 @@ export const userDefs = gql`
   input updateUserRatingInput {
     id: ID!
     user_id: ID!
+    title: String
+    comment: String
     restaurant_menu_item_id: ID!
     rating: Float
   }
