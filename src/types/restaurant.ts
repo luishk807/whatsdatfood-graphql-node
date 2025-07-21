@@ -7,9 +7,9 @@ export type RestaurantMenuItemImages = {
   name: string;
   url_m: string;
   url_s: string;
-  owner: String;
-  license: String;
-  content_link: String;
+  owner: string;
+  license: string;
+  content_link: string;
   category: string;
   createdAt: string;
   updatedAt: string;
@@ -23,9 +23,9 @@ export type RestaurantMenuItemImagesResponseType = {
   name: string;
   url_m: string;
   url_s: string;
-  owner: String;
-  license: String;
-  content_link: String;
+  owner: string;
+  license: string;
+  content_link: string;
   category: string;
   createdAt: string;
   updatedAt: string;

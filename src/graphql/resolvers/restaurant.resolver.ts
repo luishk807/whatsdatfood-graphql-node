@@ -87,10 +87,26 @@ export const restaurantResolvers: IResolvers = {
   },
   RestaurantMenuItemsAIResponse: {
     ratings: async (parent: RestaurantMenuItemsAIResponse, args: any) => {
-      return parent.ratings || [];
+      const keyItem = dbAliases.restaurantItems
+        .userRatings as keyof RestaurantMenuItemsAIResponse;
+      return parent[keyItem] || [];
     },
     images: async (parent: RestaurantMenuItemsAIResponse) => {
-      return parent.images || [];
+      const keyItem = dbAliases.restaurantItems
+        .restaurantItemImages as keyof RestaurantMenuItemsAIResponse;
+      return parent[keyItem] || [];
+    },
+  },
+  RestaurantMenuItemsResponseType: {
+    ratings: async (parent: RestaurantMenuItemsAIResponse, args: any) => {
+      const keyItem = dbAliases.restaurantItems
+        .userRatings as keyof RestaurantMenuItemsAIResponse;
+      return parent[keyItem] || [];
+    },
+    images: async (parent: RestaurantMenuItemsAIResponse) => {
+      const keyItem = dbAliases.restaurantItems
+        .restaurantItemImages as keyof RestaurantMenuItemsAIResponse;
+      return parent[keyItem] || [];
     },
   },
   RestaurantMenuItems: {
