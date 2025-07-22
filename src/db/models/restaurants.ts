@@ -10,6 +10,13 @@ interface RestaurantInterface {
   city?: string;
   state?: string;
   country?: string;
+  phone?: string;
+  payment_method?: string;
+  rating?: number;
+  michelin_score?: number;
+  description?: string;
+  delivery_method?: string;
+  letter_grade?: string;
   postal_code?: string;
   created_at?: Date;
   updated_at?: Date;
@@ -32,6 +39,13 @@ class Restaurants
   public state!: string;
   public country!: string;
   public postal_code!: string;
+  public phone!: string;
+  public payment_method!: string;
+  public rating!: number;
+  public michelin_score!: number;
+  public description!: string;
+  public delivery_method!: string;
+  public letter_grade!: string;
 
   // timestamps!
   public readonly created_at!: Date;
@@ -73,6 +87,27 @@ Restaurants.init(
       type: DataTypes.STRING,
     },
     postal_code: {
+      type: DataTypes.STRING,
+    },
+    phone: {
+      type: DataTypes.STRING,
+    },
+    payment_method: {
+      type: DataTypes.STRING,
+    },
+    rating: {
+      type: DataTypes.DOUBLE,
+    },
+    michelin_score: {
+      type: DataTypes.INTEGER,
+    },
+    description: {
+      type: DataTypes.TEXT,
+    },
+    delivery_method: {
+      type: DataTypes.TEXT,
+    },
+    letter_grade: {
       type: DataTypes.STRING,
     },
   },

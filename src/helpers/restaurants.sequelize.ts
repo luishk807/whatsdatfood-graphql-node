@@ -14,6 +14,13 @@ export const buildRestaurantPayload = (item: RestaurantsInput) => {
     state: _get(item, 'state'),
     country: _get(item, 'country'),
     postal_code: _get(item, 'postal_code'),
+    phone: _get(item, 'phone'),
+    payment_method: _get(item, 'payment_method'),
+    rating: _get(item, 'rating'),
+    michelin_score: _get(item, 'michelin_score'),
+    description: _get(item, 'description'),
+    delivery_method: _get(item, 'delivery_method'),
+    letter_grade: _get(item, 'letter_grade'),
   };
 
   const full_address = getBuiltAddress({
@@ -72,6 +79,13 @@ export const buildRestaurantResponse = (
         postal_code: _get(data, 'postal_code'),
         createdAt: _get(data, 'createdAt'),
         updatedAt: _get(data, 'updatedAt'),
+        phone: _get(data, 'phone'),
+        payment_method: _get(data, 'payment_method'),
+        rating: _get(data, 'rating'),
+        michelin_score: _get(data, 'michelin_score'),
+        description: _get(data, 'description'),
+        delivery_method: _get(data, 'delivery_method'),
+        letter_grade: _get(data, 'letter_grade'),
         restaurantItems: _get(data, dbAliases.restaurant.restaurantItems),
       }))
     : {
@@ -85,6 +99,13 @@ export const buildRestaurantResponse = (
         postal_code: _get(item, 'postal_code'),
         createdAt: _get(item, 'createdAt'),
         updatedAt: _get(item, 'updatedAt'),
+        phone: _get(item, 'phone'),
+        payment_method: _get(item, 'payment_method'),
+        rating: _get(item, 'rating'),
+        michelin_score: _get(item, 'michelin_score'),
+        description: _get(item, 'description'),
+        delivery_method: _get(item, 'delivery_method'),
+        letter_grade: _get(item, 'letter_grade'),
         restaurantItems: _get(item, dbAliases.restaurant.restaurantItems),
       };
 };

@@ -72,6 +72,13 @@ export type RestaurantType = {
   state: string;
   country: string;
   postal_code: string;
+  phone?: string;
+  payment_method?: string;
+  rating?: number;
+  michelin_score?: string;
+  description?: string;
+  delivery_method?: string;
+  letter_grade?: string;
   createdAt?: string;
   updatedAt?: string;
   restRestaurantItems?: [RestaurantItemType];
@@ -86,6 +93,13 @@ export type RestaurantResponseType = {
   state: string;
   country: string;
   postal_code: string;
+  phone?: string;
+  payment_method?: string;
+  rating?: number;
+  michelin_score?: string;
+  description?: string;
+  delivery_method?: string;
+  letter_grade?: string;
   createdAt?: string;
   updatedAt?: string;
   restaurantItems?: [RestaurantItemResponseType];
@@ -99,6 +113,13 @@ export type createRestaurantInput = {
   state: string;
   country: string;
   postal_code: string;
+  phone?: string;
+  payment_method?: string;
+  rating?: number;
+  michelin_score?: string;
+  description?: string;
+  delivery_method?: string;
+  letter_grade?: string;
 };
 
 export type createRestaurantArgInput = {
@@ -125,5 +146,12 @@ export type RestaurantAIResponse = {
   state: string;
   country: string;
   postal_code: string;
+  phone?: string;
+  payment_method?: string;
+  rating?: number;
+  michelin_score?: string;
+  description?: string;
+  delivery_method?: string;
+  letter_grade?: string;
   restaurantItems?: [RestaurantMenuItemsAIResponse];
 };

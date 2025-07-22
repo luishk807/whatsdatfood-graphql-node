@@ -43,6 +43,13 @@ export const restaurantDefs = gql`
     state: String
     country: String
     postal_code: String
+    phone: String
+    payment_method: String
+    rating: Float
+    michelin_score: String
+    description: String
+    delivery_method: String
+    letter_grade: String
     restRestaurantItems: [RestaurantMenuItems]
   }
 
@@ -55,6 +62,13 @@ export const restaurantDefs = gql`
     state: String
     country: String
     postal_code: String
+    phone: String
+    payment_method: String
+    rating: Float
+    michelin_score: String
+    description: String
+    delivery_method: String
+    letter_grade: String
     restaurantItems: [RestaurantMenuItemsResponseType]
   }
 
@@ -107,6 +121,13 @@ export const restaurantDefs = gql`
     state: String!
     country: String!
     postal_code: String!
+    phone: String
+    payment_method: String
+    rating: Float
+    michelin_score: String
+    description: String
+    delivery_method: String
+    letter_grade: String
     restaurantItems: [RestaurantMenuItemsResponseType]
   }
 
@@ -118,6 +139,13 @@ export const restaurantDefs = gql`
     state: String
     country: String
     postal_code: String
+    phone: String
+    payment_method: String
+    rating: Float
+    michelin_score: String
+    description: String
+    delivery_method: String
+    letter_grade: String
   }
 
   input createRestaurantItemsInput {

@@ -210,7 +210,7 @@ const OpenAiFn = {
       return foundRest;
     } else {
       console.log('use ai');
-      const ai_question = `get the list of restaurants of with the name exactly ${restName} in nyc as [{ name, address, city, state, country, postal_code}]. Respond only with valid JSON schema. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
+      const ai_question = `get the list of restaurants of with the name exactly ${restName} in nyc as [{ name, address, city, state, country, postal_code, payment_method (payment method, comma separated text), rating (popular restaurant score), michelin_score (michellin star score)}, description, delivery_method (comma separated text), letter_grade}]. Respond only with valid JSON schema. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
 
       const dataJson = await this.fetchFullMenuPaginated(ai_question);
 
@@ -237,6 +237,13 @@ const OpenAiFn = {
                 state: _get(restaurantPayload, 'state'),
                 country: _get(restaurantPayload, 'country'),
                 postal_code: _get(restaurantPayload, 'postal_code'),
+                phone: _get(restaurantPayload, 'phone'),
+                payment_method: _get(restaurantPayload, 'payment_method'),
+                rating: _get(restaurantPayload, 'rating'),
+                michelin_score: _get(restaurantPayload, 'michelin_score'),
+                description: _get(restaurantPayload, 'description'),
+                delivery_method: _get(restaurantPayload, 'delivery_method'),
+                letter_grade: _get(restaurantPayload, 'letter_grade'),
               });
             }
           } else {
@@ -252,6 +259,13 @@ const OpenAiFn = {
                     state: _get(restaurant, 'state'),
                     country: _get(restaurant, 'country'),
                     postal_code: _get(restaurant, 'postal_code'),
+                    phone: _get(restaurant, 'phone'),
+                    payment_method: _get(restaurant, 'payment_method'),
+                    rating: _get(restaurant, 'rating'),
+                    michelin_score: _get(restaurant, 'michelin_score'),
+                    description: _get(restaurant, 'description'),
+                    delivery_method: _get(restaurant, 'delivery_method'),
+                    letter_grade: _get(restaurant, 'letter_grade'),
                   });
                 }
               });
