@@ -12,13 +12,16 @@ export const loginResolvers = {
       const { res } = context;
 
       try {
-        res.setHeader('Set-Cookie', '', {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          expires: new Date(0),
-          path: '/',
-        });
+        res.setHeader(
+          'Set-Cookie',
+          serialize('token', '', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            expires: new Date(0), // Invalidate immediately
+            path: '/',
+          }),
+        );
 
         return { success: true };
       } catch (err) {
@@ -40,12 +43,12 @@ export const loginResolvers = {
 
       if (loginResult.success) {
         const token = loginResult.token;
-
+        console.log('token length:', token.length); // <-- add this
         res.setHeader(
           'Set-Cookie',
           serialize('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: process.env.NODE_ENV !== 'production' ? false : true,
             sameSite: 'lax',
             path: '/',
             maxAge: 60 * 60,

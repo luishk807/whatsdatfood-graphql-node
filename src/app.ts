@@ -16,7 +16,7 @@ const corsOptions = {
   origin: ['http://localhost:3000', 'http://localhost:8080'],
   credentials: true, // 👈 allow sending cookies
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 //global error habndler

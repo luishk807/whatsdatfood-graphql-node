@@ -33,16 +33,16 @@ const LoginServices = {
       verification: plainUser.verification,
       createdAt: _get(plainUser, 'createdAt'),
       updatedAt: _get(plainUser, 'updatedAt'),
-      [dbAliases.users.userSearches]: _get(
-        plainUser,
-        dbAliases.users.userSearches,
-        [],
-      ),
-      [dbAliases.users.userRatings]: _get(
-        plainUser,
-        dbAliases.users.userRatings,
-        [],
-      ),
+      // [dbAliases.users.userSearches]: _get(
+      //   plainUser,
+      //   dbAliases.users.userSearches,
+      //   [],
+      // ),
+      // [dbAliases.users.userRatings]: _get(
+      //   plainUser,
+      //   dbAliases.users.userRatings,
+      //   [],
+      // ),
       [dbAliases.users.status]: _get(plainUser, dbAliases.users.status),
       [dbAliases.users.userRole]: _get(plainUser, dbAliases.users.userRole),
     });

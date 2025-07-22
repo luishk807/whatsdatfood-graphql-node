@@ -39,10 +39,10 @@ export type RestaurantItemType = {
   category: string;
   price?: number;
   top_choice?: boolean;
-  description: string;
   restaurant_id?: number;
   createdAt?: string;
   updatedAt?: string;
+  description: string;
   restaurantItemRest?: RestaurantType;
   restaurantItemRestImages?: [RestaurantMenuItemImages];
   restaurantItemUserRatings?: [UserRating];

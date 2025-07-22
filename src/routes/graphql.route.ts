@@ -77,7 +77,12 @@ export async function setupGraphQL(app: Application, httpServer: http.Server) {
         const body = req.body;
         const operationName = body?.operationName;
         console.log(operationName, 'operation');
-        const isPublicOperation = ['login', 'signup'].includes(operationName);
+        const isPublicOperation = [
+          'login',
+          'signup',
+          'logout',
+          'checkAuth',
+        ].includes(operationName);
         let userData = null;
         try {
           userData = authenticate(req);
