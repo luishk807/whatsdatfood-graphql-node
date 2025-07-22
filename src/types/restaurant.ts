@@ -75,7 +75,7 @@ export type RestaurantType = {
   phone?: string;
   payment_method?: string;
   rating?: number;
-  michelin_score?: string;
+  michelin_score?: number;
   description?: string;
   delivery_method?: string;
   letter_grade?: string;
@@ -96,7 +96,7 @@ export type RestaurantResponseType = {
   phone?: string;
   payment_method?: string;
   rating?: number;
-  michelin_score?: string;
+  michelin_score?: number;
   description?: string;
   delivery_method?: string;
   letter_grade?: string;
@@ -116,7 +116,7 @@ export type createRestaurantInput = {
   phone?: string;
   payment_method?: string;
   rating?: number;
-  michelin_score?: string;
+  michelin_score?: number;
   description?: string;
   delivery_method?: string;
   letter_grade?: string;
@@ -149,7 +149,7 @@ export type RestaurantAIResponse = {
   phone?: string;
   payment_method?: string;
   rating?: number;
-  michelin_score?: string;
+  michelin_score?: number;
   description?: string;
   delivery_method?: string;
   letter_grade?: string;

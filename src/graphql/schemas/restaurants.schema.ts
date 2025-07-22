@@ -46,7 +46,7 @@ export const restaurantDefs = gql`
     phone: String
     payment_method: String
     rating: Float
-    michelin_score: String
+    michelin_score: Int
     description: String
     delivery_method: String
     letter_grade: String
@@ -65,7 +65,7 @@ export const restaurantDefs = gql`
     phone: String
     payment_method: String
     rating: Float
-    michelin_score: String
+    michelin_score: Int
     description: String
     delivery_method: String
     letter_grade: String
@@ -124,7 +124,7 @@ export const restaurantDefs = gql`
     phone: String
     payment_method: String
     rating: Float
-    michelin_score: String
+    michelin_score: Int
     description: String
     delivery_method: String
     letter_grade: String
@@ -142,7 +142,7 @@ export const restaurantDefs = gql`
     phone: String
     payment_method: String
     rating: Float
-    michelin_score: String
+    michelin_score: Int
     description: String
     delivery_method: String
     letter_grade: String
