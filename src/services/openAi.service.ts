@@ -5,7 +5,7 @@ import {
   RestaurantItemType,
   RestaurantResponseType,
   RestaurantType,
-} from 'types/restaurant';
+} from 'interfaces/restaurant';
 import { gooogleResponseAPIItemTypes } from 'types';
 
 import {

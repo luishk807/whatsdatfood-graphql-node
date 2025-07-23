@@ -9,7 +9,7 @@ import {
   UserResponseType,
   UserSearchesType,
   UserType,
-} from 'types/user';
+} from 'interfaces/user';
 import { validateUserData } from 'middlewares/user';
 import { SUBSCRIPTION_EVENTS } from 'constants/graphql';
 import { dbAliases } from 'db';

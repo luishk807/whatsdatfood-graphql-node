@@ -4,7 +4,7 @@ import {
   buildRestaurantPayload,
   buildRestaurantResponse,
 } from 'helpers/restaurants.sequelize';
-import { RestaurantResponseType, RestaurantType } from 'types/restaurant';
+import { RestaurantResponseType, RestaurantType } from 'interfaces/restaurant';
 const restRepo = new Restaurants();
 
 const RestaurantServices = {

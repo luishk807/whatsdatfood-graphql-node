@@ -3,7 +3,7 @@ import Users from 'repository/users.respository';
 import { buildUserPayload, buildUserResponse } from 'helpers/users.sequelize';
 import { _get } from 'helpers';
 import { dbAliases } from 'db';
-import { UserType } from 'types/user';
+import { UserType } from 'interfaces/user';
 const UserRepo = new Users();
 
 const UserServices = {

@@ -2,7 +2,7 @@ import { _get } from '.';
 import { UserInput } from 'db/models/users';
 import { UserRatingsInput } from 'db/models/userRatings';
 import { createHashPassword } from 'helpers/login';
-import { UserRating, UserType } from 'types/user';
+import { UserRating, UserType } from 'interfaces/user';
 import { USER_ROLE_DEFAULT } from 'constants/sequelize';
 import { dbAliases } from 'db';
 export const buildUserPayload = async (item: UserInput) => {

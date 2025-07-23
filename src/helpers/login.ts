@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { NotAuthorized } from 'graphql/customErrors';
-import { UserType } from 'types/user';
+import { UserType } from 'interfaces/user';
 import cookie, { parse } from 'cookie';
 import { _get } from 'helpers';
 import { buildUserResponse } from 'helpers/users.sequelize';

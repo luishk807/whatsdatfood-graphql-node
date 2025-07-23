@@ -1,5 +1,5 @@
 import { ApolloError } from 'apollo-server-errors';
-import { createUserInputTypeArgInput } from 'types/user';
+import { createUserInputTypeArgInput } from 'interfaces/user';
 import validator from 'validator';
 
 import { _get } from 'helpers';

@@ -10,7 +10,7 @@ import {
   createRestaurantArgInput,
   RestaurantAIResponse,
   RestaurantItemResponseType,
-} from 'types/restaurant';
+} from 'interfaces/restaurant';
 import { dbAliases } from 'db/index';
 import { RestaurantsOutput } from 'db/models/restaurants';
 import DataLoader from 'dataloader';

@@ -1,6 +1,6 @@
-import { UserRating, UserRatingResponseType } from 'types/user';
+import { UserRating, UserRatingResponseType } from 'interfaces/user';
 
-export type RestaurantMenuItemImages = {
+export interface RestaurantMenuItemImages {
   id: number;
   restaurant_item_id: number;
   user_id?: bigint;
@@ -15,8 +15,8 @@ export type RestaurantMenuItemImages = {
   updatedAt: string;
   deletedAt: string;
   restaurantItemImageRestItem: RestaurantItemType;
-};
-export type RestaurantMenuItemImagesResponseType = {
+}
+export interface RestaurantMenuItemImagesResponseType {
   id: number;
   restaurant_item_id: number;
   user_id?: bigint;
@@ -31,9 +31,9 @@ export type RestaurantMenuItemImagesResponseType = {
   updatedAt: string;
   deletedAt: string;
   restaurantItem: RestaurantItemResponseType;
-};
+}
 
-export type RestaurantItemType = {
+export interface RestaurantItemType {
   id?: number;
   name: string;
   category: string;
@@ -46,9 +46,9 @@ export type RestaurantItemType = {
   restaurantItemRest?: RestaurantType;
   restaurantItemRestImages?: [RestaurantMenuItemImages];
   restaurantItemUserRatings?: [UserRating];
-};
+}
 
-export type RestaurantItemResponseType = {
+export interface RestaurantItemResponseType {
   id?: number;
   name: string;
   category: string;
@@ -61,9 +61,9 @@ export type RestaurantItemResponseType = {
   restaurant?: RestaurantResponseType;
   images?: [RestaurantMenuItemImagesResponseType];
   ratings?: [UserRatingResponseType];
-};
+}
 
-export type RestaurantType = {
+export interface RestaurantType {
   id: number;
   name: string;
   slug: string;
@@ -82,9 +82,9 @@ export type RestaurantType = {
   createdAt?: string;
   updatedAt?: string;
   restRestaurantItems?: [RestaurantItemType];
-};
+}
 
-export type RestaurantResponseType = {
+export interface RestaurantResponseType {
   id: number;
   name: string;
   slug: string;
@@ -103,9 +103,9 @@ export type RestaurantResponseType = {
   createdAt?: string;
   updatedAt?: string;
   restaurantItems?: [RestaurantItemResponseType];
-};
+}
 
-export type createRestaurantInput = {
+export interface createRestaurantInput {
   name: string;
   slug: string;
   address: string;
@@ -120,13 +120,13 @@ export type createRestaurantInput = {
   description?: string;
   delivery_method?: string;
   letter_grade?: string;
-};
+}
 
-export type createRestaurantArgInput = {
+export interface createRestaurantArgInput {
   input: createRestaurantInput;
-};
+}
 
-export type RestaurantMenuItemsAIResponse = {
+export interface RestaurantMenuItemsAIResponse {
   name: string;
   description: string;
   top_choice?: boolean;
@@ -135,9 +135,9 @@ export type RestaurantMenuItemsAIResponse = {
   restaurant_id?: number;
   ratings?: [UserRatingResponseType];
   images?: [RestaurantMenuItemImagesResponseType];
-};
+}
 
-export type RestaurantAIResponse = {
+export interface RestaurantAIResponse {
   id?: number;
   name: string;
   address: string;
@@ -154,4 +154,4 @@ export type RestaurantAIResponse = {
   delivery_method?: string;
   letter_grade?: string;
   restaurantItems?: [RestaurantMenuItemsAIResponse];
-};
+}

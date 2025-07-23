@@ -4,7 +4,7 @@ import { RestaurantsInput } from 'db/models/restaurants';
 import { RestaurantMenuItemsInput } from 'db/models/restaurantMenuItems';
 import { RestaurantMenuItemImagesInput } from 'db/models/restaurantMenuItemImages';
 import { getSlug, getBuiltAddress } from '.';
-import { RestaurantItemType, RestaurantType } from 'types/restaurant';
+import { RestaurantItemType, RestaurantType } from 'interfaces/restaurant';
 import { dbAliases } from 'db';
 
 export const buildRestaurantPayload = (item: RestaurantsInput) => {
