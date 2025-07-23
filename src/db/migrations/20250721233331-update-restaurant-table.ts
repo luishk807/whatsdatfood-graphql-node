@@ -30,6 +30,18 @@ export default {
     await queryInterface.addColumn('restaurants', 'letter_grade', {
       type: DataTypes.STRING,
     });
+    await queryInterface.addColumn('restaurants', 'email', {
+      type: DataTypes.STRING,
+    });
+    await queryInterface.addColumn('restaurants', 'reservation_required', {
+      type: DataTypes.BOOLEAN,
+    });
+    await queryInterface.addColumn('restaurants', 'reservation_available', {
+      type: DataTypes.BOOLEAN,
+    });
+    await queryInterface.addColumn('restaurants', 'website', {
+      type: DataTypes.STRING,
+    });
   },
 
   async down(queryInterface: QueryInterface, Sequelize: Sequelize) {
@@ -46,5 +58,9 @@ export default {
     await queryInterface.removeColumn('restaurants', 'description');
     await queryInterface.removeColumn('restaurants', 'delivery_method');
     await queryInterface.removeColumn('restaurants', 'letter_grade');
+    await queryInterface.removeColumn('restaurants', 'email');
+    await queryInterface.removeColumn('restaurants', 'reservation_required');
+    await queryInterface.removeColumn('restaurants', 'reservation_available');
+    await queryInterface.removeColumn('restaurants', 'website');
   },
 };

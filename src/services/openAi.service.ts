@@ -222,7 +222,7 @@ const OpenAiFn = {
       return foundRest;
     } else {
       console.log('use ai');
-      const ai_question = `get the list of restaurants of with the name exactly ${restName} in nyc as [{ name, address, city, state, country, postal_code, payment_method (payment method, comma separated text), phone (format (nnn) nnn-nnnn), rating (popular restaurant score), michelin_score (michellin star score)}, description, delivery_method (comma separated text), letter_grade (nyc letter restaurant grade from NYC Health grades}]. Respond only with valid JSON schema. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
+      const ai_question = `get the list of restaurants of with the name exactly ${restName} in nyc as [{ name, address, city, state, country, postal_code, payment_method (payment method, comma separated text), phone (format (nnn) nnn-nnnn), rating (popular restaurant score), michelin_score (michellin star score)}, description, delivery_method (comma separated text), letter_grade (nyc letter restaurant grade from NYC Health grades}, email, reservation_required (boolean), reservation_available (can do reservation?), website, food_category: [ name of category], business_hours: { day_of_week: time (format us time)}, holidays_closed: [ list of holidays when closed]]. Respond only with valid JSON schema. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
 
       const dataJson = await this.fetchFullMenuPaginated(ai_question);
 
