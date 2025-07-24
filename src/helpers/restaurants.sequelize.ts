@@ -16,6 +16,14 @@ export const buildRestaurantPayload = (item: RestaurantsInput) => {
     city: _get(item, 'city'),
     state: _get(item, 'state'),
     country: _get(item, 'country'),
+  };
+
+  const full_address = getBuiltAddress({
+    ...address_data,
+  });
+  const slug = getSlug(`${_get(item, 'name')} ${full_address}`);
+  return {
+    name: _get(item, 'name'),
     postal_code: _get(item, 'postal_code'),
     phone: _get(item, 'phone'),
     payment_method: _get(item, 'payment_method'),
@@ -28,14 +36,6 @@ export const buildRestaurantPayload = (item: RestaurantsInput) => {
     reservation_required: _get(item, 'reservation_required'),
     reservation_available: _get(item, 'reservation_available'),
     website: _get(item, 'website'),
-  };
-
-  const full_address = getBuiltAddress({
-    ...address_data,
-  });
-  const slug = getSlug(`${_get(item, 'name')} ${full_address}`);
-  return {
-    name: _get(item, 'name'),
     slug,
     ...address_data,
   };
@@ -183,5 +183,6 @@ export const getRestaurantResponse = (data: Restaurant) => {
     reservation_available: _get(data, 'reservation_available'),
     website: _get(data, 'website'),
     restaurantMenuItems: _get(data, dbAliases.restaurant.restaurantItems),
+    businessHours: _get(data, dbAliases.restaurant.restaurantBusinessHours),
   };
 };

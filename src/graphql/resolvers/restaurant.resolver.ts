@@ -55,6 +55,7 @@ export const restaurantResolvers: IResolvers = {
     ): Promise<RestaurantMenuItem[]> => {
       return parent.restaurantMenuItems ?? [];
     },
+    businessHours: async (parent: Restaurant) => parent.businessHours,
   },
   RestaurantMenuItem: {
     ratings: async (parent: RestaurantMenuItem) => parent.ratings,

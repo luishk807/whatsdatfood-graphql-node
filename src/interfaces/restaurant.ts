@@ -71,6 +71,7 @@ export interface RestaurantMenuItem extends RestaurantMenuItemBase {
 }
 export interface Restaurant extends RestaurantBase {
   restaurantMenuItems?: RestaurantMenuItem[];
+  businessHours?: RestaurantBusinessHours[];
 }
 
 export interface CreateRestaurantMenuItemInput

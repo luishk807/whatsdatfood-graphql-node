@@ -21,6 +21,15 @@ export const restaurantDefs = gql`
     delivery_method: String
     letter_grade: String
     restaurantMenuItems: [RestaurantMenuItem]
+    businessHours: [RestaurantBusinessHours]
+  }
+
+  type RestaurantBusinessHours {
+    id: ID
+    restaurant_id: ID
+    day_of_week: String
+    open_time: String
+    close_time: String
   }
 
   type RestaurantMenuItem {

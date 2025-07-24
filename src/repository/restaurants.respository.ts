@@ -35,21 +35,65 @@ class RestaurantsRepo extends Base {
             },
           ],
         },
+        {
+          model: db.RestaurantBusinessHours,
+          as: dbAliases.restaurant.restaurantBusinessHours,
+        },
       ],
     });
   }
 
   async create(payload: RestaurantsInput) {
     const t = await db.sequelize.transaction();
-
+    const { id, ...safePayload } = payload;
     try {
       const resp = await db.sequelize.query(
-        `INSERT INTO restaurants (name, slug, address, city, state, country, postal_code, created_at, updated_at) values(:name, :slug, :address, :city, :state, :country, :postal_code, NOW(), NOW())
+        `INSERT INTO restaurants (
+          name, 
+          slug, 
+          address, 
+          city, 
+          state, 
+          country, 
+          postal_code, 
+          michelin_score,
+          rating,
+          phone,
+          payment_method,
+          description,
+          delivery_method,
+          letter_grade,
+          email,
+          reservation_required,
+          reservation_available,
+          website,
+          created_at, 
+          updated_at
+        ) values(
+          :name, 
+          :slug, 
+          :address, 
+          :city, 
+          :state, 
+          :country, 
+          :postal_code, 
+          :michelin_score,
+          :rating,
+          :phone,
+          :payment_method,
+          :description,
+          :delivery_method,
+          :letter_grade,
+          :email,
+          :reservation_required,
+          :reservation_available,
+          :website,
+          NOW(), 
+          NOW()
+         )
          RETURNING *`,
         {
-          replacements: {
-            ...payload,
-          },
+          replacements: safePayload,
           transaction: t,
           type: db.Sequelize.QueryTypes.INSERT,
         },
@@ -72,20 +116,26 @@ class RestaurantsRepo extends Base {
       where: {
         slug: slug,
       },
-      include: {
-        model: db.RestaurantMenuItems,
-        as: dbAliases.restaurant.restaurantItems,
-        include: [
-          {
-            model: db.UserRatings,
-            as: dbAliases.restaurantItems.userRatings,
-          },
-          {
-            model: db.RestaurantMenuItemImages,
-            as: dbAliases.restaurantItems.restaurantItemImages,
-          },
-        ],
-      },
+      include: [
+        {
+          model: db.RestaurantMenuItems,
+          as: dbAliases.restaurant.restaurantItems,
+          include: [
+            {
+              model: db.UserRatings,
+              as: dbAliases.restaurantItems.userRatings,
+            },
+            {
+              model: db.RestaurantMenuItemImages,
+              as: dbAliases.restaurantItems.restaurantItemImages,
+            },
+          ],
+        },
+        {
+          model: db.RestaurantBusinessHours,
+          as: dbAliases.restaurant.restaurantBusinessHours,
+        },
+      ],
     })) as unknown as Restaurant;
   }
 

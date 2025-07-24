@@ -34,13 +34,15 @@ const OpenAiFn = {
     });
 
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o-search-preview',
+      model: 'gpt-4o',
       messages: [
         {
           role: 'user',
           content: ai_question,
         },
       ],
+      temperature: 0,
+      max_tokens: 500,
     });
 
     const data = response.choices[0].message.content as string;
@@ -254,20 +256,20 @@ const OpenAiFn = {
                 await RestaurantServices.create(restaurantPayload);
 
               // create businesss hours
-              const businessHoursPayload = buildRestaurantBusinessHoursPayload(
-                newRestaurant.id,
-                business_hours,
-              );
+              // const businessHoursPayload = buildRestaurantBusinessHoursPayload(
+              //   newRestaurant.id,
+              //   business_hours,
+              // );
 
-              if (businessHoursPayload) {
-                // delete previous business hours if exists
-                await RestaurantBusinesHourServices.deleteById(
-                  newRestaurant.id,
-                );
-                await RestaurantBusinesHourServices.bulkCreate(
-                  businessHoursPayload,
-                );
-              }
+              // if (businessHoursPayload) {
+              //   // delete previous business hours if exists
+              //   await RestaurantBusinesHourServices.deleteById(
+              //     newRestaurant.id,
+              //   );
+              //   await RestaurantBusinesHourServices.bulkCreate(
+              //     businessHoursPayload,
+              //   );
+              // }
 
               results.set(slug, {
                 name: _get(restaurantPayload, 'name'),

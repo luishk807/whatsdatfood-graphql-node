@@ -65,6 +65,10 @@ class Restaurants
       foreignKey: 'restaurant_id',
       as: dbAliases.restaurant.restaurantItems,
     });
+    Restaurants.hasMany(models.RestaurantBusinessHours, {
+      foreignKey: 'restaurant_id',
+      as: dbAliases.restaurant.restaurantBusinessHours,
+    });
   }
 }
 

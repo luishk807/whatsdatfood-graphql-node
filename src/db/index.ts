@@ -14,6 +14,7 @@ export const initDB = async () => {
 export const dbAliases = {
   restaurant: {
     restaurantItems: 'restRestaurantItems',
+    restaurantBusinessHours: 'restaurantRestaurantBusinessHours',
   },
   restaurantItems: {
     restaurant: 'restaurantItemRest',

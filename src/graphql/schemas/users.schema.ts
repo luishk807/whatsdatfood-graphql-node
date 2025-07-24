@@ -15,7 +15,7 @@ export const userDefs = gql`
     role_id: ID
     createdAt: DateTime
     updatedAt: DateTime
-    dob: DateTime
+    dob: Date
     searches: [UserSearch]
     ratings: [UserRating]
     status: Status
