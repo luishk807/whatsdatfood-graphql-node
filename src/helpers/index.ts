@@ -56,7 +56,7 @@ export const getTimeSplit = (times: string) => {
   const times_split = times.split('-');
 
   if (Array.isArray(times_split) && times_split.length > 1) {
-    const format = 'HH:mm:ss';
+    const format = 'HH:mm';
     const time1 = dayjs(times_split[0], format, true).isValid();
     const time2 = dayjs(times_split[1], format, true).isValid();
 
@@ -66,9 +66,8 @@ export const getTimeSplit = (times: string) => {
         close_time: times_split[1],
       };
     }
-  } else {
-    return null;
   }
+  return null;
 };
 
 export const _get = <T, R = undefined>(

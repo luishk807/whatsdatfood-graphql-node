@@ -36,6 +36,7 @@ class UserRatingRepo extends Base {
       return resp[0];
     } catch (err) {
       await t.rollback();
+      console.log(err);
       return err;
     }
   }

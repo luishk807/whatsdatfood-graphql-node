@@ -65,6 +65,7 @@ export const buildRestaurantBusinessHoursPayload = (
     return null;
   }
 
+  console.log(businessHours, 'business horus');
   const payload: RestaurantBusinessHoursInput[] = [];
   Object.keys(businessHours).forEach((day) => {
     const times = getTimeSplit(businessHours[day]);
