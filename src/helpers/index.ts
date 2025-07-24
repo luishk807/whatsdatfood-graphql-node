@@ -1,6 +1,6 @@
 import slugify from 'slugify';
 import _ from 'lodash';
-import { getBuiltAddressType } from 'types';
+import { GetBuiltAddress } from 'types';
 
 export const getSlug = (value: string) => {
   let textData: string | undefined;
@@ -28,7 +28,7 @@ export const convertStringToNumber = (str: string) => {
 export const getDataIfArray = <T>(data: T) =>
   Array.isArray(data) ? data[0] : data;
 
-export const getBuiltAddress: getBuiltAddressType = (address) => {
+export const getBuiltAddress: GetBuiltAddress = (address) => {
   let new_address = '';
   const { address: c_address, city, country, state, postal_code } = address;
   if (address) {

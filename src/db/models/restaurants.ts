@@ -18,6 +18,10 @@ interface RestaurantInterface {
   delivery_method?: string;
   letter_grade?: string;
   postal_code?: string;
+  email?: string;
+  reservation_required?: boolean;
+  reservation_available?: boolean;
+  website?: string;
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
@@ -46,6 +50,10 @@ class Restaurants
   public description!: string;
   public delivery_method!: string;
   public letter_grade!: string;
+  public email!: string;
+  public reservation_required!: boolean;
+  public reservation_available!: boolean;
+  public website!: string;
 
   // timestamps!
   public readonly created_at!: Date;
@@ -108,6 +116,18 @@ Restaurants.init(
       type: DataTypes.TEXT,
     },
     letter_grade: {
+      type: DataTypes.STRING,
+    },
+    email: {
+      type: DataTypes.STRING,
+    },
+    reservation_required: {
+      type: DataTypes.BOOLEAN,
+    },
+    reservation_available: {
+      type: DataTypes.BOOLEAN,
+    },
+    website: {
       type: DataTypes.STRING,
     },
   },

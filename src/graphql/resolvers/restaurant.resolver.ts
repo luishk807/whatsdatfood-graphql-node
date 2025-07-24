@@ -3,16 +3,14 @@ import RestaurantMenuItemImagesFn from 'services/restaurantMenuItemImages.servic
 import OpenAiResturant from 'services/openAi.service';
 import { IResolvers } from '@graphql-tools/utils'; // or your GraphQL resolver typings
 import {
-  RestaurantType,
-  RestaurantResponseType,
-  RestaurantItemType,
+  RestaurantResponse,
+  RestaurantItemResponse,
   RestaurantMenuItemsAIResponse,
-  createRestaurantArgInput,
+  CreateRestaurantArgInput,
   RestaurantAIResponse,
-  RestaurantItemResponseType,
 } from 'interfaces/restaurant';
 import { dbAliases } from 'db/index';
-import { RestaurantsOutput } from 'db/models/restaurants';
+import { RestaurantsInput } from 'db/models/restaurants';
 import DataLoader from 'dataloader';
 import { NotFoundError } from 'graphql/customErrors';
 import { DateTimeResolver } from 'graphql-scalars';
@@ -20,7 +18,7 @@ import { DateTimeResolver } from 'graphql-scalars';
 export const restaurantResolvers: IResolvers = {
   DateTime: DateTimeResolver,
   Query: {
-    restaurants: async (): Promise<RestaurantResponseType[]> => {
+    restaurants: async (): Promise<RestaurantResponse[]> => {
       const resp = await RestaurantServices.getAll();
       if (!resp) {
         throw new NotFoundError('No restaurant available');
@@ -67,10 +65,10 @@ export const restaurantResolvers: IResolvers = {
   },
   RestaurantResponseType: {
     restaurantItems: async (
-      _parent: RestaurantResponseType,
+      _parent: RestaurantResponse,
       _args: any,
       {},
-    ): Promise<RestaurantItemResponseType[]> => {
+    ): Promise<RestaurantItemResponse[]> => {
       const value = _parent.restaurantItems;
       return Array.isArray(value) ? value : [];
     },
@@ -111,39 +109,41 @@ export const restaurantResolvers: IResolvers = {
   },
   RestaurantMenuItems: {
     restaurantItemRest: async (
-      parent: RestaurantItemType,
+      parent: RestaurantItemResponse,
       args: any,
       context: {
-        restaurantItemRestaurant: DataLoader<number, RestaurantType | null>;
+        restaurantItemRestaurant: DataLoader<number, RestaurantResponse | null>;
       },
-    ): Promise<RestaurantType | null> => {
+    ): Promise<RestaurantResponse | null> => {
       if (parent.restaurant_id) {
-        return context.restaurantItemRestaurant.load(parent.restaurant_id);
+        return context.restaurantItemRestaurant.load(
+          Number(parent.restaurant_id),
+        );
       } else {
         return null;
       }
     },
     restaurantItemUserRatings: async (
-      parent: RestaurantItemType,
+      parent: RestaurantItemResponse,
       args: any,
     ) => {
-      return parent.restaurantItemUserRatings || [];
+      return parent.ratings || [];
     },
-    restaurantItemRestImages: async (parent: RestaurantItemType) => {
-      return parent.restaurantItemRestImages || [];
+    restaurantItemRestImages: async (parent: RestaurantItemResponse) => {
+      return parent.images || [];
     },
   },
   Mutation: {
     addRestaurant: async (
       _parent: any,
-      args: createRestaurantArgInput,
+      args: CreateRestaurantArgInput,
       context: any,
-    ): Promise<RestaurantType> => {
+    ): Promise<RestaurantResponse> => {
       if (!context.user) {
         //check authtenthication
       }
       const { input } = args;
-      return await RestaurantServices.create({ ...input });
+      return await RestaurantServices.create(input as RestaurantsInput);
     },
   },
 };

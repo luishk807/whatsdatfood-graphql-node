@@ -2,11 +2,9 @@ import OpenAI from 'openai';
 import { _get } from 'helpers';
 import {
   RestaurantAIResponse,
-  RestaurantItemType,
-  RestaurantResponseType,
-  RestaurantType,
+  RestaurantResponse,
 } from 'interfaces/restaurant';
-import { gooogleResponseAPIItemTypes } from 'types';
+import { GooogleResponseAPIItem } from 'types';
 
 import {
   buildRestaurantPayload,
@@ -149,6 +147,11 @@ const OpenAiFn = {
       phone,
       description,
       delivery_method,
+      payment_method,
+      email,
+      reservation_required,
+      reservation_available,
+      website,
     } = Array.isArray(restData) ? restData[0] : restData;
 
     const wholeAddress = getBuiltAddress({
@@ -212,6 +215,10 @@ const OpenAiFn = {
       phone,
       description,
       delivery_method,
+      email,
+      reservation_required,
+      reservation_available,
+      website,
       restaurantItems: results,
     };
   },
@@ -256,11 +263,21 @@ const OpenAiFn = {
                 description: _get(restaurantPayload, 'description'),
                 delivery_method: _get(restaurantPayload, 'delivery_method'),
                 letter_grade: _get(restaurantPayload, 'letter_grade'),
+                email: _get(restaurantPayload, 'email'),
+                reservation_required: _get(
+                  restaurantPayload,
+                  'reservation_required',
+                ),
+                reservation_available: _get(
+                  restaurantPayload,
+                  'reservation_available',
+                ),
+                website: _get(restaurantPayload, 'website'),
               });
             }
           } else {
             if (Array.isArray(restData)) {
-              restData.forEach((restaurant: RestaurantType) => {
+              restData.forEach((restaurant: RestaurantResponse) => {
                 const slug = _get(restaurant, 'slug');
                 if (!results.has(slug)) {
                   results.set(slug, {
@@ -278,6 +295,16 @@ const OpenAiFn = {
                     description: _get(restaurant, 'description'),
                     delivery_method: _get(restaurant, 'delivery_method'),
                     letter_grade: _get(restaurant, 'letter_grade'),
+                    email: _get(restaurant, 'email'),
+                    reservation_required: _get(
+                      restaurant,
+                      'reservation_required',
+                    ),
+                    reservation_available: _get(
+                      restaurant,
+                      'reservation_available',
+                    ),
+                    website: _get(restaurant, 'website'),
                   });
                 }
               });
@@ -288,10 +315,7 @@ const OpenAiFn = {
       return Array.from(results.values());
     }
   },
-  async getBestImagesFromList(
-    query: string,
-    images: [gooogleResponseAPIItemTypes],
-  ) {
+  async getBestImagesFromList(query: string, images: [GooogleResponseAPIItem]) {
     const ai_question = `From the list of images below, return exactly one image with width at least 150 pixels for ${query}, in JSON format as:
 
     [

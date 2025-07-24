@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { _get } from 'helpers';
-import { googleResponseAPIType } from 'types';
+import { GoogleResponseAPI } from 'types';
 
 const GOOGLE_KEY: string | undefined = process.env.GOOGLE_API_KEY;
 const GOOGLE_URL: string | undefined = process.env.GOOGLE_URL;
@@ -8,7 +8,7 @@ const GOOGLE_CX: string | undefined = process.env.GOOGLE_CX;
 
 export const getGoogleImages = async (
   query: string,
-): Promise<googleResponseAPIType | undefined> => {
+): Promise<GoogleResponseAPI | undefined> => {
   if (!query) {
     return undefined;
   }
@@ -29,7 +29,7 @@ export const getGoogleImages = async (
         cx: GOOGLE_CX,
       },
     };
-    const photoUrls: googleResponseAPIType = await axios(config);
+    const photoUrls: GoogleResponseAPI = await axios(config);
     return photoUrls;
   } catch (err: any) {
     console.error('Google API error:', err?.response?.data || err.message);

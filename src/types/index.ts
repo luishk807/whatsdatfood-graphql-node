@@ -1,4 +1,4 @@
-export type addressType = {
+export type Address = {
   address: string;
   city?: string;
   state?: string;
@@ -6,12 +6,14 @@ export type addressType = {
   postal_code?: string;
 };
 
-export type StatusType = {
+export type Status = {
   id: number;
   name: string;
 };
 
-export type gooogleResponseAPIItemTypes = {
+export type ID = number | bigint;
+
+export type GooogleResponseAPIItem = {
   kind: string;
   title: string;
   htmlTitle: string;
@@ -36,8 +38,8 @@ export type gooogleResponseAPIItemTypes = {
 export type LoginPayload = {
   success: boolean;
 };
-export type googleResponseAPIType = {
-  items: [gooogleResponseAPIItemTypes];
+export type GoogleResponseAPI = {
+  items: [GooogleResponseAPIItem];
 };
 
-export type getBuiltAddressType = (address: addressType) => string;
+export type GetBuiltAddress = (address: Address) => string;

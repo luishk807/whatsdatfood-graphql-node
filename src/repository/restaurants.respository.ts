@@ -8,7 +8,7 @@ import { LIMIT, PAGE } from 'constants/sequelize';
 import { getPageOffset, normalizeApostrophes } from 'helpers/sequelize';
 import { _get } from 'helpers';
 import { RestaurantsWithItemsOutput } from 'interfaces';
-import { RestaurantType } from 'interfaces/restaurant';
+import { RestaurantResponse } from 'interfaces/restaurant';
 
 class RestaurantsRepo extends Base {
   constructor() {
@@ -63,7 +63,7 @@ class RestaurantsRepo extends Base {
     }
   }
 
-  async findBySlug(slug: string): Promise<RestaurantType> {
+  async findBySlug(slug: string): Promise<RestaurantResponse> {
     if (!slug) {
       throw new Error('findBySlug Error: name is empty');
     }
@@ -86,7 +86,7 @@ class RestaurantsRepo extends Base {
           },
         ],
       },
-    })) as unknown as RestaurantType;
+    })) as unknown as RestaurantResponse;
   }
 
   async findByNameMatch(

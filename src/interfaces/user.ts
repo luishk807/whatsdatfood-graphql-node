@@ -1,272 +1,91 @@
 import {
-  RestaurantItemType,
-  RestaurantItemResponseType,
-  RestaurantType,
-  RestaurantResponseType,
+  RestaurantItemResponse,
+  RestaurantResponse,
 } from 'interfaces/restaurant';
+import { ID } from 'types';
+import { Status } from 'interfaces';
 
-import { StatusType } from 'interfaces';
-
-export interface UserType {
-  id: number;
-  first_name: string;
-  last_name: string;
-  password: string;
-  username: string;
-  phone: string;
-  email: string;
-  role_id: bigint;
-  verification: string;
+export interface UserRoleBase {
+  id?: ID;
+  name: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
+export interface UserBase {
+  id?: ID;
+  first_name?: string;
+  last_name?: string;
+  password?: string;
+  username?: string;
+  phone?: string;
+  email?: string;
+  role_id?: ID;
+  verification?: string;
   dob?: Date;
   createdAt?: Date;
   updatedAt?: Date;
-  status_id?: number;
-  userUserRatings?: [UserRating];
-  userStatus?: StatusType;
-  userUserRole?: UserRoleType;
-  userUserSearches?: [UserSearchesType];
+  deletedAt?: Date;
+  status_id?: ID;
 }
-
-export interface UserResponseType {
-  id: number;
-  first_name: string;
-  last_name: string;
-  password: string;
-  username: string;
-  phone: string;
-  email: string;
-  role_id: bigint;
-  verification: string;
-  dob?: Date;
+export interface UserSearchesBase {
+  id?: ID;
+  user_id: ID;
+  restaurant_id: ID;
   createdAt?: Date;
   updatedAt?: Date;
-  status_id?: number;
-  ratings?: [UserRatingResponseType];
-  status?: StatusType;
-  role?: UserRoleType;
-  searches?: [UserSearchesType];
+  deletedAt?: Date;
 }
-
-export interface UserRating {
-  id?: number;
-  restaurant_menu_item_id: bigint;
-  user_id: bigint;
+export interface UserRatingBase {
+  id?: ID;
+  restaurant_menu_item_id: ID;
+  user_id: ID;
   rating: number;
   createdAt?: Date;
   updatedAt?: Date;
   title?: string;
   comment?: string;
-  userRatingRestaurantItem?: RestaurantItemType;
 }
 
-export interface UserRatingResponseType {
-  id?: number;
-  restaurant_menu_item_id: bigint;
-  user_id: bigint;
-  rating: number;
-  createdAt?: Date;
-  updatedAt?: Date;
-  title?: string;
-  comment?: string;
-  restaurantItem?: RestaurantItemResponseType;
+export interface UserResponse extends UserBase {
+  ratings?: UserRatingResponse[];
+  status?: Status;
+  role?: UserRoleResponse;
+  searches?: UserSearchesResponse[];
 }
 
-export interface UserRoleType {
-  id: number;
+export interface UserRatingResponse extends UserRatingBase {
+  restaurantItem?: RestaurantItemResponse;
+}
+
+export interface UserRoleResponse {
+  id: ID;
   name: string;
 }
-
-export interface UserSearchesType {
-  id: number;
-  user_id: number;
-  restaurant_id: number;
-  userSearchesRestaurant: RestaurantType;
-  userSearchesUser: UserType;
+export interface UserSearchesResponse extends UserSearchesBase {
+  restaurant: RestaurantResponse;
+  user: UserResponse;
 }
 
-export interface UserSearchesResponseType {
-  id: number;
-  user_id: number;
-  restaurant_id: number;
-  restaurant: RestaurantResponseType;
-  user: UserResponseType;
-}
+export interface UserRatingInput
+  extends Partial<Omit<UserRatingBase, 'id' | 'createdAt' | 'updatedAt'>> {}
 
-export interface createUserRatingInput {
-  restaurant_menu_item_id: bigint;
-  user_id: bigint;
-  rating: number;
-  comment?: string;
-  title?: string;
-}
+export interface UserInput
+  extends Partial<Omit<UserBase, 'id' | 'createdAt' | 'updatedAt'>> {}
 
-export interface updateUserRatingInput {
-  id?: number;
-  restaurant_menu_item_id: bigint;
-  user_id: bigint;
-  rating: number;
-  comment?: string;
-  title?: string;
+export interface UserSearchesInput
+  extends Partial<Omit<UserSearchesBase, 'id' | 'createdAt' | 'updatedAt'>> {}
+export interface UserRoleInput
+  extends Partial<Omit<UserRoleBase, 'id' | 'createdAt' | 'updatedAt'>> {}
+export interface CreateUserRoleInputArg {
+  input: UserRoleInput;
 }
-
-export interface createUserInputType {
-  first_name: string;
-  last_name: string;
-  password: string;
-  username: string;
-  phone: string;
-  role_id: bigint;
-  email: string;
-  verification: string;
-  dob: Date;
+export interface CreateUserRatingInputArg {
+  input: UserRatingInput;
 }
-
-export interface createUserRoleInputType {
-  name: string;
+export interface CreateUserInputArg {
+  input: UserInput;
 }
-
-export interface createUserRoleInputTypeArgInput {
-  input: createUserRoleInputType;
-}
-
-export interface createUserInputTypeArgInput {
-  input: createUserInputType;
-}
-
-export interface createUserSearchesInputType {
-  id: number;
-  user_id: number;
-  restaurant_id: number;
-}
-
-export interface UserType {
-  id: number;
-  first_name: string;
-  last_name: string;
-  password: string;
-  username: string;
-  phone: string;
-  email: string;
-  role_id: bigint;
-  verification: string;
-  dob?: Date;
-  createdAt?: Date;
-  updatedAt?: Date;
-  status_id?: number;
-  userUserRatings?: [UserRating];
-  userStatus?: StatusType;
-  userUserRole?: UserRoleType;
-  userUserSearches?: [UserSearchesType];
-}
-
-export interface UserResponseType {
-  id: number;
-  first_name: string;
-  last_name: string;
-  password: string;
-  username: string;
-  phone: string;
-  email: string;
-  role_id: bigint;
-  verification: string;
-  dob?: Date;
-  createdAt?: Date;
-  updatedAt?: Date;
-  status_id?: number;
-  ratings?: [UserRatingResponseType];
-  status?: StatusType;
-  role?: UserRoleType;
-  searches?: [UserSearchesType];
-}
-
-export interface UserRating {
-  id?: number;
-  restaurant_menu_item_id: bigint;
-  user_id: bigint;
-  rating: number;
-  createdAt?: Date;
-  updatedAt?: Date;
-  title?: string;
-  comment?: string;
-  userRatingRestaurantItem?: RestaurantItemType;
-}
-
-export interface UserRatingResponseType {
-  id?: number;
-  restaurant_menu_item_id: bigint;
-  user_id: bigint;
-  rating: number;
-  createdAt?: Date;
-  updatedAt?: Date;
-  title?: string;
-  comment?: string;
-  restaurantItem?: RestaurantItemResponseType;
-}
-
-export interface UserRoleType {
-  id: number;
-  name: string;
-}
-
-export interface UserSearchesType {
-  id: number;
-  user_id: number;
-  restaurant_id: number;
-  userSearchesRestaurant: RestaurantType;
-  userSearchesUser: UserType;
-}
-
-export interface UserSearchesResponseType {
-  id: number;
-  user_id: number;
-  restaurant_id: number;
-  restaurant: RestaurantResponseType;
-  user: UserResponseType;
-}
-
-export interface createUserRatingInput {
-  restaurant_menu_item_id: bigint;
-  user_id: bigint;
-  rating: number;
-  comment?: string;
-  title?: string;
-}
-
-export interface updateUserRatingInput {
-  id?: number;
-  restaurant_menu_item_id: bigint;
-  user_id: bigint;
-  rating: number;
-  comment?: string;
-  title?: string;
-}
-
-export interface createUserInputType {
-  first_name: string;
-  last_name: string;
-  password: string;
-  username: string;
-  phone: string;
-  role_id: bigint;
-  email: string;
-  verification: string;
-  dob: Date;
-}
-
-export interface createUserRoleInputType {
-  name: string;
-}
-
-export interface createUserRoleInputTypeArgInput {
-  input: createUserRoleInputType;
-}
-
-export interface createUserInputTypeArgInput {
-  input: createUserInputType;
-}
-
-export interface createUserSearchesInputType {
-  id: number;
-  user_id: number;
-  restaurant_id: number;
+export interface CreateUserSearchInputArg {
+  input: UserSearchesInput;
 }

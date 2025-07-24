@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { NotAuthorized } from 'graphql/customErrors';
-import { UserType } from 'interfaces/user';
+import { UserResponse } from 'interfaces/user';
 import cookie, { parse } from 'cookie';
 import { _get } from 'helpers';
 import { buildUserResponse } from 'helpers/users.sequelize';
@@ -59,7 +59,7 @@ export const authenticate = (req: any) => {
       return null;
     }
 
-    const user = buildUserResponse(decoded as UserType);
+    const user = buildUserResponse(decoded as UserResponse);
     return user;
   } catch (err) {
     if (err instanceof Error) {

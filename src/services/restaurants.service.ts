@@ -4,7 +4,7 @@ import {
   buildRestaurantPayload,
   buildRestaurantResponse,
 } from 'helpers/restaurants.sequelize';
-import { RestaurantResponseType, RestaurantType } from 'interfaces/restaurant';
+import { RestaurantResponse } from 'interfaces/restaurant';
 const restRepo = new Restaurants();
 
 const RestaurantServices = {
@@ -30,7 +30,7 @@ const RestaurantServices = {
   },
   async findBySlug(
     slug: string,
-  ): Promise<RestaurantResponseType | RestaurantResponseType[]> {
+  ): Promise<RestaurantResponse | RestaurantResponse[]> {
     const resp = await restRepo.findBySlug(slug);
     return buildRestaurantResponse(resp);
   },

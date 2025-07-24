@@ -1,15 +1,23 @@
 import { _get } from '.';
-import { UserInput } from 'db/models/users';
-import { UserRatingsInput } from 'db/models/userRatings';
 import { createHashPassword } from 'helpers/login';
-import { UserRating, UserType } from 'interfaces/user';
+import {
+  UserRatingResponse,
+  UserResponse,
+  UserInput,
+  UserRatingInput,
+} from 'interfaces/user';
 import { USER_ROLE_DEFAULT } from 'constants/sequelize';
 import { dbAliases } from 'db';
-export const buildUserPayload = async (item: UserInput) => {
+export const buildUserEntry = async (item: UserInput) => {
+  if (!item.first_name || !item.last_name || typeof item.email !== 'string') {
+    throw new Error(
+      'Missing required fields: restaurant_menu_item_id, user_id, rating',
+    );
+  }
   const password = await createHashPassword(_get(item, 'password'));
   const role = _get(item, 'role_id');
   return {
-    first_name: _get(item, 'first_name'),
+    first_name: String(_get(item, 'first_name')),
     last_name: _get(item, 'last_name'),
     username: _get(item, 'username'),
     password: password,
@@ -20,9 +28,30 @@ export const buildUserPayload = async (item: UserInput) => {
   };
 };
 
-export const buildUserRatingPayload = async (item: UserRatingsInput) => {
+export const buildUserRatingEntry = (input: UserRatingInput) => {
+  if (
+    !input.restaurant_menu_item_id ||
+    !input.user_id ||
+    typeof input.rating !== 'number'
+  ) {
+    throw new Error(
+      'Missing required fields: restaurant_menu_item_id, user_id, rating',
+    );
+  }
+  const id = _get(input, 'id');
+  return {
+    ...(id && { id: id }),
+    restaurant_menu_item_id: BigInt(input.restaurant_menu_item_id),
+    user_id: BigInt(input.user_id),
+    rating: input.rating,
+    title: input.title,
+    comment: input.comment,
+  };
+};
+
+export const buildUserRatingResponse = async (item: UserRatingResponse) => {
   const id = _get(item, 'id');
-  let payload: UserRating = {
+  let payload: UserRatingResponse = {
     rating: parseFloat(_get(item, 'rating')),
     user_id: _get(item, 'user_id'),
     comment: _get(item, 'comment'),
@@ -37,13 +66,13 @@ export const buildUserRatingPayload = async (item: UserRatingsInput) => {
   return payload;
 };
 
-export const buildUserResponse = (item: UserType | UserType[]) => {
+export const buildUserResponse = (item: UserResponse | UserResponse[]) => {
   if (!item || (Array.isArray(item) && !item.length)) {
     return item;
   }
 
   return Array.isArray(item)
-    ? item.map((data: UserType) => ({
+    ? item.map((data: UserResponse) => ({
         id: _get(data, 'id'),
         first_name: _get(data, 'first_name'),
         last_name: _get(data, 'last_name'),

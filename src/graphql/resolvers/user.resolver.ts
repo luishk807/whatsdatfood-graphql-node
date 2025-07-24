@@ -2,21 +2,22 @@ import UserServices from 'services/users.service';
 import UserRatingServices from 'services/userRating.services';
 import { createPubSub } from '@graphql-yoga/node';
 import {
-  createUserInputTypeArgInput,
-  createUserRatingInput,
-  updateUserRatingInput,
-  UserRating,
-  UserResponseType,
-  UserSearchesType,
-  UserType,
+  CreateUserInputArg,
+  CreateUserRatingInputArg,
+  UserRatingResponse,
+  UserSearchesResponse,
+  UserResponse,
+  UserRatingBase,
 } from 'interfaces/user';
 import { validateUserData } from 'middlewares/user';
 import { SUBSCRIPTION_EVENTS } from 'constants/graphql';
 import { dbAliases } from 'db';
 import { getAssociationData } from 'helpers/sequelize';
+import { buildUserEntry, buildUserRatingEntry } from 'helpers/users.sequelize';
+import { RestaurantsInput } from 'db/models/restaurants';
 import { DateTimeResolver } from 'graphql-scalars';
 type Events = {
-  USER_ADDED: { userAdded: UserType }; // Use your actual UserType here
+  USER_ADDED: { userAdded: UserResponse }; // Use your actual UserType here
 };
 
 const pubsub = createPubSub();
@@ -41,66 +42,66 @@ export const userResolvers = {
     },
   },
   User: {
-    userStatus: async (parent: UserType) => {
+    userStatus: async (parent: UserResponse) => {
       return getAssociationData(
         parent,
-        dbAliases.users.status as keyof UserType,
+        dbAliases.users.status as keyof UserResponse,
       );
     },
-    userUserSearches: async (parent: UserType) => {
+    userUserSearches: async (parent: UserResponse) => {
       const value = getAssociationData(
         parent,
-        dbAliases.users.userSearches as keyof UserType,
+        dbAliases.users.userSearches as keyof UserResponse,
       );
 
       return Array.isArray(value) ? value : [];
     },
-    userUserRole: async (parent: UserType) => {
+    userUserRole: async (parent: UserResponse) => {
       return getAssociationData(
         parent,
-        dbAliases.users.userRole as keyof UserType,
+        dbAliases.users.userRole as keyof UserResponse,
       );
     },
-    userUserRatings: async (parent: UserType) => {
+    userUserRatings: async (parent: UserResponse) => {
       const value = getAssociationData(
         parent,
-        dbAliases.users.userRatings as keyof UserType,
+        dbAliases.users.userRatings as keyof UserResponse,
       );
 
       return Array.isArray(value) ? value : [];
     },
   },
   UserRatings: {
-    userRatingRestaurantItem: async (parent: UserRating) => {
+    userRatingRestaurantItem: async (parent: UserResponse) => {
       const value = getAssociationData(
         parent,
-        dbAliases.userRatings.restaurantItem as keyof UserRating,
+        dbAliases.userRatings.restaurantItem as keyof UserResponse,
       );
 
       return value;
     },
   },
   UserRatingResponseType: {
-    restaurantItem: async (parent: UserType) => {
+    restaurantItem: async (parent: UserResponse) => {
       const value = getAssociationData(
         parent,
-        dbAliases.users.userRatings as keyof UserType,
+        dbAliases.users.userRatings as keyof UserResponse,
       );
 
       return Array.isArray(value) ? value : [];
     },
   },
   UserSearches: {
-    userSearchesRestaurant: async (parent: UserSearchesType) => {
+    userSearchesRestaurant: async (parent: UserSearchesResponse) => {
       return getAssociationData(
         parent,
-        dbAliases.userSearches.restaurant as keyof UserSearchesType,
+        dbAliases.userSearches.restaurant as keyof UserSearchesResponse,
       );
     },
-    userSearchesUser: async (parent: UserSearchesType) => {
+    userSearchesUser: async (parent: UserSearchesResponse) => {
       return getAssociationData(
         parent,
-        dbAliases.userSearches.user as keyof UserSearchesType,
+        dbAliases.userSearches.user as keyof UserSearchesResponse,
       );
     },
   },
@@ -108,15 +109,16 @@ export const userResolvers = {
     addUser: validateUserData(
       async (
         _parent: any,
-        args: createUserInputTypeArgInput,
+        args: CreateUserInputArg,
         context: any,
-      ): Promise<UserType> => {
+      ): Promise<UserResponse> => {
         if (!context.user) {
           //check authtenthication
         }
         const { input } = args;
         console.log(input);
-        const resp = await UserServices.create(input);
+        const payload = await buildUserEntry(input);
+        const resp = await UserServices.create(payload);
 
         // publish the event
         pubsub.publish(SUBSCRIPTION_EVENTS.USER_ADDED, { userAdded: resp });
@@ -126,20 +128,22 @@ export const userResolvers = {
     ),
     updateUserRating: async (
       _: any,
-      args: { input: updateUserRatingInput },
-    ): Promise<UserRating> => {
+      args: CreateUserRatingInputArg,
+    ): Promise<UserRatingResponse> => {
       const { input } = args;
-      return await UserRatingServices.update(input);
+      const payload = buildUserRatingEntry(input);
+      return await UserRatingServices.update(payload);
     },
     deleteUserRating: async (_: any, args: { id: number }) => {
       return await UserRatingServices.deleteById(args.id);
     },
     addUserRating: async (
       _: any,
-      args: { input: createUserRatingInput },
-    ): Promise<UserRating> => {
+      args: CreateUserRatingInputArg,
+    ): Promise<UserRatingResponse> => {
       const { input } = args;
-      return await UserRatingServices.create(input);
+      const validatedInput = buildUserRatingEntry(input);
+      return await UserRatingServices.create(validatedInput);
     },
   },
 

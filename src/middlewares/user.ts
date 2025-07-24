@@ -1,5 +1,5 @@
 import { ApolloError } from 'apollo-server-errors';
-import { createUserInputTypeArgInput } from 'interfaces/user';
+import { CreateUserInputArg } from 'interfaces/user';
 import validator from 'validator';
 
 import { _get } from 'helpers';
@@ -8,14 +8,14 @@ export const validateUserData =
   <TArgs = any, TContext = any, TResult = any>(
     resolver: (
       parent: any,
-      args: createUserInputTypeArgInput,
+      args: CreateUserInputArg,
       context: TContext,
       info: any,
     ) => Promise<TResult>,
   ) =>
   async (
     parent: any,
-    args: createUserInputTypeArgInput,
+    args: CreateUserInputArg,
     context: TContext,
     info: any,
   ): Promise<TResult> => {

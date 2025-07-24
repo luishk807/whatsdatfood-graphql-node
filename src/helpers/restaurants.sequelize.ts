@@ -4,7 +4,10 @@ import { RestaurantsInput } from 'db/models/restaurants';
 import { RestaurantMenuItemsInput } from 'db/models/restaurantMenuItems';
 import { RestaurantMenuItemImagesInput } from 'db/models/restaurantMenuItemImages';
 import { getSlug, getBuiltAddress } from '.';
-import { RestaurantItemType, RestaurantType } from 'interfaces/restaurant';
+import {
+  RestaurantItemResponse,
+  RestaurantResponse,
+} from 'interfaces/restaurant';
 import { dbAliases } from 'db';
 
 export const buildRestaurantPayload = (item: RestaurantsInput) => {
@@ -21,6 +24,10 @@ export const buildRestaurantPayload = (item: RestaurantsInput) => {
     description: _get(item, 'description'),
     delivery_method: _get(item, 'delivery_method'),
     letter_grade: _get(item, 'letter_grade'),
+    email: _get(item, 'email'),
+    reservation_required: _get(item, 'reservation_required'),
+    reservation_available: _get(item, 'reservation_available'),
+    website: _get(item, 'website'),
   };
 
   const full_address = getBuiltAddress({
@@ -61,91 +68,74 @@ export const buildRestaurantItemImagePayload = (
 };
 
 export const buildRestaurantResponse = (
-  item: RestaurantType | RestaurantType[],
+  item: RestaurantResponse | RestaurantResponse[],
 ) => {
   if (!item || (Array.isArray(item) && !item.length)) {
     return item;
   }
 
   return Array.isArray(item)
-    ? item.map((data: RestaurantType) => ({
-        id: _get(data, 'id'),
-        name: _get(data, 'name'),
-        slug: _get(data, 'slug'),
-        address: _get(data, 'address'),
-        city: _get(data, 'city'),
-        state: _get(data, 'state'),
-        country: _get(data, 'country'),
-        postal_code: _get(data, 'postal_code'),
-        createdAt: _get(data, 'createdAt'),
-        updatedAt: _get(data, 'updatedAt'),
-        phone: _get(data, 'phone'),
-        payment_method: _get(data, 'payment_method'),
-        rating: _get(data, 'rating'),
-        michelin_score: _get(data, 'michelin_score'),
-        description: _get(data, 'description'),
-        delivery_method: _get(data, 'delivery_method'),
-        letter_grade: _get(data, 'letter_grade'),
-        restaurantItems: _get(data, dbAliases.restaurant.restaurantItems),
-      }))
-    : {
-        id: _get(item, 'id'),
-        name: _get(item, 'name'),
-        slug: _get(item, 'slug'),
-        address: _get(item, 'address'),
-        city: _get(item, 'city'),
-        state: _get(item, 'state'),
-        country: _get(item, 'country'),
-        postal_code: _get(item, 'postal_code'),
-        createdAt: _get(item, 'createdAt'),
-        updatedAt: _get(item, 'updatedAt'),
-        phone: _get(item, 'phone'),
-        payment_method: _get(item, 'payment_method'),
-        rating: _get(item, 'rating'),
-        michelin_score: _get(item, 'michelin_score'),
-        description: _get(item, 'description'),
-        delivery_method: _get(item, 'delivery_method'),
-        letter_grade: _get(item, 'letter_grade'),
-        restaurantItems: _get(item, dbAliases.restaurant.restaurantItems),
-      };
+    ? item.map((data: RestaurantResponse) => {
+        return getRestaurantResponse(data);
+      })
+    : getRestaurantResponse(item);
 };
 
 export const buildRestaurantItemResponse = (
-  item: RestaurantItemType | RestaurantItemType[],
+  item: RestaurantItemResponse | RestaurantItemResponse[],
 ) => {
   if (!item || (Array.isArray(item) && !item.length)) {
     return item;
   }
 
   return Array.isArray(item)
-    ? item.map((data: RestaurantItemType) => ({
-        id: _get(data, 'id'),
-        restaurant_id: _get(data, 'restaurant_id'),
-        name: _get(data, 'name'),
-        price: _get(data, 'price'),
-        top_choice: _get(data, 'top_choice'),
-        description: _get(data, 'description'),
-        category: _get(data, 'category'),
-        createdAt: _get(data, 'createdAt'),
-        updatedAt: _get(data, 'updatedAt'),
-        deletedAt: _get(data, 'deletedAt'),
-        restaurant: _get(data, dbAliases.restaurantItems.restaurant),
-        images: _get(data, dbAliases.restaurantItems.restaurantItemImages),
-        ratings: _get(data, dbAliases.restaurantItems.userRatings),
-      }))
-    : {
-        id: _get(item, 'id'),
-        restaurant_id: _get(item, 'restaurant_id'),
-        name: _get(item, 'name'),
-        price: _get(item, 'price'),
-        top_choice: _get(item, 'top_choice'),
-        description: _get(item, 'description'),
-        category: _get(item, 'category'),
-        createdAt: _get(item, 'createdAt'),
-        updatedAt: _get(item, 'updatedAt'),
-        deletedAt: _get(item, 'deletedAt'),
-        restaurant: _get(item, dbAliases.restaurantItems.restaurant),
-        images: _get(item, dbAliases.restaurantItems.restaurantItemImages),
-        ratings: _get(item, dbAliases.restaurantItems.userRatings),
-      };
+    ? item.map((data: RestaurantItemResponse) => {
+        return getRestaurantItemResponse(data);
+      })
+    : getRestaurantItemResponse(item);
+};
+
+export const getRestaurantItemResponse = (data: RestaurantItemResponse) => {
+  return {
+    id: _get(data, 'id'),
+    restaurant_id: _get(data, 'restaurant_id'),
+    name: _get(data, 'name'),
+    price: _get(data, 'price'),
+    top_choice: _get(data, 'top_choice'),
+    description: _get(data, 'description'),
+    category: _get(data, 'category'),
+    createdAt: _get(data, 'createdAt'),
+    updatedAt: _get(data, 'updatedAt'),
+    deletedAt: _get(data, 'deletedAt'),
+    restaurant: _get(data, dbAliases.restaurantItems.restaurant),
+    images: _get(data, dbAliases.restaurantItems.restaurantItemImages),
+    ratings: _get(data, dbAliases.restaurantItems.userRatings),
+  };
+};
+
+export const getRestaurantResponse = (data: RestaurantResponse) => {
+  return {
+    id: _get(data, 'id'),
+    name: _get(data, 'name'),
+    slug: _get(data, 'slug'),
+    address: _get(data, 'address'),
+    city: _get(data, 'city'),
+    state: _get(data, 'state'),
+    country: _get(data, 'country'),
+    postal_code: _get(data, 'postal_code'),
+    createdAt: _get(data, 'createdAt'),
+    updatedAt: _get(data, 'updatedAt'),
+    phone: _get(data, 'phone'),
+    payment_method: _get(data, 'payment_method'),
+    rating: _get(data, 'rating'),
+    michelin_score: _get(data, 'michelin_score'),
+    description: _get(data, 'description'),
+    delivery_method: _get(data, 'delivery_method'),
+    letter_grade: _get(data, 'letter_grade'),
+    email: _get(data, 'email'),
+    reservation_required: _get(data, 'reservation_required'),
+    reservation_available: _get(data, 'reservation_available'),
+    website: _get(data, 'website'),
+    restaurantItems: _get(data, dbAliases.restaurant.restaurantItems),
+  };
 };
