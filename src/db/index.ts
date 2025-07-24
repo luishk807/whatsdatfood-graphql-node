@@ -44,4 +44,24 @@ export const dbAliases = {
     restaurantItem: 'userRatingRestaurantItem',
     status: 'userRatingStatus',
   },
+  holidays: {
+    status: 'holidayStatus',
+  },
+  foodCategories: {
+    status: 'foodCategoryStatus',
+  },
+  restaurantBusinessHours: {
+    status: 'restaurantBusinessHourStatus',
+    restaurant: 'restaurantBusinessHourRestaurant',
+  },
+  restaurantCategories: {
+    status: 'restaurantCategoryStatus',
+    restaurant: 'restaurantCategoryRestaurant',
+    foodCategory: 'restaurantCategoryFoodCategory',
+  },
+  restaurantHoliday: {
+    status: 'restaurantHolidayStatus',
+    restaurant: 'restaurantHolidayRestaurant',
+    holiday: 'restaurantHolidayHoliday',
+  },
 };

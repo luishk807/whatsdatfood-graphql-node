@@ -1,7 +1,7 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelizeConnection from 'db/sequelize';
 import { dbAliases } from 'db/index';
-interface StatusesInterface {
+interface HolidaysInterface {
   id: number;
   name: string;
   status_id: number;
@@ -10,24 +10,31 @@ interface StatusesInterface {
   deleted_at?: Date;
 }
 
-export interface StatusesInput extends Optional<StatusesInterface, 'id'> {}
-export interface StatusesOutput extends Required<StatusesInterface> {}
+export interface HolidaysInput extends Optional<HolidaysInterface, 'id'> {}
+export interface HolidaysOutput extends Required<HolidaysInterface> {}
 
-class Statuses
-  extends Model<StatusesInterface, StatusesInput>
-  implements StatusesInterface
+class Holidays
+  extends Model<HolidaysInterface, HolidaysInput>
+  implements HolidaysInterface
 {
   public id!: number;
-  public name!: string;
   public status_id!: number;
+  public name!: string;
 
   // timestamps!
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
   public readonly deleted_at!: Date;
+
+  static associate(models: any): void {
+    Holidays.belongsTo(models.Statuses, {
+      foreignKey: 'status_id',
+      as: dbAliases.holidays.status,
+    });
+  }
 }
 
-Statuses.init(
+Holidays.init(
   {
     id: {
       autoIncrement: true,
@@ -56,4 +63,4 @@ Statuses.init(
   },
 );
 
-export default Statuses;
+export default Holidays;

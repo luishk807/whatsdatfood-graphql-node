@@ -1,7 +1,7 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelizeConnection from 'db/sequelize';
 import { dbAliases } from 'db/index';
-interface StatusesInterface {
+interface FoodCategoriesInterface {
   id: number;
   name: string;
   status_id: number;
@@ -10,12 +10,14 @@ interface StatusesInterface {
   deleted_at?: Date;
 }
 
-export interface StatusesInput extends Optional<StatusesInterface, 'id'> {}
-export interface StatusesOutput extends Required<StatusesInterface> {}
+export interface FoodCategoriesInput
+  extends Optional<FoodCategoriesInterface, 'id'> {}
+export interface FoodCategoriesOutput
+  extends Required<FoodCategoriesInterface> {}
 
-class Statuses
-  extends Model<StatusesInterface, StatusesInput>
-  implements StatusesInterface
+class FoodCategories
+  extends Model<FoodCategoriesInterface, FoodCategoriesInput>
+  implements FoodCategoriesInterface
 {
   public id!: number;
   public name!: string;
@@ -25,9 +27,16 @@ class Statuses
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
   public readonly deleted_at!: Date;
+
+  static associate(models: any): void {
+    FoodCategories.belongsTo(models.Statuses, {
+      foreignKey: 'status_id',
+      as: dbAliases.foodCategories.status,
+    });
+  }
 }
 
-Statuses.init(
+FoodCategories.init(
   {
     id: {
       autoIncrement: true,
@@ -56,4 +65,4 @@ Statuses.init(
   },
 );
 
-export default Statuses;
+export default FoodCategories;
