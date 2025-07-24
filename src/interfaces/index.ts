@@ -3,28 +3,25 @@ import { RestaurantsOutput } from 'db/models/restaurants';
 import { Response, Request } from 'express';
 import { ID } from 'types';
 import {
-  RestaurantResponse,
-  RestaurantItemResponse,
-  RestaurantAIResponse,
+  Restaurant,
+  RestaurantMenuItem,
+  RestaurantAI,
 } from 'interfaces/restaurant';
 
-import { UserResponse } from 'interfaces/user';
+import { User } from 'interfaces/user';
 
 export interface GraphQLServerContext {
   res: Response;
   req: Request;
-  user: UserResponse | null;
-  restaurantRestaurantItemsDataLoader: DataLoader<
-    number,
-    RestaurantItemResponse[]
-  >;
-  restaurantItemRestaurant: DataLoader<number, RestaurantResponse | null>;
-  aiRestaurantNameList: DataLoader<string, RestaurantAIResponse[] | []>;
-  aiRestaurantDataBySlug: DataLoader<string, RestaurantAIResponse>;
+  user: User | null;
+  restaurantRestaurantItemsDataLoader: DataLoader<number, RestaurantMenuItem[]>;
+  restaurantItemRestaurant: DataLoader<number, Restaurant | null>;
+  aiRestaurantNameList: DataLoader<string, RestaurantAI[] | []>;
+  aiRestaurantDataBySlug: DataLoader<string, RestaurantAI>;
 }
 
 export interface RestaurantsWithItemsOutput extends RestaurantsOutput {
-  restRestaurantItems: RestaurantItemResponse[];
+  restRestaurantItems: RestaurantMenuItem[];
 }
 
 export interface Address {

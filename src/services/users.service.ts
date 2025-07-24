@@ -3,7 +3,7 @@ import Users from 'repository/users.respository';
 import { buildUserEntry, buildUserResponse } from 'helpers/users.sequelize';
 import { _get } from 'helpers';
 import { dbAliases } from 'db';
-import { UserResponse } from 'interfaces/user';
+import { User } from 'interfaces/user';
 const UserRepo = new Users();
 
 const UserServices = {
@@ -13,19 +13,19 @@ const UserServices = {
   },
   async findById(id: number) {
     const resp = await UserRepo.getOneById(id);
-    return buildUserResponse(resp as UserResponse);
+    return buildUserResponse(resp as User);
   },
   async findByEmail(email: string) {
     const resp = await UserRepo.findUserByEmail(email);
-    return buildUserResponse(resp as UserResponse);
+    return buildUserResponse(resp as User);
   },
   async findByUsername(username: string) {
     const resp = await UserRepo.findUserByUsername(username);
-    return buildUserResponse(resp as UserResponse);
+    return buildUserResponse(resp as User);
   },
   async getAll() {
     const resp = await UserRepo.getAll();
-    return buildUserResponse(resp as UserResponse);
+    return buildUserResponse(resp as User);
   },
 };
 

@@ -4,10 +4,7 @@ import { RestaurantsInput } from 'db/models/restaurants';
 import { RestaurantMenuItemsInput } from 'db/models/restaurantMenuItems';
 import { RestaurantMenuItemImagesInput } from 'db/models/restaurantMenuItemImages';
 import { getSlug, getBuiltAddress } from '.';
-import {
-  RestaurantItemResponse,
-  RestaurantResponse,
-} from 'interfaces/restaurant';
+import { RestaurantMenuItem, Restaurant } from 'interfaces/restaurant';
 import { dbAliases } from 'db';
 
 export const buildRestaurantPayload = (item: RestaurantsInput) => {
@@ -67,35 +64,33 @@ export const buildRestaurantItemImagePayload = (
   };
 };
 
-export const buildRestaurantResponse = (
-  item: RestaurantResponse | RestaurantResponse[],
-) => {
+export const buildRestaurantResponse = (item: Restaurant | Restaurant[]) => {
   if (!item || (Array.isArray(item) && !item.length)) {
     return item;
   }
 
   return Array.isArray(item)
-    ? item.map((data: RestaurantResponse) => {
+    ? item.map((data: Restaurant) => {
         return getRestaurantResponse(data);
       })
     : getRestaurantResponse(item);
 };
 
 export const buildRestaurantItemResponse = (
-  item: RestaurantItemResponse | RestaurantItemResponse[],
+  item: RestaurantMenuItem | RestaurantMenuItem[],
 ) => {
   if (!item || (Array.isArray(item) && !item.length)) {
     return item;
   }
 
   return Array.isArray(item)
-    ? item.map((data: RestaurantItemResponse) => {
+    ? item.map((data: RestaurantMenuItem) => {
         return getRestaurantItemResponse(data);
       })
     : getRestaurantItemResponse(item);
 };
 
-export const getRestaurantItemResponse = (data: RestaurantItemResponse) => {
+export const getRestaurantItemResponse = (data: RestaurantMenuItem) => {
   return {
     id: _get(data, 'id'),
     restaurant_id: _get(data, 'restaurant_id'),
@@ -113,7 +108,7 @@ export const getRestaurantItemResponse = (data: RestaurantItemResponse) => {
   };
 };
 
-export const getRestaurantResponse = (data: RestaurantResponse) => {
+export const getRestaurantResponse = (data: Restaurant) => {
   return {
     id: _get(data, 'id'),
     name: _get(data, 'name'),
@@ -136,6 +131,6 @@ export const getRestaurantResponse = (data: RestaurantResponse) => {
     reservation_required: _get(data, 'reservation_required'),
     reservation_available: _get(data, 'reservation_available'),
     website: _get(data, 'website'),
-    restaurantItems: _get(data, dbAliases.restaurant.restaurantItems),
+    restaurantMenuItems: _get(data, dbAliases.restaurant.restaurantItems),
   };
 };

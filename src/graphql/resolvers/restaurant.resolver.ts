@@ -1,15 +1,11 @@
 import RestaurantServices from 'services/restaurants.service';
 import RestaurantMenuItemImagesFn from 'services/restaurantMenuItemImages.service';
-import OpenAiResturant from 'services/openAi.service';
 import { IResolvers } from '@graphql-tools/utils'; // or your GraphQL resolver typings
 import {
-  RestaurantResponse,
-  RestaurantItemResponse,
-  RestaurantMenuItemsAIResponse,
+  Restaurant,
+  RestaurantMenuItem,
   CreateRestaurantArgInput,
-  RestaurantAIResponse,
 } from 'interfaces/restaurant';
-import { dbAliases } from 'db/index';
 import { RestaurantsInput } from 'db/models/restaurants';
 import DataLoader from 'dataloader';
 import { NotFoundError } from 'graphql/customErrors';
@@ -18,7 +14,7 @@ import { DateTimeResolver } from 'graphql-scalars';
 export const restaurantResolvers: IResolvers = {
   DateTime: DateTimeResolver,
   Query: {
-    restaurants: async (): Promise<RestaurantResponse[]> => {
+    restaurants: async (): Promise<Restaurant[]> => {
       const resp = await RestaurantServices.getAll();
       if (!resp) {
         throw new NotFoundError('No restaurant available');
@@ -29,16 +25,16 @@ export const restaurantResolvers: IResolvers = {
       _parent: any,
       args: { slug: string },
       context: {
-        aiRestaurantDataBySlug: DataLoader<string, RestaurantAIResponse>;
+        aiRestaurantDataBySlug: DataLoader<string, Restaurant>;
       },
-    ): Promise<RestaurantAIResponse | null> => {
+    ): Promise<Restaurant | null> => {
       return context.aiRestaurantDataBySlug.load(args.slug);
     },
     aiRestaurantNameList: async (
       _parent: any,
       _args: { name: string },
       context: {
-        aiRestaurantNameList: DataLoader<string, RestaurantAIResponse[]>;
+        aiRestaurantNameList: DataLoader<string, Restaurant[]>;
       },
     ) => {
       return context.aiRestaurantNameList.load(_args.name);
@@ -52,93 +48,25 @@ export const restaurantResolvers: IResolvers = {
     },
   },
   Restaurant: {
-    restRestaurantItems: async (
-      _parent: RestaurantAIResponse,
+    restaurantMenuItems: async (
+      parent: Restaurant,
       _args: any,
       {},
-    ): Promise<RestaurantMenuItemsAIResponse[]> => {
-      const key = dbAliases.restaurant
-        .restaurantItems as keyof RestaurantAIResponse;
-      const value = _parent[key];
-      return Array.isArray(value) ? value : [];
+    ): Promise<RestaurantMenuItem[]> => {
+      return parent.restaurantMenuItems ?? [];
     },
   },
-  RestaurantResponseType: {
-    restaurantItems: async (
-      _parent: RestaurantResponse,
-      _args: any,
-      {},
-    ): Promise<RestaurantItemResponse[]> => {
-      const value = _parent.restaurantItems;
-      return Array.isArray(value) ? value : [];
-    },
-  },
-  RestaurantAIResponse: {
-    restaurantItems: async (
-      parent: RestaurantAIResponse,
-      args: any,
-      {},
-    ): Promise<RestaurantMenuItemsAIResponse[]> => {
-      const value = parent.restaurantItems;
-      return Array.isArray(value) ? value : [];
-    },
-  },
-  RestaurantMenuItemsAIResponse: {
-    ratings: async (parent: RestaurantMenuItemsAIResponse, args: any) => {
-      const keyItem = dbAliases.restaurantItems
-        .userRatings as keyof RestaurantMenuItemsAIResponse;
-      return parent[keyItem] || [];
-    },
-    images: async (parent: RestaurantMenuItemsAIResponse) => {
-      const keyItem = dbAliases.restaurantItems
-        .restaurantItemImages as keyof RestaurantMenuItemsAIResponse;
-      return parent[keyItem] || [];
-    },
-  },
-  RestaurantMenuItemsResponseType: {
-    ratings: async (parent: RestaurantMenuItemsAIResponse, args: any) => {
-      const keyItem = dbAliases.restaurantItems
-        .userRatings as keyof RestaurantMenuItemsAIResponse;
-      return parent[keyItem] || [];
-    },
-    images: async (parent: RestaurantMenuItemsAIResponse) => {
-      const keyItem = dbAliases.restaurantItems
-        .restaurantItemImages as keyof RestaurantMenuItemsAIResponse;
-      return parent[keyItem] || [];
-    },
-  },
-  RestaurantMenuItems: {
-    restaurantItemRest: async (
-      parent: RestaurantItemResponse,
-      args: any,
-      context: {
-        restaurantItemRestaurant: DataLoader<number, RestaurantResponse | null>;
-      },
-    ): Promise<RestaurantResponse | null> => {
-      if (parent.restaurant_id) {
-        return context.restaurantItemRestaurant.load(
-          Number(parent.restaurant_id),
-        );
-      } else {
-        return null;
-      }
-    },
-    restaurantItemUserRatings: async (
-      parent: RestaurantItemResponse,
-      args: any,
-    ) => {
-      return parent.ratings || [];
-    },
-    restaurantItemRestImages: async (parent: RestaurantItemResponse) => {
-      return parent.images || [];
-    },
+  RestaurantMenuItem: {
+    ratings: async (parent: RestaurantMenuItem) => parent.ratings,
+    images: async (parent: RestaurantMenuItem) => parent.images,
+    restaurant: async (parent: RestaurantMenuItem) => parent.restaurant,
   },
   Mutation: {
     addRestaurant: async (
       _parent: any,
       args: CreateRestaurantArgInput,
       context: any,
-    ): Promise<RestaurantResponse> => {
+    ): Promise<Restaurant> => {
       if (!context.user) {
         //check authtenthication
       }

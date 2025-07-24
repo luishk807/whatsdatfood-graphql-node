@@ -1,4 +1,5 @@
 import { UserRatingsInput } from 'db/models/userRatings';
+import { buildUserRatingResponse } from 'helpers/users.sequelize';
 import UserRating from 'repository/userRating.repository';
 const UserRatingRepo = new UserRating();
 
@@ -16,7 +17,8 @@ const UserServices = {
     return await UserRatingRepo.getOneById(id);
   },
   async getAll() {
-    return await UserRatingRepo.getAll();
+    const resp = await UserRatingRepo.getAll();
+    return buildUserRatingResponse(resp);
   },
 };
 

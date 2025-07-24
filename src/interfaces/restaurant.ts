@@ -1,6 +1,6 @@
-import { UserRatingResponse } from 'interfaces/user';
+import { UserRating, User } from 'interfaces/user';
 import { ID } from 'types';
-export interface RestaurantMenuImageBase {
+export interface RestaurantMenuItemImagesBase {
   id?: ID;
   restaurant_item_id: ID;
   user_id?: bigint;
@@ -16,7 +16,7 @@ export interface RestaurantMenuImageBase {
   deletedAt?: string;
 }
 
-export interface RestaurantItemBase {
+export interface RestaurantMenuItemBase {
   id?: ID;
   name: string;
   category: string;
@@ -30,13 +30,13 @@ export interface RestaurantItemBase {
 
 export interface RestaurantBase {
   id?: ID;
-  name: string;
+  name?: string;
   slug?: string;
-  address: string;
-  city: string;
-  state: string;
-  country: string;
-  postal_code: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  postal_code?: string;
   phone?: string;
   payment_method?: string;
   rating?: number;
@@ -51,36 +51,39 @@ export interface RestaurantBase {
   createdAt?: string;
   updatedAt?: string;
 }
-export interface RestaurantMenuItemImagesResponse
-  extends RestaurantMenuImageBase {
-  restaurantItem: RestaurantItemResponse;
+
+export interface RestaurantMenuItemImages extends RestaurantMenuItemImagesBase {
+  restaurantMenuItem: RestaurantMenuItem;
 }
 
-export interface RestaurantItemResponse extends RestaurantItemBase {
-  restaurant?: RestaurantResponse;
-  images?: RestaurantMenuItemImagesResponse[];
-  ratings?: UserRatingResponse[];
+export interface RestaurantMenuItem extends RestaurantMenuItemBase {
+  restaurant?: Restaurant;
+  images?: RestaurantMenuItemImages[];
+  ratings?: UserRating[];
 }
-export interface RestaurantResponse extends RestaurantBase {
-  restaurantItems?: RestaurantItemResponse[];
+export interface Restaurant extends RestaurantBase {
+  restaurantMenuItems?: RestaurantMenuItem[];
 }
 
-export interface CreateRestaurantItemInput
-  extends Partial<Omit<RestaurantItemBase, 'id' | 'createdAt' | 'updatedAt'>> {}
+export interface CreateRestaurantMenuItemInput
+  extends Partial<
+    Omit<RestaurantMenuItemBase, 'id' | 'createdAt' | 'updatedAt'>
+  > {}
 export interface CreateRestaurantInput
   extends Partial<Omit<RestaurantBase, 'id' | 'createdAt' | 'updatedAt'>> {}
 
 export interface CreateRestaurantArgInput {
   input: CreateRestaurantInput;
 }
-export interface CreateRestarauntItemArgInput {
-  input: CreateRestaurantItemInput;
+export interface CreateRestarauntMenuItemArgInput {
+  input: CreateRestaurantMenuItemInput;
 }
-export interface RestaurantMenuItemsAIResponse extends RestaurantItemBase {
-  ratings?: UserRatingResponse[];
-  images?: RestaurantMenuItemImagesResponse[];
+export interface RestaurantMenuItemsAI extends Partial<RestaurantMenuItemBase> {
+  ratings?: UserRating[];
+  images?: RestaurantMenuItemImages[];
+  restaurant?: Restaurant;
 }
 
-export interface RestaurantAIResponse extends RestaurantBase {
-  restaurantItems?: RestaurantMenuItemsAIResponse[];
+export interface RestaurantAI extends Partial<RestaurantBase> {
+  restaurantMenuItems?: RestaurantMenuItemsAI[];
 }

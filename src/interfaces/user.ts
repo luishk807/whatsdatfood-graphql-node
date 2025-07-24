@@ -1,7 +1,4 @@
-import {
-  RestaurantItemResponse,
-  RestaurantResponse,
-} from 'interfaces/restaurant';
+import { RestaurantMenuItem, Restaurant } from 'interfaces/restaurant';
 import { ID } from 'types';
 import { Status } from 'interfaces';
 
@@ -47,24 +44,27 @@ export interface UserRatingBase {
   comment?: string;
 }
 
-export interface UserResponse extends UserBase {
-  ratings?: UserRatingResponse[];
+export interface User extends Partial<UserBase> {
+  ratings?: UserRating[];
   status?: Status;
-  role?: UserRoleResponse;
-  searches?: UserSearchesResponse[];
+  role?: UserRole;
+  searches?: UserSearch[];
 }
 
-export interface UserRatingResponse extends UserRatingBase {
-  restaurantItem?: RestaurantItemResponse;
+export interface UserRating extends Partial<UserRatingBase> {
+  restaurantMenuItem?: RestaurantMenuItem;
+  user?: User;
+  status?: Status;
 }
 
-export interface UserRoleResponse {
+export interface UserRole {
   id: ID;
   name: string;
 }
-export interface UserSearchesResponse extends UserSearchesBase {
-  restaurant: RestaurantResponse;
-  user: UserResponse;
+export interface UserSearch extends Partial<UserSearchesBase> {
+  restaurant?: Restaurant;
+  user?: User;
+  status?: Status;
 }
 
 export interface UserRatingInput

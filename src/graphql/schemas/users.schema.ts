@@ -3,69 +3,37 @@ export const userDefs = gql`
   scalar DateTime
   scalar Date
   type User {
-    id: ID!
-    first_name: String!
-    last_name: String!
-    password: String!
-    phone: String!
-    email: String!
-    username: String!
+    id: ID
+    first_name: String
+    last_name: String
+    password: String
+    phone: String
+    email: String
+    username: String
     verification: String
     status_id: ID
-    role_id: ID!
+    role_id: ID
     createdAt: DateTime
     updatedAt: DateTime
-    dob: DateTime!
-    userUserSearches: [UserSearches]
-    userUserRatings: [UserRatings]
-    userStatus: Status
-    userUserRole: UserRole
-  }
-
-  type UserResponseType {
-    id: ID!
-    first_name: String!
-    last_name: String!
-    password: String!
-    phone: String!
-    email: String!
-    username: String!
-    verification: String
-    status_id: ID
-    role_id: ID!
-    createdAt: DateTime
-    updatedAt: DateTime
-    dob: Date
-    searches: [UserSearches]
-    ratings: [UserRatingResponseType]
+    dob: DateTime
+    searches: [UserSearch]
+    ratings: [UserRating]
     status: Status
     role: UserRole
   }
 
-  type UserRatings {
-    id: ID!
+  type UserRating {
+    id: ID
     rating: Float
-    user_id: ID!
+    user_id: ID
     comment: String
     title: String
     createdAt: DateTime
     updatedAt: DateTime
-    restaurant_menu_item_id: ID!
-    user: [UserResponseType]
-    userRatingRestaurantItem: RestaurantMenuItems
-  }
-
-  type UserRatingResponseType {
-    id: ID!
-    rating: Float
-    user_id: ID!
-    comment: String
-    title: String
-    createdAt: DateTime
-    updatedAt: DateTime
-    restaurant_menu_item_id: ID!
-    user: [UserResponseType]
-    restaurantItem: RestaurantMenuItemsResponseType
+    restaurant_menu_item_id: ID
+    user: User
+    status: Status
+    restaurantMenuItem: RestaurantMenuItem
   }
 
   type Subscription {
@@ -77,28 +45,16 @@ export const userDefs = gql`
     name: String
   }
 
-  type UserSearches {
+  type UserSearch {
     id: ID!
-    user_id: ID!
+    user_id: ID
     restaurant_id: ID!
     user: User
     restaurant: Restaurant
     createdAt: DateTime
     updatedAt: DateTime
     deletedAt: DateTime
-    userSearchesRestaurant: Restaurant
-    userSearchesUser: User
-  }
-
-  type UserSearchesResponseType {
-    id: ID!
-    user_id: ID!
-    restaurant_id: ID!
-    user: UserResponseType
-    createdAt: DateTime
-    updatedAt: DateTime
-    deletedAt: DateTime
-    restaurant: RestaurantResponseType
+    searches: Restaurant
   }
 
   input CreateUserInput {
@@ -134,20 +90,20 @@ export const userDefs = gql`
   }
 
   extend type Query {
-    users: [UserResponseType]
-    user(id: ID): UserResponseType
-    getUserByEmail(email: String): UserResponseType
-    getUserByUsername(username: String): UserResponseType
-    ratings: [UserRatingResponseType]
+    users: [User]
+    user(id: ID): User
+    getUserByEmail(email: String): User
+    getUserByUsername(username: String): User
+    ratings: [UserRating]
     checkUsername(username: String): Boolean
   }
 
   extend type Mutation {
     addUser(input: CreateUserInput): User
-    addUserRating(input: createUserRatingInput): UserRatings
-    updateUserRating(input: updateUserRatingInput): UserRatings
+    addUserRating(input: createUserRatingInput): UserRating
+    updateUserRating(input: updateUserRatingInput): UserRating
     deleteUserRating(id: ID): Boolean
-    addUserSearches(input: createUserSearchInput): UserSearches
+    addUserSearches(input: createUserSearchInput): UserSearch
   }
 
   extend type Subscription {

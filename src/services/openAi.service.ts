@@ -1,9 +1,6 @@
 import OpenAI from 'openai';
 import { _get } from 'helpers';
-import {
-  RestaurantAIResponse,
-  RestaurantResponse,
-} from 'interfaces/restaurant';
+import { RestaurantAI, Restaurant } from 'interfaces/restaurant';
 import { GooogleResponseAPIItem } from 'types';
 
 import {
@@ -26,8 +23,7 @@ type AIMenuType = {
   top_choice: boolean;
 };
 const openAiKey: string | undefined = process.env.OPENAI_KEY;
-const itemKey = dbAliases.restaurant
-  .restaurantItems as keyof RestaurantAIResponse;
+const itemKey = dbAliases.restaurant.restaurantItems as keyof RestaurantAI;
 
 const OpenAiFn = {
   async askAIQuestion(ai_question: string) {
@@ -155,11 +151,11 @@ const OpenAiFn = {
     } = Array.isArray(restData) ? restData[0] : restData;
 
     const wholeAddress = getBuiltAddress({
-      address,
-      city,
-      state,
-      country,
-      postal_code,
+      address: address ?? '',
+      city: city ?? '',
+      state: state ?? '',
+      country: country ?? '',
+      postal_code: postal_code ?? '',
     });
 
     const menuItems = _get(restData, 'restaurantItems');
@@ -277,7 +273,7 @@ const OpenAiFn = {
             }
           } else {
             if (Array.isArray(restData)) {
-              restData.forEach((restaurant: RestaurantResponse) => {
+              restData.forEach((restaurant: Restaurant) => {
                 const slug = _get(restaurant, 'slug');
                 if (!results.has(slug)) {
                   results.set(slug, {

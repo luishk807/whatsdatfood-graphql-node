@@ -1,11 +1,6 @@
 import { _get } from '.';
 import { createHashPassword } from 'helpers/login';
-import {
-  UserRatingResponse,
-  UserResponse,
-  UserInput,
-  UserRatingInput,
-} from 'interfaces/user';
+import { UserRating, User, UserInput, UserRatingInput } from 'interfaces/user';
 import { USER_ROLE_DEFAULT } from 'constants/sequelize';
 import { dbAliases } from 'db';
 export const buildUserEntry = async (item: UserInput) => {
@@ -49,30 +44,50 @@ export const buildUserRatingEntry = (input: UserRatingInput) => {
   };
 };
 
-export const buildUserRatingResponse = async (item: UserRatingResponse) => {
-  const id = _get(item, 'id');
-  let payload: UserRatingResponse = {
-    rating: parseFloat(_get(item, 'rating')),
-    user_id: _get(item, 'user_id'),
-    comment: _get(item, 'comment'),
-    title: _get(item, 'title'),
-    restaurant_menu_item_id: _get(item, 'restaurant_menu_item_id'),
-  };
-
-  if (id !== undefined && id !== null) {
-    payload.id = Number(id);
+export const buildUserRatingResponse = async (
+  item: UserRating | UserRating[],
+) => {
+  if (!item || (Array.isArray(item) && !item.length)) {
+    return item;
   }
 
-  return payload;
+  if (Array.isArray(item)) {
+    const test = item[0];
+    console.log('test', test);
+  }
+
+  return Array.isArray(item)
+    ? item.map((data: any) => ({
+        id: _get(data, 'id'),
+        rating: parseFloat(_get(data, 'rating')),
+        user_id: _get(data, 'user_id'),
+        comment: _get(data, 'comment'),
+        title: _get(data, 'title'),
+        restaurant_menu_item_id: _get(data, 'restaurant_menu_item_id'),
+        restaurantMenuItem: _get(data, dbAliases.userRatings.restaurantItem),
+        status: _get(data, dbAliases.userRatings.status),
+        user: _get(data, dbAliases.userRatings.user),
+      }))
+    : {
+        id: _get(item, 'id'),
+        rating: parseFloat(_get(item, 'rating')),
+        user_id: _get(item, 'user_id'),
+        comment: _get(item, 'comment'),
+        title: _get(item, 'title'),
+        restaurant_menu_item_id: _get(item, 'restaurant_menu_item_id'),
+        restaurantMenuItem: _get(item, dbAliases.userRatings.restaurantItem),
+        status: _get(item, dbAliases.userRatings.status),
+        user: _get(item, dbAliases.userRatings.user),
+      };
 };
 
-export const buildUserResponse = (item: UserResponse | UserResponse[]) => {
+export const buildUserResponse = (item: User | User[]) => {
   if (!item || (Array.isArray(item) && !item.length)) {
     return item;
   }
 
   return Array.isArray(item)
-    ? item.map((data: UserResponse) => ({
+    ? item.map((data: User) => ({
         id: _get(data, 'id'),
         first_name: _get(data, 'first_name'),
         last_name: _get(data, 'last_name'),

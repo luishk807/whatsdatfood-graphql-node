@@ -4,20 +4,16 @@ import { createPubSub } from '@graphql-yoga/node';
 import {
   CreateUserInputArg,
   CreateUserRatingInputArg,
-  UserRatingResponse,
-  UserSearchesResponse,
-  UserResponse,
-  UserRatingBase,
+  UserRating,
+  UserSearch,
+  User,
 } from 'interfaces/user';
 import { validateUserData } from 'middlewares/user';
 import { SUBSCRIPTION_EVENTS } from 'constants/graphql';
-import { dbAliases } from 'db';
-import { getAssociationData } from 'helpers/sequelize';
 import { buildUserEntry, buildUserRatingEntry } from 'helpers/users.sequelize';
-import { RestaurantsInput } from 'db/models/restaurants';
 import { DateTimeResolver } from 'graphql-scalars';
 type Events = {
-  USER_ADDED: { userAdded: UserResponse }; // Use your actual UserType here
+  USER_ADDED: { userAdded: User }; // Use your actual UserType here
 };
 
 const pubsub = createPubSub();
@@ -42,68 +38,19 @@ export const userResolvers = {
     },
   },
   User: {
-    userStatus: async (parent: UserResponse) => {
-      return getAssociationData(
-        parent,
-        dbAliases.users.status as keyof UserResponse,
-      );
-    },
-    userUserSearches: async (parent: UserResponse) => {
-      const value = getAssociationData(
-        parent,
-        dbAliases.users.userSearches as keyof UserResponse,
-      );
-
-      return Array.isArray(value) ? value : [];
-    },
-    userUserRole: async (parent: UserResponse) => {
-      return getAssociationData(
-        parent,
-        dbAliases.users.userRole as keyof UserResponse,
-      );
-    },
-    userUserRatings: async (parent: UserResponse) => {
-      const value = getAssociationData(
-        parent,
-        dbAliases.users.userRatings as keyof UserResponse,
-      );
-
-      return Array.isArray(value) ? value : [];
-    },
+    status: async (parent: User) => parent.status,
+    searches: async (parent: User) => parent.searches,
+    role: async (parent: User) => parent.role,
+    ratings: async (parent: User) => parent.ratings,
   },
-  UserRatings: {
-    userRatingRestaurantItem: async (parent: UserResponse) => {
-      const value = getAssociationData(
-        parent,
-        dbAliases.userRatings.restaurantItem as keyof UserResponse,
-      );
-
-      return value;
-    },
+  UserRating: {
+    restaurantMenuItem: async (parent: UserRating) => parent.restaurantMenuItem,
+    user: async (parent: UserRating) => parent.user,
+    status: async (parent: UserRating) => parent.status,
   },
-  UserRatingResponseType: {
-    restaurantItem: async (parent: UserResponse) => {
-      const value = getAssociationData(
-        parent,
-        dbAliases.users.userRatings as keyof UserResponse,
-      );
-
-      return Array.isArray(value) ? value : [];
-    },
-  },
-  UserSearches: {
-    userSearchesRestaurant: async (parent: UserSearchesResponse) => {
-      return getAssociationData(
-        parent,
-        dbAliases.userSearches.restaurant as keyof UserSearchesResponse,
-      );
-    },
-    userSearchesUser: async (parent: UserSearchesResponse) => {
-      return getAssociationData(
-        parent,
-        dbAliases.userSearches.user as keyof UserSearchesResponse,
-      );
-    },
+  UserSearch: {
+    restaurant: async (parent: UserSearch) => parent.restaurant,
+    user: async (parent: UserSearch) => parent.user,
   },
   Mutation: {
     addUser: validateUserData(
@@ -111,7 +58,7 @@ export const userResolvers = {
         _parent: any,
         args: CreateUserInputArg,
         context: any,
-      ): Promise<UserResponse> => {
+      ): Promise<User> => {
         if (!context.user) {
           //check authtenthication
         }
@@ -129,7 +76,7 @@ export const userResolvers = {
     updateUserRating: async (
       _: any,
       args: CreateUserRatingInputArg,
-    ): Promise<UserRatingResponse> => {
+    ): Promise<UserRating> => {
       const { input } = args;
       const payload = buildUserRatingEntry(input);
       return await UserRatingServices.update(payload);
@@ -140,7 +87,7 @@ export const userResolvers = {
     addUserRating: async (
       _: any,
       args: CreateUserRatingInputArg,
-    ): Promise<UserRatingResponse> => {
+    ): Promise<UserRating> => {
       const { input } = args;
       const validatedInput = buildUserRatingEntry(input);
       return await UserRatingServices.create(validatedInput);

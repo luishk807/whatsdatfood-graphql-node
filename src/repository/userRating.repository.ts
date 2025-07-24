@@ -30,7 +30,15 @@ class UserRatingRepo extends Base {
       include: [
         {
           model: db.RestaurantMenuItems,
-          as: dbAliases.restaurantItems.userRatings,
+          as: dbAliases.userRatings.restaurantItem,
+        },
+        {
+          model: db.Users,
+          as: dbAliases.userRatings.user,
+        },
+        {
+          model: db.Statuses,
+          as: dbAliases.userRatings.status,
         },
       ],
     });
