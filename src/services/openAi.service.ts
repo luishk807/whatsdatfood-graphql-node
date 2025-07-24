@@ -158,7 +158,7 @@ const OpenAiFn = {
       postal_code: postal_code ?? '',
     });
 
-    const menuItems = _get(restData, 'restaurantItems');
+    const menuItems = _get(restData, 'restaurantMenuItems');
 
     if (menuItems && menuItems.length) {
       return restData;
@@ -215,7 +215,7 @@ const OpenAiFn = {
       reservation_required,
       reservation_available,
       website,
-      restaurantItems: results,
+      restaurantMenuItems: results,
     };
   },
   async getAIRestaurantList(restName: string) {
