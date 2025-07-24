@@ -23,6 +23,9 @@ export interface GraphQLServerContext {
 export interface RestaurantsWithItemsOutput extends RestaurantsOutput {
   restRestaurantItems: RestaurantMenuItem[];
 }
+export interface BusinessHours {
+  [key: string]: string;
+}
 
 export interface Address {
   address: string;

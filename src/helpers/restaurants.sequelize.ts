@@ -1,12 +1,15 @@
 import { _get } from '.';
-import { convertStringToNumber } from 'helpers';
+import { convertStringToNumber, getTimeSplit } from 'helpers';
 import { RestaurantsInput } from 'db/models/restaurants';
 import { RestaurantMenuItemsInput } from 'db/models/restaurantMenuItems';
 import { RestaurantMenuItemImagesInput } from 'db/models/restaurantMenuItemImages';
+import RestaurantBusinessHours, {
+  RestaurantBusinessHoursInput,
+} from 'db/models/restaurantBusinessHours';
 import { getSlug, getBuiltAddress } from '.';
 import { RestaurantMenuItem, Restaurant } from 'interfaces/restaurant';
 import { dbAliases } from 'db';
-
+import { BusinessHours } from 'interfaces';
 export const buildRestaurantPayload = (item: RestaurantsInput) => {
   const address_data = {
     address: _get(item, 'address'),
@@ -50,6 +53,37 @@ export const buildRestaurantItemPayload = (item: RestaurantMenuItemsInput) => {
   };
 };
 
+export const buildRestaurantBusinessHoursPayload = (
+  id: number,
+  businessHours: BusinessHours,
+): RestaurantBusinessHoursInput[] | null => {
+  if (!businessHours) {
+    return null;
+  }
+
+  if (!Object.keys(businessHours).length) {
+    return null;
+  }
+
+  const payload: RestaurantBusinessHoursInput[] = [];
+  Object.keys(businessHours).forEach((day) => {
+    const times = getTimeSplit(businessHours[day]);
+    const dayFormat = day.toLowerCase();
+    if (times && dayFormat) {
+      const item: RestaurantBusinessHoursInput = {
+        restaurant_id: id,
+        day_of_week: day,
+        open_time: times.open_time,
+        close_time: times.close_time,
+        status_id: 1,
+      };
+      payload.push(item);
+    }
+  });
+
+  return payload;
+};
+
 export const buildRestaurantItemImagePayload = (
   item: RestaurantMenuItemImagesInput,
 ) => {
@@ -88,6 +122,23 @@ export const buildRestaurantItemResponse = (
         return getRestaurantItemResponse(data);
       })
     : getRestaurantItemResponse(item);
+};
+
+export const getRestaurantBusinessHoursResponse = (
+  data: RestaurantBusinessHours,
+) => {
+  return {
+    id: _get(data, 'id'),
+    restaurant_id: _get(data, 'restaurant_id'),
+    day_of_week: _get(data, 'day_of_week'),
+    open_time: _get(data, 'open_time'),
+    close_time: _get(data, 'close_time'),
+    status_id: _get(data, 'status_id'),
+    createdAt: _get(data, 'createdAt'),
+    updatedAt: _get(data, 'updatedAt'),
+    deletedAt: _get(data, 'deletedAt'),
+    status: _get(data, dbAliases.restaurantBusinessHours.status),
+  };
 };
 
 export const getRestaurantItemResponse = (data: RestaurantMenuItem) => {

@@ -1,6 +1,9 @@
 import slugify from 'slugify';
 import _ from 'lodash';
 import { GetBuiltAddress } from 'types';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
 export const getSlug = (value: string) => {
   let textData: string | undefined;
@@ -47,6 +50,25 @@ export const getBuiltAddress: GetBuiltAddress = (address) => {
     new_address += `${country} `;
   }
   return new_address.trim();
+};
+
+export const getTimeSplit = (times: string) => {
+  const times_split = times.split('-');
+
+  if (Array.isArray(times_split) && times_split.length > 1) {
+    const format = 'HH:mm:ss';
+    const time1 = dayjs(times_split[0], format, true).isValid();
+    const time2 = dayjs(times_split[1], format, true).isValid();
+
+    if (time1 && time2) {
+      return {
+        open_time: times_split[0],
+        close_time: times_split[1],
+      };
+    }
+  } else {
+    return null;
+  }
 };
 
 export const _get = <T, R = undefined>(

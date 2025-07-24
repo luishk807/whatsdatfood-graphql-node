@@ -5,7 +5,7 @@ interface RestaurantBusinessHoursInterface {
   id: number;
   day_of_week: string;
   open_time: string;
-  closing_time: string;
+  close_time: string;
   restaurant_id: number;
   status_id: number;
   created_at?: Date;
@@ -25,7 +25,7 @@ class RestaurantBusinessHours
   public id!: number;
   public day_of_week!: string;
   public open_time!: string;
-  public closing_time!: string;
+  public close_time!: string;
   public restaurant_id!: number;
   public status_id!: number;
 
@@ -64,7 +64,7 @@ RestaurantBusinessHours.init(
         is: /^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/,
       },
     },
-    closing_time: {
+    close_time: {
       allowNull: false,
       type: DataTypes.TIME,
       validate: {

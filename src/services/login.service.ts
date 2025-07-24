@@ -6,7 +6,7 @@ const UserRepo = new UserRepository();
 
 const LoginServices = {
   async login(username: string, password: string) {
-    const user = await UserRepo.findUserByUsername(username);
+    const user = await UserRepo.findUserBy('username', username);
 
     if (!user) {
       throw new Error('Invalid email and password');

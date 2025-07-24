@@ -7,9 +7,11 @@ import {
   buildRestaurantPayload,
   buildRestaurantItemPayload,
   buildRestaurantItemResponse,
+  buildRestaurantBusinessHoursPayload,
 } from 'helpers/restaurants.sequelize';
 import { dbAliases } from 'db/index';
 import RestaurantServices from 'services/restaurants.service';
+import RestaurantBusinesHourServices from 'services/restaurantBusinessHours.service';
 import RestaurantMenuItemsFn from 'services/restaurantMenuItems.service';
 import { getBuiltAddress } from 'helpers';
 
@@ -237,13 +239,36 @@ const OpenAiFn = {
             item = item[0];
           }
           const rest_name = _get(item, 'name', '');
+          const business_hours = _get(item, 'business_hours');
+          const holidays = _get(item, 'holidays_closed');
+          const food_category = _get(item, 'food_category');
+
           const restData = await RestaurantServices.findByName(rest_name);
 
           if (!restData || (Array.isArray(restData) && !restData.length)) {
             const restaurantPayload = buildRestaurantPayload(item);
             const slug = _get(restaurantPayload, 'slug');
             if (!results.has(slug)) {
-              await RestaurantServices.create(restaurantPayload);
+              // create restaurant
+              const newRestaurant =
+                await RestaurantServices.create(restaurantPayload);
+
+              // create businesss hours
+              const businessHoursPayload = buildRestaurantBusinessHoursPayload(
+                newRestaurant.id,
+                business_hours,
+              );
+
+              if (businessHoursPayload) {
+                // delete previous business hours if exists
+                await RestaurantBusinesHourServices.deleteById(
+                  newRestaurant.id,
+                );
+                await RestaurantBusinesHourServices.bulkCreate(
+                  businessHoursPayload,
+                );
+              }
+
               results.set(slug, {
                 name: _get(restaurantPayload, 'name'),
                 address: _get(restaurantPayload, 'address'),

@@ -16,11 +16,11 @@ const UserServices = {
     return buildUserResponse(resp as User);
   },
   async findByEmail(email: string) {
-    const resp = await UserRepo.findUserByEmail(email);
+    const resp = await UserRepo.findUserBy('email', email);
     return buildUserResponse(resp as User);
   },
   async findByUsername(username: string) {
-    const resp = await UserRepo.findUserByUsername(username);
+    const resp = await UserRepo.findUserBy('username', username);
     return buildUserResponse(resp as User);
   },
   async getAll() {

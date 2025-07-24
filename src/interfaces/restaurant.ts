@@ -52,6 +52,14 @@ export interface RestaurantBase {
   updatedAt?: string;
 }
 
+export interface RestaurantBusinessHours {
+  id: number;
+  restaurant_id: number;
+  day_of_week: string;
+  open_time: string;
+  close_time: string;
+  status_id: number;
+}
 export interface RestaurantMenuItemImages extends RestaurantMenuItemImagesBase {
   restaurantMenuItem: RestaurantMenuItem;
 }
