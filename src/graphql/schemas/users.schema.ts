@@ -30,6 +30,7 @@ export const userDefs = gql`
     title: String
     createdAt: DateTime
     updatedAt: DateTime
+    status_id: ID
     restaurant_menu_item_id: ID
     user: User
     status: Status

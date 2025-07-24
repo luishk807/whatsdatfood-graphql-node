@@ -4,7 +4,6 @@ import { dbAliases } from 'db/index';
 interface StatusesInterface {
   id: number;
   name: string;
-  status_id: number;
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
@@ -19,7 +18,6 @@ class Statuses
 {
   public id!: number;
   public name!: string;
-  public status_id!: number;
 
   // timestamps!
   public readonly created_at!: Date;
@@ -37,15 +35,6 @@ Statuses.init(
     name: {
       allowNull: false,
       type: DataTypes.STRING,
-    },
-    status_id: {
-      type: DataTypes.BIGINT,
-      defaultValue: 1,
-      references: {
-        model: 'statuses',
-        key: 'id',
-      },
-      onDelete: 'SET NULL',
     },
   },
   {

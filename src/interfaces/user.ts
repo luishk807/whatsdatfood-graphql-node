@@ -39,6 +39,7 @@ export interface UserRatingBase {
   user_id: ID;
   rating: number;
   createdAt?: Date;
+  status_id?: ID;
   updatedAt?: Date;
   title?: string;
   comment?: string;
