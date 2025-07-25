@@ -10,6 +10,7 @@ import { getSlug, getBuiltAddress } from '.';
 import { RestaurantMenuItem, Restaurant } from 'interfaces/restaurant';
 import { dbAliases } from 'db';
 import { BusinessHours } from 'interfaces';
+import { Holiday } from 'interfaces/holidays';
 export const buildRestaurantPayload = (item: RestaurantsInput) => {
   const address_data = {
     address: _get(item, 'address'),
@@ -40,6 +41,22 @@ export const buildRestaurantPayload = (item: RestaurantsInput) => {
     ...address_data,
   };
 };
+
+export const buildRestaurantHolidayPayload = (id: number, item: Holiday[]) => {
+  if (!id || !item || !item.length) {
+    return null;
+  }
+
+  const payload = item.reduce((acc: any, item: Holiday, indx: number) => {
+    acc.push({
+      ...item,
+      restaurant_id: id,
+    });
+  }, []);
+
+  return payload;
+};
+
 export const buildRestaurantItemPayload = (item: RestaurantMenuItemsInput) => {
   let priceRaw = _get(item, 'price');
   let price = convertStringToNumber(priceRaw);

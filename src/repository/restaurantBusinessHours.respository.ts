@@ -10,36 +10,6 @@ class UserRatingRepo extends Base {
     super(RestaurantBusinessHours);
   }
 
-  async create(payload: RestaurantBusinessHoursInput) {
-    const t = await db.sequelize.transaction();
-    try {
-      const resp = await this.model.upsert(payload, {
-        transaction: t,
-        returning: true,
-      });
-      console.log(resp);
-      await t.commit();
-      return resp[0];
-    } catch (err) {
-      await t.rollback();
-      return err;
-    }
-  }
-  async bulkCreate(payload: RestaurantBusinessHoursInput[]) {
-    const t = await db.sequelize.transaction();
-    try {
-      const resp = await this.model.bulkCreate(payload, {
-        transaction: t,
-        returning: true,
-      });
-      await t.commit();
-      return resp[0];
-    } catch (err) {
-      await t.rollback();
-      console.log(err);
-      return err;
-    }
-  }
   async deleteFromRestaurantId(id: number) {
     const t = await db.sequelize.transaction();
     try {
@@ -73,28 +43,6 @@ class UserRatingRepo extends Base {
         },
       ],
     });
-  }
-  async update(payload: RestaurantBusinessHoursInput) {
-    console.log('update businss hours', payload);
-    const t = await db.sequelize.transaction();
-    try {
-      const [affectedCount, updatedRows] = await this.model.update(payload, {
-        where: {
-          id: payload.id,
-        },
-        transaction: t,
-        returning: true,
-      });
-      if (affectedCount === 0) {
-        throw new Error(`No Business hours found with id ${payload.id}`);
-      }
-
-      await t.commit();
-      return updatedRows[0]; // return the updated instance
-    } catch (err) {
-      await t.rollback();
-      return err;
-    }
   }
 }
 

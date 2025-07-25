@@ -5,13 +5,15 @@ const RestaurantItemRepo = new RestaurantMenuItems();
 
 const RestaurantMenuItemsFn = {
   async create(payload: RestaurantMenuItemsInput) {
-    return await RestaurantItemRepo.create(payload);
+    return await RestaurantItemRepo.create<RestaurantMenuItemsInput>(payload);
   },
   async destroyItemByRestaurantId(id: number) {
     return await RestaurantItemRepo.destroyItemsByRestaurantId(id);
   },
   async bulkCreate(payload: RestaurantMenuItemsInput[]) {
-    return await RestaurantItemRepo.bulkCreate(payload);
+    return await RestaurantItemRepo.bulkCreate<RestaurantMenuItemsInput>(
+      payload,
+    );
   },
   async findById(id: number) {
     return await RestaurantItemRepo.getOneById(id);

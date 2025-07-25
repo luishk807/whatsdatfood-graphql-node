@@ -17,13 +17,17 @@ const FLICKR_URL: string | undefined = process.env.FLICKR_API_URL;
 
 const RestaurantMenuItemImagesFn = {
   async create(payload: RestaurantMenuItemImagesInput) {
-    return await RestaurantItemImageRepo.create(payload);
+    return await RestaurantItemImageRepo.create<RestaurantMenuItemImagesInput>(
+      payload,
+    );
   },
   async destroyItemByRestaurantId(id: number) {
     return await RestaurantItemImageRepo.destroyItemsByRestaurantId(id);
   },
   async bulkCreate(payload: RestaurantMenuItemImagesInput[]) {
-    return await RestaurantItemImageRepo.bulkCreate(payload);
+    return await RestaurantItemImageRepo.bulkCreate<RestaurantMenuItemImagesInput>(
+      payload,
+    );
   },
   async findById(id: number) {
     return await RestaurantItemImageRepo.getOneById(id);

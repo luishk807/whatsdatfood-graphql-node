@@ -9,7 +9,7 @@ const UserRepo = new Users();
 const UserServices = {
   async create(payload: UserInput) {
     const new_payload = await buildUserEntry(payload);
-    return await UserRepo.create(new_payload);
+    return await UserRepo.create<UserInput>(new_payload);
   },
   async findById(id: number) {
     const resp = await UserRepo.getOneById(id);

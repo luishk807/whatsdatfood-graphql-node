@@ -1,18 +1,17 @@
 import OpenAI from 'openai';
 import { _get } from 'helpers';
-import { RestaurantAI, Restaurant } from 'interfaces/restaurant';
+import { Restaurant } from 'interfaces/restaurant';
 import { GooogleResponseAPIItem } from 'types';
 
 import {
   buildRestaurantPayload,
   buildRestaurantItemPayload,
   buildRestaurantItemResponse,
-  buildRestaurantBusinessHoursPayload,
 } from 'helpers/restaurants.sequelize';
-import { dbAliases } from 'db/index';
 import RestaurantServices from 'services/restaurants.service';
 import RestaurantBusinesHourServices from 'services/restaurantBusinessHours.service';
 import RestaurantMenuItemsFn from 'services/restaurantMenuItems.service';
+import HolidayServices from 'services/holidays.service';
 import { getBuiltAddress } from 'helpers';
 
 type AIMenuType = {
@@ -25,7 +24,6 @@ type AIMenuType = {
   top_choice: boolean;
 };
 const openAiKey: string | undefined = process.env.OPENAI_KEY;
-const itemKey = dbAliases.restaurant.restaurantItems as keyof RestaurantAI;
 
 const OpenAiFn = {
   async askAIQuestion(ai_question: string) {
@@ -241,8 +239,8 @@ const OpenAiFn = {
           }
           const rest_name = _get(item, 'name', '');
           const business_hours = _get(item, 'business_hours');
-          const holidays = _get(item, 'holidays_closed');
           const food_category = _get(item, 'food_category');
+          const holidays = _get(item, 'holidays_closed');
 
           const restData = await RestaurantServices.findByName(rest_name);
 
@@ -254,23 +252,19 @@ const OpenAiFn = {
               const newRestaurant =
                 await RestaurantServices.create(restaurantPayload);
 
-              //create businesss hours
-              const businessHoursPayload = buildRestaurantBusinessHoursPayload(
+              // create businesss hours
+              await RestaurantBusinesHourServices.processBusinesHoursFromRestaurant(
                 newRestaurant.id,
                 business_hours,
               );
 
-              if (businessHoursPayload) {
-                // delete previous business hours if exists
-                await RestaurantBusinesHourServices.deleteById(
-                  newRestaurant.id,
-                );
+              // save holiday
+              // await HolidayServices.proccessHolidayFromRestaurant(
+              //   newRestaurant.id,
+              //   holidays,
+              // );
 
-                console.log('adding the businesss hours', businessHoursPayload);
-                await RestaurantBusinesHourServices.bulkCreate(
-                  businessHoursPayload,
-                );
-              }
+              //save categories
 
               results.set(slug, {
                 name: _get(restaurantPayload, 'name'),

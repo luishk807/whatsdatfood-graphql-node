@@ -43,57 +43,24 @@ class RestaurantsRepo extends Base {
     });
   }
 
-  async create(payload: RestaurantsInput) {
+  async create<RestaurantsInput>(payload: RestaurantsInput) {
     const t = await db.sequelize.transaction();
-    const { id, ...safePayload } = payload;
     try {
       const resp = await db.sequelize.query(
         `INSERT INTO restaurants (
-          name, 
-          slug, 
-          address, 
-          city, 
-          state, 
-          country, 
-          postal_code, 
-          michelin_score,
-          rating,
-          phone,
-          payment_method,
-          description,
-          delivery_method,
-          letter_grade,
-          email,
-          reservation_required,
-          reservation_available,
-          website,
-          created_at, 
-          updated_at
-        ) values(
-          :name, 
-          :slug, 
-          :address, 
-          :city, 
-          :state, 
-          :country, 
-          :postal_code, 
-          :michelin_score,
-          :rating,
-          :phone,
-          :payment_method,
-          :description,
-          :delivery_method,
-          :letter_grade,
-          :email,
-          :reservation_required,
-          :reservation_available,
-          :website,
-          NOW(), 
-          NOW()
-         )
+        name, slug, address, city, state, country, postal_code,
+        michelin_score, rating, phone, payment_method, description,
+        delivery_method, letter_grade, email, reservation_required,
+        reservation_available, website, created_at, updated_at
+      ) values (
+        :name, :slug, :address, :city, :state, :country, :postal_code,
+        :michelin_score, :rating, :phone, :payment_method, :description,
+        :delivery_method, :letter_grade, :email, :reservation_required,
+        :reservation_available, :website, NOW(), NOW()
+      )
          RETURNING *`,
         {
-          replacements: safePayload,
+          replacements: payload,
           transaction: t,
           type: db.Sequelize.QueryTypes.INSERT,
         },

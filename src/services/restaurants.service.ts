@@ -10,7 +10,7 @@ const restRepo = new Restaurants();
 const RestaurantServices = {
   async create(payload: RestaurantsInput) {
     const resp = buildRestaurantPayload(payload);
-    return await restRepo.create(resp);
+    return await restRepo.create<RestaurantsInput>(resp);
   },
 
   async getAll() {

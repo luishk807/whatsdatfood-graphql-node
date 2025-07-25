@@ -5,10 +5,10 @@ const UserRatingRepo = new UserRating();
 
 const UserServices = {
   async create(payload: UserRatingsInput) {
-    return await UserRatingRepo.create(payload);
+    return await UserRatingRepo.create<UserRatingsInput>(payload);
   },
   async update(payload: UserRatingsInput) {
-    return await UserRatingRepo.update(payload);
+    return await UserRatingRepo.update<UserRatingsInput>(payload);
   },
   async deleteById(id: number) {
     return await UserRatingRepo.deleteById(id);

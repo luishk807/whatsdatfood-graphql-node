@@ -11,18 +11,6 @@ class UsersRepo extends Base {
     super(Users);
   }
 
-  async create(payload: UserInput) {
-    const t = await db.sequelize.transaction();
-    try {
-      const resp = await this.model.upsert(payload, { transaction: t });
-      console.log(resp);
-      await t.commit();
-      return resp[0];
-    } catch (err) {
-      await t.rollback();
-      return err;
-    }
-  }
   async findUserBy(
     key: 'email' | 'username',
     value: string,

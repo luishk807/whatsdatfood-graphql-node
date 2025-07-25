@@ -35,37 +35,6 @@ class RestaurantMenuItemsRepo extends Base {
       restaurant_id: id,
     });
   }
-
-  async create(payload: RestaurantMenuItemImagesInput) {
-    const t = await db.sequelize.transaction();
-
-    try {
-      const resp = await this.model.upsert(payload, {
-        transaction: t,
-        returning: true,
-      });
-      await t.commit();
-      return resp;
-    } catch (err) {
-      await t.rollback();
-      return err;
-    }
-  }
-  async bulkCreate(payload: RestaurantMenuItemImagesInput[]) {
-    const t = await db.sequelize.transaction();
-
-    try {
-      const resp = await this.model.bulkCreate(payload, {
-        transaction: t,
-        returning: true,
-      });
-      await t.commit();
-      return resp;
-    } catch (err) {
-      await t.rollback();
-      return err;
-    }
-  }
 }
 
 export default RestaurantMenuItemsRepo;
