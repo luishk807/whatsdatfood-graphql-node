@@ -22,6 +22,8 @@ export const restaurantDefs = gql`
     letter_grade: String
     tasting_menu_only: Boolean
     tasting_menu_price: Float
+    reservation_required: Boolean
+    reservation_available: Boolean
     price_range: String
     website: String
     drink_pairing_price: Float
@@ -87,6 +89,8 @@ export const restaurantDefs = gql`
     letter_grade: String
     tasting_menu_only: Boolean
     tasting_menu_price: Float
+    reservation_required: Boolean
+    reservation_available: Boolean
     price_range: String
     drink_pairing_price: Float
   }
