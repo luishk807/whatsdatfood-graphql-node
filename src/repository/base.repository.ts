@@ -1,4 +1,5 @@
 import db from '../db/models';
+import { Op } from 'sequelize';
 import { _get } from 'helpers';
 import { LIMIT, PAGE } from '../constants/sequelize';
 import { getPageOffset } from '../helpers/sequelize';
@@ -21,24 +22,33 @@ class Base {
       return resp[0];
     } catch (err) {
       await t.rollback();
-      return err;
+      this.handlerError(err);
     }
   }
-  async findOrCreate<T extends object>(key: string, payload: T) {
+  async findOrCreate<T extends object>(
+    key: string,
+    payload: T,
+    isMatch?: boolean,
+  ) {
     const t = await db.sequelize.transaction();
     const value = _get(payload, key);
+
+    const whereMath = isMatch
+      ? {
+          [Op.iLike]: `%${value}%`,
+        }
+      : value;
+
+    console.log(payload, 'findorcreate');
     try {
-      const [record, created] = await this.model.findOrCreate(
-        {
-          where: {
-            [key]: value,
-          },
+      const [record, created] = await this.model.findOrCreate({
+        where: {
+          [key]: whereMath,
         },
-        {
-          transaction: t,
-          returning: true,
-        },
-      );
+        default: payload,
+        transaction: t,
+        returning: true,
+      });
       if (created) {
         console.log(`record ${value} was created`);
       }
@@ -46,7 +56,7 @@ class Base {
       return record;
     } catch (err) {
       await t.rollback();
-      return err;
+      this.handlerError(err);
     }
   }
   async bulkCreate<T extends object>(payload: T[]) {
@@ -60,7 +70,7 @@ class Base {
       return resp;
     } catch (err) {
       await t.rollback();
-      return err;
+      this.handlerError(err);
     }
   }
 
@@ -92,19 +102,17 @@ class Base {
   async deleteById(id: number) {
     const t = await db.sequelize.transaction();
     try {
-      const resp = await this.model.destroy(
-        {
-          where: {
-            id: id,
-          },
+      const resp = await this.model.destroy({
+        where: {
+          id: id,
         },
-        { transaction: t },
-      );
+        transaction: t,
+      });
       await t.commit();
       return resp;
     } catch (err) {
       await t.rollback();
-      return err;
+      this.handlerError(err);
     }
   }
   async update<T extends object>(payload: T) {
@@ -126,8 +134,31 @@ class Base {
       return updatedRows[0]; // return the updated instance
     } catch (err) {
       await t.rollback();
-      return err;
+      this.handlerError(err);
     }
+  }
+  async deleteByRestaurantId(id: number) {
+    const t = await db.sequelize.transaction();
+    try {
+      const resp = await this.model.destroy({
+        where: {
+          restaurant_id: id,
+        },
+        force: true,
+        transaction: t,
+      });
+      await t.commit();
+      return resp;
+    } catch (err) {
+      await t.rollback();
+      this.handlerError(err);
+    }
+  }
+  async handlerError(err: any) {
+    if (err instanceof Error) {
+      throw new Error(err.message);
+    }
+    throw err;
   }
 }
 

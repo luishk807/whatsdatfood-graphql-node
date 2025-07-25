@@ -10,23 +10,6 @@ class HolidayRepo extends Base {
     super(Holiday);
   }
 
-  async deleteByRestaurantId(id: number) {
-    const t = await db.sequelize.transaction();
-    try {
-      const resp = await this.model.destroy({
-        where: {
-          restaurant_id: id,
-        },
-        force: true,
-        transaction: t,
-      });
-      await t.commit();
-      return resp;
-    } catch (err) {
-      await t.rollback();
-      return err;
-    }
-  }
   async getAll() {
     return await this.model.findAll({
       include: [

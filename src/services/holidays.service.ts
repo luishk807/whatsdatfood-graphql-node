@@ -6,10 +6,9 @@ import {
 } from 'helpers/holidays.sequelize';
 import { Holiday } from 'interfaces/holidays';
 import { _get } from 'helpers';
-import { buildRestaurantHolidayPayload } from 'helpers/restaurants.sequelize';
 const HolidayRepo = new HolidayRepository();
 
-const UserServices = {
+const HolidayService = {
   async create(holiday: string) {
     const entry = buildHolidayPayload(holiday);
     if (entry) {
@@ -20,7 +19,7 @@ const UserServices = {
   async findOrCreate(holiday: string) {
     const entry = buildHolidayPayload(holiday);
     if (entry) {
-      return await HolidayRepo.findOrCreate<HolidaysInput>('name', entry);
+      return await HolidayRepo.findOrCreate<HolidaysInput>('name', entry, true);
     }
     return false;
   },
@@ -38,23 +37,6 @@ const UserServices = {
     const resp = await HolidayRepo.getAll();
     return buildHolidayResponse(resp as Holiday);
   },
-//   async proccessHolidayFromRestaurant(restId: number, holidays: string[]) {
-//     if (Array.isArray(holidays)) {
-//       const holidaySaved = [];
-//       for (let holiday in holidays) {
-//         const resp = await this.findOrCreate(holiday);
-//         if (resp) {
-//           let item = buildRestaurantHolidayPayload(restId, resp);
-//           holidaySaved.push(item);
-//         }
-//       }
-
-//       if (holidaySaved.length) {
-//         await this.deleteByRestaurantId(restId);
-//         await this.bulkCreate(holidaySaved);
-//       }
-//     }
-//   },
 };
 
-export default UserServices;
+export default HolidayService;

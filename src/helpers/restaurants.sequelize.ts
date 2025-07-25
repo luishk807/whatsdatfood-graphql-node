@@ -1,16 +1,28 @@
-import { _get } from '.';
-import { convertStringToNumber, getTimeSplit } from 'helpers';
+import { dbAliases } from 'db';
+import {
+  getSlug,
+  getBuiltAddress,
+  convertStringToNumber,
+  getTimeSplit,
+  _get,
+} from 'helpers';
+import { BusinessHours } from 'interfaces';
+import {
+  RestaurantMenuItem,
+  Restaurant,
+  RestaurantHoliday,
+} from 'interfaces/restaurant';
+import { Holiday } from 'interfaces/holidays';
+import { FoodCategory } from 'interfaces/foodCategory';
+import { DEFAULT_STATUS } from 'constants/sequelize';
 import { RestaurantsInput } from 'db/models/restaurants';
 import { RestaurantMenuItemsInput } from 'db/models/restaurantMenuItems';
 import { RestaurantMenuItemImagesInput } from 'db/models/restaurantMenuItemImages';
 import RestaurantBusinessHours, {
   RestaurantBusinessHoursInput,
 } from 'db/models/restaurantBusinessHours';
-import { getSlug, getBuiltAddress } from '.';
-import { RestaurantMenuItem, Restaurant } from 'interfaces/restaurant';
-import { dbAliases } from 'db';
-import { BusinessHours } from 'interfaces';
-import { Holiday } from 'interfaces/holidays';
+import RestaurantHolidays from 'db/models/restaurantHolidays';
+
 export const buildRestaurantPayload = (item: RestaurantsInput) => {
   const address_data = {
     address: _get(item, 'address'),
@@ -37,24 +49,40 @@ export const buildRestaurantPayload = (item: RestaurantsInput) => {
     reservation_required: _get(item, 'reservation_required'),
     reservation_available: _get(item, 'reservation_available'),
     website: _get(item, 'website'),
+    tasting_menu_only: _get(item, 'tasting_menu_only'),
+    tasting_menu_price: _get(item, 'tasting_menu_price'),
+    price_range: _get(item, 'price_range'),
+    drink_pairing_price: _get(item, 'drink_pairing_price'),
     slug,
     ...address_data,
   };
 };
 
-export const buildRestaurantHolidayPayload = (id: number, item: Holiday[]) => {
-  if (!id || !item || !item.length) {
+export const buildRestaurantCategoryPayload = (
+  id: number,
+  item: FoodCategory,
+) => {
+  if (!id || !item) {
     return null;
   }
 
-  const payload = item.reduce((acc: any, item: Holiday, indx: number) => {
-    acc.push({
-      ...item,
-      restaurant_id: id,
-    });
-  }, []);
+  return {
+    food_category_id: item.id,
+    restaurant_id: id,
+    status_id: DEFAULT_STATUS,
+  };
+};
 
-  return payload;
+export const buildRestaurantHolidayPayload = (id: number, item: Holiday) => {
+  if (!id || !item) {
+    return null;
+  }
+
+  return {
+    holiday_id: item.id,
+    restaurant_id: id,
+    status_id: DEFAULT_STATUS,
+  };
 };
 
 export const buildRestaurantItemPayload = (item: RestaurantMenuItemsInput) => {
@@ -93,7 +121,7 @@ export const buildRestaurantBusinessHoursPayload = (
         day_of_week: day,
         open_time: times.open_time,
         close_time: times.close_time,
-        status_id: 1,
+        status_id: DEFAULT_STATUS,
       };
       payload.push(item);
     }
@@ -140,6 +168,34 @@ export const buildRestaurantItemResponse = (
         return getRestaurantItemResponse(data);
       })
     : getRestaurantItemResponse(item);
+};
+
+export const getRestaurantCategoryResponse = (data: RestaurantHolidays) => {
+  return {
+    id: _get(data, 'id'),
+    restaurant_id: _get(data, 'restaurant_id'),
+    food_category_id: _get(data, 'food_category_id'),
+    status_id: _get(data, 'status_id'),
+    createdAt: _get(data, 'createdAt'),
+    updatedAt: _get(data, 'updatedAt'),
+    deletedAt: _get(data, 'deletedAt'),
+    status: _get(data, dbAliases.restaurantCategories.status),
+    foodCategory: _get(data, dbAliases.restaurantCategories.foodCategory),
+    restaurant: _get(data, dbAliases.restaurantCategories.restaurant),
+  };
+};
+
+export const getRestaurantHolidayResponse = (data: RestaurantHolidays) => {
+  return {
+    id: _get(data, 'id'),
+    restaurant_id: _get(data, 'restaurant_id'),
+    holiday_id: _get(data, 'holiday_id'),
+    status_id: _get(data, 'status_id'),
+    createdAt: _get(data, 'createdAt'),
+    updatedAt: _get(data, 'updatedAt'),
+    deletedAt: _get(data, 'deletedAt'),
+    status: _get(data, dbAliases.restaurantHoliday.status),
+  };
 };
 
 export const getRestaurantBusinessHoursResponse = (
@@ -200,6 +256,10 @@ export const getRestaurantResponse = (data: Restaurant) => {
     reservation_required: _get(data, 'reservation_required'),
     reservation_available: _get(data, 'reservation_available'),
     website: _get(data, 'website'),
+    tasting_menu_only: _get(data, 'tasting_menu_only'),
+    tasting_menu_price: _get(data, 'tasting_menu_price'),
+    price_range: _get(data, 'price_range'),
+    drink_pairing_price: _get(data, 'drink_pairing_price'),
     restaurantMenuItems: _get(data, dbAliases.restaurant.restaurantItems),
     businessHours: _get(data, dbAliases.restaurant.restaurantBusinessHours),
   };

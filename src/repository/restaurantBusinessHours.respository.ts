@@ -10,26 +10,6 @@ class UserRatingRepo extends Base {
     super(RestaurantBusinessHours);
   }
 
-  async deleteFromRestaurantId(id: number) {
-    const t = await db.sequelize.transaction();
-    try {
-      const resp = await this.model.destroy({
-        where: {
-          restaurant_id: id,
-        },
-        transaction: t,
-        force: true,
-      });
-      await t.commit();
-      return resp;
-    } catch (err) {
-      await t.rollback();
-      if (err instanceof Error) {
-        return err.message;
-      }
-      throw new Error('ERROR: unable to delete business hours');
-    }
-  }
   async getAll() {
     return await this.model.findAll({
       include: [

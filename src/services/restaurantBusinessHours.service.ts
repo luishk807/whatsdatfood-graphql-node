@@ -24,7 +24,7 @@ const UserServices = {
     );
   },
   async deleteById(id: number) {
-    return await RestaurantBusinessHoursRepo.deleteFromRestaurantId(id);
+    return await RestaurantBusinessHoursRepo.deleteByRestaurantId(id);
   },
   async findById(id: number) {
     return await RestaurantBusinessHoursRepo.getOneById(id);

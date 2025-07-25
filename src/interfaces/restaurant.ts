@@ -48,6 +48,10 @@ export interface RestaurantBase {
   reservation_required?: boolean;
   reservation_available?: boolean;
   website?: string;
+  tasting_menu_only?: boolean;
+  tasting_menu_price?: number;
+  price_range?: string;
+  drink_pairing_price?: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -59,6 +63,15 @@ export interface RestaurantBusinessHours {
   open_time: string;
   close_time: string;
   status_id: number;
+}
+
+export interface RestaurantHoliday {
+  id: number;
+  food_category_id: number;
+  restaurant_id: number;
+  status_id: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 export interface RestaurantMenuItemImages extends RestaurantMenuItemImagesBase {
   restaurantMenuItem: RestaurantMenuItem;

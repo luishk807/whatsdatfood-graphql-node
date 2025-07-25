@@ -1,7 +1,7 @@
 import { _get } from '.';
 import { createHashPassword } from 'helpers/login';
 import { UserRating, User, UserInput, UserRatingInput } from 'interfaces/user';
-import { USER_ROLE_DEFAULT } from 'constants/sequelize';
+import { USER_ROLE_DEFAULT, DEFAULT_STATUS } from 'constants/sequelize';
 import { dbAliases } from 'db';
 export const buildUserEntry = async (item: UserInput) => {
   if (!item.first_name || !item.last_name || typeof item.email !== 'string') {

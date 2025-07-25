@@ -22,6 +22,10 @@ interface RestaurantInterface {
   reservation_required?: boolean;
   reservation_available?: boolean;
   website?: string;
+  tasting_menu_only?: boolean;
+  tasting_menu_price?: number;
+  price_range?: string;
+  drink_pairing_price?: number;
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
@@ -54,6 +58,10 @@ class Restaurants
   public reservation_required!: boolean;
   public reservation_available!: boolean;
   public website!: string;
+  public tasting_menu_only!: boolean;
+  public tasting_menu_price!: number;
+  public price_range!: string;
+  public drink_pairing_price!: number;
 
   // timestamps!
   public readonly created_at!: Date;
@@ -133,6 +141,18 @@ Restaurants.init(
     },
     website: {
       type: DataTypes.STRING,
+    },
+    tasting_menu_only: {
+      type: DataTypes.BOOLEAN,
+    },
+    tasting_menu_price: {
+      type: DataTypes.DOUBLE,
+    },
+    price_range: {
+      type: DataTypes.STRING,
+    },
+    drink_pairing_price: {
+      type: DataTypes.DOUBLE,
     },
   },
   {

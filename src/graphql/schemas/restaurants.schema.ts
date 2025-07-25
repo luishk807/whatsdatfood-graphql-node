@@ -20,6 +20,11 @@ export const restaurantDefs = gql`
     description: String
     delivery_method: String
     letter_grade: String
+    tasting_menu_only: Boolean
+    tasting_menu_price: Float
+    price_range: String
+    website: String
+    drink_pairing_price: Float
     restaurantMenuItems: [RestaurantMenuItem]
     businessHours: [RestaurantBusinessHours]
   }
@@ -77,8 +82,13 @@ export const restaurantDefs = gql`
     rating: Float
     michelin_score: Int
     description: String
+    website: String
     delivery_method: String
     letter_grade: String
+    tasting_menu_only: Boolean
+    tasting_menu_price: Float
+    price_range: String
+    drink_pairing_price: Float
   }
 
   input createRestaurantMenuItemsInput {
