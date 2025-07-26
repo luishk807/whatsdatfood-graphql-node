@@ -52,6 +52,10 @@ export interface RestaurantBase {
   tasting_menu_price?: number;
   price_range?: string;
   drink_pairing_price?: number;
+  parking_available?: boolean;
+  cash_only?: boolean;
+  drive_through?: boolean;
+  delivery_option?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

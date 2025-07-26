@@ -27,6 +27,10 @@ export const restaurantDefs = gql`
     price_range: String
     website: String
     drink_pairing_price: Float
+    parking_available: Boolean
+    cash_only: Boolean
+    drive_through: Boolean
+    delivery_option: Boolean
     restaurantMenuItems: [RestaurantMenuItem]
     businessHours: [RestaurantBusinessHours]
   }
@@ -93,6 +97,10 @@ export const restaurantDefs = gql`
     reservation_available: Boolean
     price_range: String
     drink_pairing_price: Float
+    parking_available: Boolean
+    cash_only: Boolean
+    drive_through: Boolean
+    delivery_option: Boolean
   }
 
   input createRestaurantMenuItemsInput {

@@ -53,6 +53,10 @@ export const buildRestaurantPayload = (item: RestaurantsInput) => {
     tasting_menu_price: _get(item, 'tasting_menu_price'),
     price_range: _get(item, 'price_range'),
     drink_pairing_price: _get(item, 'drink_pairing_price'),
+    parking_available: _get(item, 'parking_available'),
+    cash_only: _get(item, 'cash_only'),
+    drive_through: _get(item, 'drive_through'),
+    delivery_option: _get(item, 'delivery_option'),
     slug,
     ...address_data,
   };
@@ -260,6 +264,10 @@ export const getRestaurantResponse = (data: Restaurant) => {
     tasting_menu_price: _get(data, 'tasting_menu_price'),
     price_range: _get(data, 'price_range'),
     drink_pairing_price: _get(data, 'drink_pairing_price'),
+    parking_available: _get(data, 'parking_available'),
+    cash_only: _get(data, 'cash_only'),
+    drive_through: _get(data, 'drive_through'),
+    delivery_option: _get(data, 'delivery_option'),
     restaurantMenuItems: _get(data, dbAliases.restaurant.restaurantItems),
     businessHours: _get(data, dbAliases.restaurant.restaurantBusinessHours),
   };

@@ -26,6 +26,10 @@ interface RestaurantInterface {
   tasting_menu_price?: number;
   price_range?: string;
   drink_pairing_price?: number;
+  parking_available?: boolean;
+  cash_only?: boolean;
+  drive_through?: boolean;
+  delivery_option?: boolean;
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
@@ -62,6 +66,10 @@ class Restaurants
   public tasting_menu_price!: number;
   public price_range!: string;
   public drink_pairing_price!: number;
+  public parking_available!: boolean;
+  public cash_only!: boolean;
+  public drive_through!: boolean;
+  public delivery_option!: boolean;
 
   // timestamps!
   public readonly created_at!: Date;
@@ -152,6 +160,18 @@ Restaurants.init(
       type: DataTypes.STRING,
     },
     drink_pairing_price: {
+      type: DataTypes.DOUBLE,
+    },
+    parking_available: {
+      type: DataTypes.DOUBLE,
+    },
+    cash_only: {
+      type: DataTypes.DOUBLE,
+    },
+    drive_through: {
+      type: DataTypes.DOUBLE,
+    },
+    delivery_option: {
       type: DataTypes.DOUBLE,
     },
   },
