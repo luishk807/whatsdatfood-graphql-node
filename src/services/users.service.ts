@@ -11,6 +11,10 @@ const UserServices = {
     const new_payload = await buildUserEntry(payload);
     return await UserRepo.create<UserInput>(new_payload);
   },
+  async update(payload: UserInput) {
+    const new_payload = await buildUserEntry(payload);
+    return await UserRepo.update<UserInput>(new_payload);
+  },
   async findById(id: number) {
     const resp = await UserRepo.getOneById(id);
     return buildUserResponse(resp as User);

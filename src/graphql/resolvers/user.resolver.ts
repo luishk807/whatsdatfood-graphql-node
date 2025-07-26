@@ -86,6 +86,11 @@ export const userResolvers = {
         return resp;
       },
     ),
+    updateUser: async (_: any, args: CreateUserInputArg): Promise<User> => {
+      const { input } = args;
+      const payload = await buildUserEntry(input);
+      return await UserServices.update(payload);
+    },
     addUserFavorites: async (_: any, args: CreateUserFavoritesInputArg) => {
       const { input } = args;
       const payload = await buildUserFavoritesEntry(input);

@@ -78,30 +78,42 @@ export const userDefs = gql`
     dob: String!
   }
 
-  input createUserSearchInput {
+  input CreateUserSearchInput {
     user_id: ID!
     restaurant_id: ID!
   }
 
-  input createUserFavoritesInput {
+  input CreateUserFavoritesInput {
     user_id: ID!
     restaurant_id: ID!
   }
 
-  input createUserRatingInput {
+  input CreateUserRatingInput {
     user_id: ID!
     title: String
     restaurant_menu_item_id: ID!
     rating: Float
     comment: String
   }
-  input updateUserRatingInput {
+  input UpdateUserRatingInput {
     id: ID!
     user_id: ID!
     title: String
     comment: String
     restaurant_menu_item_id: ID!
     rating: Float
+  }
+
+  input UpdateUserInput {
+    id: ID!
+    first_name: String
+    last_name: String
+    password: String
+    username: String
+    phone: String
+    role: ID
+    email: String
+    dob: String
   }
 
   extend type Query {
@@ -115,11 +127,12 @@ export const userDefs = gql`
 
   extend type Mutation {
     addUser(input: CreateUserInput): User
-    addUserRating(input: createUserRatingInput): UserRating
-    updateUserRating(input: updateUserRatingInput): UserRating
+    addUserRating(input: CreateUserRatingInput): UserRating
+    updateUserRating(input: UpdateUserRatingInput): UserRating
+    updateUser(input: UpdateUserInput): User
     deleteUserRating(id: ID): Boolean
-    addUserSearches(input: createUserSearchInput): UserSearch
-    addUserFavorites(input: createUserFavoritesInput): UserFavorites
+    addUserSearches(input: CreateUserSearchInput): UserSearch
+    addUserFavorites(input: CreateUserFavoritesInput): UserFavorites
     deleteUserFavorites(id: ID): Boolean
   }
 
