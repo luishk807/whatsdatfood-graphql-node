@@ -1,17 +1,25 @@
 import UserServices from 'services/users.service';
 import UserRatingServices from 'services/userRating.services';
 import { createPubSub } from '@graphql-yoga/node';
+import UserFavoriteServices from 'services/userFavorites.services';
 import {
   CreateUserInputArg,
   CreateUserRatingInputArg,
   UserRating,
   UserSearch,
   User,
+  CreateUserFavoritesInputArg,
+  UserFavorites,
 } from 'interfaces/user';
 import { validateUserData } from 'middlewares/user';
 import { SUBSCRIPTION_EVENTS } from 'constants/graphql';
-import { buildUserEntry, buildUserRatingEntry } from 'helpers/users.sequelize';
+import {
+  buildUserEntry,
+  buildUserFavoritesEntry,
+  buildUserRatingEntry,
+} from 'helpers/users.sequelize';
 import { DateTimeResolver } from 'graphql-scalars';
+
 type Events = {
   USER_ADDED: { userAdded: User }; // Use your actual UserType here
 };
@@ -42,6 +50,7 @@ export const userResolvers = {
     searches: async (parent: User) => parent.searches,
     role: async (parent: User) => parent.role,
     ratings: async (parent: User) => parent.ratings,
+    favorites: async (parent: User) => parent.favorites,
   },
   UserRating: {
     restaurantMenuItem: async (parent: UserRating) => parent.restaurantMenuItem,
@@ -51,6 +60,10 @@ export const userResolvers = {
   UserSearch: {
     restaurant: async (parent: UserSearch) => parent.restaurant,
     user: async (parent: UserSearch) => parent.user,
+  },
+  UserFavorites: {
+    user: async (parent: UserFavorites) => parent.user,
+    restaurant: async (parent: UserFavorites) => parent.restaurant,
   },
   Mutation: {
     addUser: validateUserData(
@@ -73,6 +86,16 @@ export const userResolvers = {
         return resp;
       },
     ),
+    addUserFavorites: async (_: any, args: CreateUserFavoritesInputArg) => {
+      const { input } = args;
+      const payload = await buildUserFavoritesEntry(input);
+      return await UserFavoriteServices.createOrUpdate(payload);
+    },
+    deleteUserFavorites: async (_: any, args: CreateUserFavoritesInputArg) => {
+      const { input } = args;
+      const payload = await buildUserFavoritesEntry(input);
+      return await UserFavoriteServices.update(payload);
+    },
     updateUserRating: async (
       _: any,
       args: CreateUserRatingInputArg,
@@ -90,7 +113,7 @@ export const userResolvers = {
     ): Promise<UserRating> => {
       const { input } = args;
       const validatedInput = buildUserRatingEntry(input);
-      return await UserRatingServices.create(validatedInput);
+      return await UserRatingServices.createOrUpdate(validatedInput);
     },
   },
 

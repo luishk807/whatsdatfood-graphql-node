@@ -18,8 +18,17 @@ export const userDefs = gql`
     dob: Date
     searches: [UserSearch]
     ratings: [UserRating]
+    favorites: [UserFavorites]
     status: Status
     role: UserRole
+  }
+
+  type UserFavorites {
+    id: ID
+    user_id: ID
+    restaurant_id: ID
+    user: User
+    restaurant: Restaurant
   }
 
   type UserRating {
@@ -74,6 +83,11 @@ export const userDefs = gql`
     restaurant_id: ID!
   }
 
+  input createUserFavoritesInput {
+    user_id: ID!
+    restaurant_id: ID!
+  }
+
   input createUserRatingInput {
     user_id: ID!
     title: String
@@ -105,6 +119,8 @@ export const userDefs = gql`
     updateUserRating(input: updateUserRatingInput): UserRating
     deleteUserRating(id: ID): Boolean
     addUserSearches(input: createUserSearchInput): UserSearch
+    addUserFavorites(input: createUserFavoritesInput): UserFavorites
+    deleteUserFavorites(id: ID): Boolean
   }
 
   extend type Subscription {

@@ -1,6 +1,13 @@
 import { _get } from '.';
 import { createHashPassword } from 'helpers/login';
-import { UserRating, User, UserInput, UserRatingInput } from 'interfaces/user';
+import {
+  UserRating,
+  User,
+  UserInput,
+  UserRatingInput,
+  UserFavorites,
+  UserFavoritesInput,
+} from 'interfaces/user';
 import { USER_ROLE_DEFAULT, DEFAULT_STATUS } from 'constants/sequelize';
 import { dbAliases } from 'db';
 export const buildUserEntry = async (item: UserInput) => {
@@ -20,6 +27,20 @@ export const buildUserEntry = async (item: UserInput) => {
     phone: _get(item, 'phone'),
     email: _get(item, 'email'),
     dob: _get(item, 'dob'),
+  };
+};
+
+export const buildUserFavoritesEntry = (input: UserFavoritesInput) => {
+  if (!input.restaurant_id || !input.user_id) {
+    throw new Error(
+      'Missing required fields: restaurant_menu_item_id, user_id, rating',
+    );
+  }
+  const id = _get(input, 'id');
+  return {
+    ...(id && { id: id }),
+    restaurant_id: BigInt(input.restaurant_id),
+    user_id: BigInt(input.user_id),
   };
 };
 
@@ -107,6 +128,7 @@ export const buildUserResponse = (item: User | User[]) => {
         ratings: _get(data, dbAliases.users.userRatings),
         status: _get(data, dbAliases.users.status),
         role: _get(data, dbAliases.users.userRole),
+        rating: _get(data, dbAliases.users.userFavorites),
       }))
     : {
         id: _get(item, 'id'),
@@ -126,5 +148,34 @@ export const buildUserResponse = (item: User | User[]) => {
         ratings: _get(item, dbAliases.users.userRatings),
         status: _get(item, dbAliases.users.status),
         role: _get(item, dbAliases.users.userRole),
+        rating: _get(item, dbAliases.users.userFavorites),
+      };
+};
+
+export const buildUserFavoritesResponse = (
+  item: UserFavorites | UserFavorites[],
+) => {
+  if (!item || (Array.isArray(item) && !item.length)) {
+    return item;
+  }
+
+  return Array.isArray(item)
+    ? item.map((data: User) => ({
+        id: _get(data, 'id'),
+        restaurant_id: _get(data, 'restaurant_id'),
+        user_id: _get(data, 'user_id'),
+        createdAt: _get(data, 'createdAt'),
+        updatedAt: _get(data, 'updatedAt'),
+        user: _get(data, dbAliases.userFavorites.user),
+        restaurant: _get(data, dbAliases.userFavorites.restaurant),
+      }))
+    : {
+        id: _get(item, 'id'),
+        restaurant_id: _get(item, 'restaurant_id'),
+        user_id: _get(item, 'user_id'),
+        createdAt: _get(item, 'createdAt'),
+        updatedAt: _get(item, 'updatedAt'),
+        user: _get(item, dbAliases.userFavorites.user),
+        restaurant: _get(item, dbAliases.userFavorites.restaurant),
       };
 };

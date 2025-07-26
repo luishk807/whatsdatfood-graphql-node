@@ -9,6 +9,15 @@ export interface UserRoleBase {
   updatedAt?: Date;
   deletedAt?: Date;
 }
+
+export interface UserFavoritesBase {
+  id?: ID;
+  user_id: ID;
+  restaurant_id: ID;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
 export interface UserBase {
   id?: ID;
   first_name?: string;
@@ -45,11 +54,17 @@ export interface UserRatingBase {
   comment?: string;
 }
 
+export interface UserFavorites extends Partial<UserFavoritesBase> {
+  user?: User;
+  restaurant?: Restaurant;
+}
+
 export interface User extends Partial<UserBase> {
   ratings?: UserRating[];
   status?: Status;
   role?: UserRole;
   searches?: UserSearch[];
+  favorites?: UserFavorites[];
 }
 
 export interface UserRating extends Partial<UserRatingBase> {
@@ -70,6 +85,8 @@ export interface UserSearch extends Partial<UserSearchesBase> {
 
 export interface UserRatingInput
   extends Partial<Omit<UserRatingBase, 'id' | 'createdAt' | 'updatedAt'>> {}
+export interface UserFavoritesInput
+  extends Partial<Omit<UserFavoritesBase, 'id' | 'createdAt' | 'updatedAt'>> {}
 
 export interface UserInput
   extends Partial<Omit<UserBase, 'id' | 'createdAt' | 'updatedAt'>> {}
@@ -89,4 +106,8 @@ export interface CreateUserInputArg {
 }
 export interface CreateUserSearchInputArg {
   input: UserSearchesInput;
+}
+
+export interface CreateUserFavoritesInputArg {
+  input: UserFavoritesInput;
 }

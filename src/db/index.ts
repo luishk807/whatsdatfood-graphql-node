@@ -31,6 +31,7 @@ export const dbAliases = {
     userRole: 'userUserRole',
     status: 'userStatus',
     userRatings: 'userUserRatings',
+    userFavorites: 'userUserFavorites',
     userSearches: 'userUserSearches',
   },
   userRole: {
@@ -39,6 +40,10 @@ export const dbAliases = {
   userSearches: {
     restaurant: 'userSearchesRestaurant',
     user: 'userSearchesUser',
+  },
+  userFavorites: {
+    user: 'userFavoritesUser',
+    restaurant: 'userFavoritesRestaurant',
   },
   userRatings: {
     user: 'userRatingUser',

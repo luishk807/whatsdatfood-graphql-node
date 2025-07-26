@@ -25,6 +25,39 @@ class Base {
       this.handlerError(err);
     }
   }
+
+  async createOrUpdate<T extends object>(payload: T) {
+    const t = await db.sequelize.transaction();
+    const userId = _get(payload, 'user_id');
+    const restItemId = _get(payload, 'restaurant_menu_item_id');
+
+    if (!userId || !restItemId) {
+      throw new Error('User info and restaurant Info Required');
+    }
+    try {
+      const find = await this.model.findOne({
+        where: {
+          user_id: userId,
+          restaurant_menu_item_id: restItemId,
+        },
+      });
+
+      if (!find) {
+        const resp = await this.model.upsert(payload, {
+          transaction: t,
+          returning: true,
+        });
+        console.log(resp);
+        await t.commit();
+        return resp[0];
+      } else {
+        return await this.update(payload);
+      }
+    } catch (err) {
+      await t.rollback();
+      this.handlerError(err);
+    }
+  }
   async findOrCreate<T extends object>(
     key: string,
     payload: T,
