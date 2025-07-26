@@ -51,12 +51,12 @@ class RestaurantsRepo extends Base {
         name, slug, address, city, state, country, postal_code,
         michelin_score, rating, phone, payment_method, description,
         delivery_method, letter_grade, email, reservation_required,
-        reservation_available, website, created_at, updated_at
+        reservation_available, website, tasting_menu_only, tasting_menu_price, price_range, drink_pairing_price, parking_available,cash_only,drive_through, delivery_option, card_payment, created_at, updated_at
       ) values (
         :name, :slug, :address, :city, :state, :country, :postal_code,
         :michelin_score, :rating, :phone, :payment_method, :description,
         :delivery_method, :letter_grade, :email, :reservation_required,
-        :reservation_available, :website, NOW(), NOW()
+        :reservation_available, :website, :tasting_menu_only, :tasting_menu_price, :price_range, :drink_pairing_price, :parking_available, :cash_only, :drive_through, :delivery_option, :card_payment, NOW(), NOW()
       )
          RETURNING *`,
         {

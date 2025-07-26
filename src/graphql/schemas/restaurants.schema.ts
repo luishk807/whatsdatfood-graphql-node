@@ -29,6 +29,7 @@ export const restaurantDefs = gql`
     drink_pairing_price: Float
     parking_available: Boolean
     cash_only: Boolean
+    card_payment: Boolean
     drive_through: Boolean
     delivery_option: Boolean
     restaurantMenuItems: [RestaurantMenuItem]
@@ -99,6 +100,7 @@ export const restaurantDefs = gql`
     drink_pairing_price: Float
     parking_available: Boolean
     cash_only: Boolean
+    card_payment: Boolean
     drive_through: Boolean
     delivery_option: Boolean
   }

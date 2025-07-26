@@ -21,6 +21,9 @@ export default {
     await queryInterface.addColumn('restaurants', 'delivery_option', {
       type: DataTypes.BOOLEAN,
     });
+    await queryInterface.addColumn('restaurants', 'card_payment', {
+      type: DataTypes.BOOLEAN,
+    });
   },
 
   async down(queryInterface: QueryInterface, Sequelize: Sequelize) {
@@ -34,5 +37,6 @@ export default {
     await queryInterface.removeColumn('restaurants', 'cash_only');
     await queryInterface.removeColumn('restaurants', 'drive_through');
     await queryInterface.removeColumn('restaurants', 'delivery_option');
+    await queryInterface.removeColumn('restaurants', 'card_payment');
   },
 };

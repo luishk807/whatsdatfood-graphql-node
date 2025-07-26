@@ -176,6 +176,7 @@ const OpenAiFn = {
       website,
       parking_available,
       cash_only,
+      card_payment,
       drive_through,
       delivery_option,
     } = Array.isArray(restData) ? restData[0] : restData;
@@ -252,6 +253,7 @@ const OpenAiFn = {
       cash_only,
       drive_through,
       delivery_option,
+      card_payment,
       restaurantMenuItems: results,
     };
   },
@@ -262,12 +264,15 @@ const OpenAiFn = {
       return foundRest;
     } else {
       console.log('use ai');
-      const ai_question = `get the list of restaurants of with the name exactly ${restName} in nyc as [{ name, address, city, state, country, postal_code, payment_method (payment method, comma separated text), phone (format (nnn) nnn-nnnn), rating (popular restaurant score), michelin_score (michellin star score)}, description, delivery_method (comma separated text), letter_grade (nyc letter restaurant grade from NYC Health grades}, email, reservation_required (boolean), reservation_available (can do reservation?), website (complete homepage url with protocol), food_category: [ name of category], business_hours: { day_of_week: time (military hours HH:mm)}, holidays_closed: [ list of holidays when closed], tasting_menu_only (boolean), tasting_menu_price (number in USD),price_range (string like "$$$$"), drink_pairing_price (number in USD or null)]. Respond only with valid JSON schema. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
+      const ai_question = `get the list of restaurants of with the name exactly ${restName} in nyc as [{ name, address, city, state, country, postal_code, payment_method (payment method, comma separated text), phone (format (nnn) nnn-nnnn), rating (popular restaurant score), michelin_score (michellin star score)}, description, delivery_method (comma separated text), letter_grade (nyc letter restaurant grade from NYC Health grades}, email, reservation_required (boolean), reservation_available (can do reservation?), website (complete homepage url with protocol), food_category: [ name of category], business_hours: { day_of_week: time (military hours HH:mm)}, holidays_closed: [ list of holidays when closed], tasting_menu_only (boolean), tasting_menu_price (number in USD),price_range (string like "$$$$"), drink_pairing_price (number in USD or null), parking_available: boolean (do they have parking space), cash_only: boolean, drive_through: boolean,  delivery_option: boolean, card_payment: boolean (accept credit card payment)]. Respond only with valid JSON schema. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
 
       const dataJson = await this.fetchFullMenuPaginated(
         GPT_MODEL.GPT4,
         ai_question,
       );
+
+      console.log('**********RESPONSE****************');
+      console.log(dataJson);
 
       const results = new Map();
 
@@ -361,6 +366,7 @@ const OpenAiFn = {
                 website: _get(restaurantPayload, 'website', null),
                 parking_available: _get(restaurantPayload, 'parking_available'),
                 cash_only: _get(restaurantPayload, 'cash_only'),
+                card_payment: _get(restaurantPayload, 'card_payment'),
                 drive_through: _get(restaurantPayload, 'drive_through'),
                 delivery_option: _get(restaurantPayload, 'delivery_option'),
               });
@@ -404,6 +410,7 @@ const OpenAiFn = {
                     website: _get(restaurant, 'website'),
                     parking_available: _get(restaurant, 'parking_available'),
                     cash_only: _get(restaurant, 'cash_only'),
+                    card_payment: _get(restaurant, 'card_payment'),
                     drive_through: _get(restaurant, 'drive_through'),
                     delivery_option: _get(restaurant, 'delivery_option'),
                   });

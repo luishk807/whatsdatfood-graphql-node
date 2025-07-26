@@ -54,6 +54,7 @@ export interface RestaurantBase {
   drink_pairing_price?: number;
   parking_available?: boolean;
   cash_only?: boolean;
+  card_payment?: boolean;
   drive_through?: boolean;
   delivery_option?: boolean;
   createdAt?: string;

@@ -28,6 +28,7 @@ interface RestaurantInterface {
   drink_pairing_price?: number;
   parking_available?: boolean;
   cash_only?: boolean;
+  card_payment?: boolean;
   drive_through?: boolean;
   delivery_option?: boolean;
   created_at?: Date;
@@ -68,6 +69,7 @@ class Restaurants
   public drink_pairing_price!: number;
   public parking_available!: boolean;
   public cash_only!: boolean;
+  public card_payment!: boolean;
   public drive_through!: boolean;
   public delivery_option!: boolean;
 
@@ -166,13 +168,16 @@ Restaurants.init(
       type: DataTypes.DOUBLE,
     },
     cash_only: {
-      type: DataTypes.DOUBLE,
+      type: DataTypes.BOOLEAN,
+    },
+    card_payment: {
+      type: DataTypes.BOOLEAN,
     },
     drive_through: {
-      type: DataTypes.DOUBLE,
+      type: DataTypes.BOOLEAN,
     },
     delivery_option: {
-      type: DataTypes.DOUBLE,
+      type: DataTypes.BOOLEAN,
     },
   },
   {
