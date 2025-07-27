@@ -84,8 +84,7 @@ export const userDefs = gql`
   }
 
   input CreateUserFavoritesInput {
-    user_id: ID!
-    restaurant_id: ID!
+    slug: String!
   }
 
   input CreateUserRatingInput {

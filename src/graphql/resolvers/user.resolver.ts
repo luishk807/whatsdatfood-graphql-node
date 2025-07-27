@@ -19,6 +19,7 @@ import {
   buildUserRatingEntry,
 } from 'helpers/users.sequelize';
 import { DateTimeResolver } from 'graphql-scalars';
+import RestaurantServices from 'services/restaurants.service';
 
 type Events = {
   USER_ADDED: { userAdded: User }; // Use your actual UserType here
@@ -91,15 +92,27 @@ export const userResolvers = {
       const payload = await buildUserEntry(input);
       return await UserServices.update(payload);
     },
-    addUserFavorites: async (_: any, args: CreateUserFavoritesInputArg) => {
+    addUserFavorites: async (
+      _: any,
+      args: CreateUserFavoritesInputArg,
+      context: { user: User },
+    ) => {
       const { input } = args;
-      const payload = await buildUserFavoritesEntry(input);
-      return await UserFavoriteServices.createOrUpdate(payload);
+      const { user } = context;
+      // const payload = await buildUserFavoritesEntry(input);
+      const findRest = await RestaurantServices.findBySlug(input as string);
+      const restaurant = Array.isArray(findRest) ? findRest[0] : findRest;
+      if (restaurant) {
+        return await UserFavoriteServices.createOrUpdate({
+          restaurant_id: Number(restaurant.id),
+          user_id: Number(user.id),
+        });
+      }
     },
     deleteUserFavorites: async (_: any, args: CreateUserFavoritesInputArg) => {
       const { input } = args;
       const payload = await buildUserFavoritesEntry(input);
-      return await UserFavoriteServices.update(payload);
+      return await UserFavoriteServices.deleteById(payload);
     },
     updateUserRating: async (
       _: any,
