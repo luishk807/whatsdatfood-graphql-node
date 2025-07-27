@@ -20,6 +20,11 @@ const LoginServices = {
 
     const plainUser = user.get({ plain: true });
 
+    // don't put too much info, otherwise it will increase
+    // the token size since there is MAX size
+
+    const user_status = _get(plainUser, dbAliases.users.status);
+    const user_role = _get(plainUser, dbAliases.users.userRole);
     const token = createJSONWebToken({
       id: plainUser.id,
       email: plainUser.email,
@@ -29,10 +34,10 @@ const LoginServices = {
       first_name: plainUser.first_name,
       last_name: plainUser.last_name,
       status_id: plainUser.status_id,
-      dob: plainUser.dob,
-      verification: plainUser.verification,
-      createdAt: _get(plainUser, 'createdAt'),
-      updatedAt: _get(plainUser, 'updatedAt'),
+      // dob: plainUser.dob,
+      // verification: plainUser.verification,
+      // createdAt: _get(plainUser, 'createdAt'),
+      // updatedAt: _get(plainUser, 'updatedAt'),
       // [dbAliases.users.userSearches]: _get(
       //   plainUser,
       //   dbAliases.users.userSearches,
@@ -43,8 +48,8 @@ const LoginServices = {
       //   dbAliases.users.userRatings,
       //   [],
       // ),
-      [dbAliases.users.status]: _get(plainUser, dbAliases.users.status),
-      [dbAliases.users.userRole]: _get(plainUser, dbAliases.users.userRole),
+      // [dbAliases.users.status]: _get(plainUser, dbAliases.users.status),
+      // [dbAliases.users.userRole]: _get(plainUser, dbAliases.users.userRole),
     });
     return {
       success: true,

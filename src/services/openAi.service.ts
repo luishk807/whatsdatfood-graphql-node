@@ -14,6 +14,7 @@ import RestaurantMenuItemsFn from 'services/restaurantMenuItems.service';
 import { getBuiltAddress } from 'helpers';
 import RestaurantHolidayService from './restaurantHolidays.services';
 import RestaurantCategoryService from './restaurantCategories.services';
+import { dbAliases } from 'db';
 
 type AIMenuType = {
   id?: number;
@@ -190,12 +191,11 @@ const OpenAiFn = {
     });
 
     const menuItems = _get(restData, 'restaurantMenuItems');
-
     if (menuItems && menuItems.length) {
       return restData;
     } else {
       const ai_question = `get me the menu of ${name} ${wholeAddress} restaurant, put in an array of object as [{ name, price, description, category, top_choice: true or false}]. No extra text. don't include source. Do not use Markdown formatting or hyperlinks. Always respond with plain text and raw JSON only.`;
-
+      console.log('using AI for items');
       let menu = await this.fetchFullMenuPaginated(
         GPT_MODEL.GPT4_PREVIEW,
         ai_question,
@@ -207,7 +207,6 @@ const OpenAiFn = {
         }
 
         for (let item of menu) {
-          console.log(item, 'checking in menu');
           const restaurantItemPayload = buildRestaurantItemPayload({
             ...item,
             restaurant_id: restId,

@@ -11,6 +11,15 @@ class UserRatingRepo extends Base {
     super(UserRatings);
   }
 
+  async getOneByUserAndRestItemId(userId: number, restItemId: number) {
+    return await this.model.findOne({
+      where: {
+        restaurant_menu_item_id: restItemId,
+        user_id: userId,
+      },
+    });
+  }
+
   async getAll() {
     return await this.model.findAll({
       include: [

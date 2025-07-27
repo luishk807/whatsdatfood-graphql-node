@@ -88,6 +88,7 @@ export const userDefs = gql`
   }
 
   input CreateUserRatingInput {
+    id: ID
     user_id: ID!
     title: String
     restaurant_menu_item_id: ID!
@@ -120,6 +121,7 @@ export const userDefs = gql`
     user(id: ID): User
     getUserByEmail(email: String): User
     getUserByUsername(username: String): User
+    getRatingByRestItemId(restItemId: ID): UserRating
     ratings: [UserRating]
     checkUsername(username: String): Boolean
   }

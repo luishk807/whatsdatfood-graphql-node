@@ -60,7 +60,7 @@ class UsersRepo extends Base {
         },
       ],
     });
-    console.log(JSON.stringify(findUser, null, 2)); // Check nested data here
+    // console.log(JSON.stringify(findUser, null, 2)); // Check nested data here
 
     return findUser ? findUser : null;
   }

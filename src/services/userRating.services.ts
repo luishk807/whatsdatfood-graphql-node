@@ -8,7 +8,7 @@ const UserServices = {
     return await UserRatingRepo.create<UserRatingsInput>(payload);
   },
   async createOrUpdate(payload: UserRatingsInput) {
-    return await UserRatingRepo.create<UserRatingsInput>(payload);
+    return await UserRatingRepo.createOrUpdate<UserRatingsInput>(payload);
   },
   async update(payload: UserRatingsInput) {
     return await UserRatingRepo.update<UserRatingsInput>(payload);
@@ -18,6 +18,9 @@ const UserServices = {
   },
   async findById(id: number) {
     return await UserRatingRepo.getOneById(id);
+  },
+  async findByUserAndRestItemId(userId: number, restItemId: number) {
+    return await UserRatingRepo.getOneByUserAndRestItemId(userId, restItemId);
   },
   async getAll() {
     const resp = await UserRatingRepo.getAll();

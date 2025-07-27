@@ -239,6 +239,11 @@ export const getRestaurantItemResponse = (data: RestaurantMenuItem) => {
 };
 
 export const getRestaurantResponse = (data: Restaurant) => {
+  const restaurantItems = _get(data, dbAliases.restaurant.restaurantItems);
+  const formatItems = restaurantItems.map((item: RestaurantMenuItem) => {
+    return getRestaurantItemResponse(item);
+  });
+
   return {
     id: _get(data, 'id'),
     name: _get(data, 'name'),
@@ -270,7 +275,7 @@ export const getRestaurantResponse = (data: Restaurant) => {
     card_payment: _get(data, 'card_payment'),
     drive_through: _get(data, 'drive_through'),
     delivery_option: _get(data, 'delivery_option'),
-    restaurantMenuItems: _get(data, dbAliases.restaurant.restaurantItems),
+    restaurantMenuItems: formatItems,
     businessHours: _get(data, dbAliases.restaurant.restaurantBusinessHours),
   };
 };

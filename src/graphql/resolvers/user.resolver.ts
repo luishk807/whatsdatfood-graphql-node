@@ -10,6 +10,7 @@ import {
   User,
   CreateUserFavoritesInputArg,
   UserFavorites,
+  UserFavoritesInputArg,
 } from 'interfaces/user';
 import { validateUserData } from 'middlewares/user';
 import { SUBSCRIPTION_EVENTS } from 'constants/graphql';
@@ -20,6 +21,8 @@ import {
 } from 'helpers/users.sequelize';
 import { DateTimeResolver } from 'graphql-scalars';
 import RestaurantServices from 'services/restaurants.service';
+import { ID } from 'types';
+import { _get } from 'helpers';
 
 type Events = {
   USER_ADDED: { userAdded: User }; // Use your actual UserType here
@@ -44,6 +47,24 @@ export const userResolvers = {
     ): Promise<Boolean> => {
       const resp = await UserServices.findByUsername(args.username);
       return !!resp;
+    },
+    getRatingByRestItemId: async (
+      _: any,
+      args: { restItemId: ID },
+      context: {
+        user: User;
+      },
+    ): Promise<UserRating | null> => {
+      const { restItemId } = args;
+      const { user } = context;
+      if (user && restItemId) {
+        return await UserRatingServices.findByUserAndRestItemId(
+          Number(user.id),
+          Number(restItemId),
+        );
+      }
+
+      return null;
     },
   },
   User: {
@@ -97,19 +118,22 @@ export const userResolvers = {
       args: CreateUserFavoritesInputArg,
       context: { user: User },
     ) => {
-      const { input } = args;
+      const { slug } = args.input;
       const { user } = context;
-      // const payload = await buildUserFavoritesEntry(input);
-      const findRest = await RestaurantServices.findBySlug(input as string);
-      const restaurant = Array.isArray(findRest) ? findRest[0] : findRest;
-      if (restaurant) {
-        return await UserFavoriteServices.createOrUpdate({
-          restaurant_id: Number(restaurant.id),
-          user_id: Number(user.id),
-        });
+
+      if (!slug || !user) {
+        throw new Error('user is not log in or slug is missing');
+      }
+
+      const userId = _get(user, 'id');
+      if (slug) {
+        return await UserFavoriteServices.createOrUpdateFavorite(
+          slug as string,
+          userId,
+        );
       }
     },
-    deleteUserFavorites: async (_: any, args: CreateUserFavoritesInputArg) => {
+    deleteUserFavorites: async (_: any, args: UserFavoritesInputArg) => {
       const { input } = args;
       const payload = await buildUserFavoritesEntry(input);
       return await UserFavoriteServices.deleteById(payload);

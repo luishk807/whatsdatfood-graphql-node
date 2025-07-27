@@ -88,6 +88,9 @@ export interface UserRatingInput
 export interface UserFavoritesInput
   extends Partial<Omit<UserFavoritesBase, 'id' | 'createdAt' | 'updatedAt'>> {}
 
+export interface CreateUserFavoriteInput {
+  slug: String;
+}
 export interface UserInput
   extends Partial<Omit<UserBase, 'id' | 'createdAt' | 'updatedAt'>> {}
 
@@ -109,5 +112,9 @@ export interface CreateUserSearchInputArg {
 }
 
 export interface CreateUserFavoritesInputArg {
+  input: CreateUserFavoriteInput;
+}
+
+export interface UserFavoritesInputArg {
   input: UserFavoritesInput;
 }

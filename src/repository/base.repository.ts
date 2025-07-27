@@ -148,6 +148,23 @@ class Base {
       this.handlerError(err);
     }
   }
+  async removeById(id: number) {
+    const t = await db.sequelize.transaction();
+    try {
+      const resp = await this.model.destroy({
+        where: {
+          id: id,
+        },
+        force: true,
+        transaction: t,
+      });
+      await t.commit();
+      return resp;
+    } catch (err) {
+      await t.rollback();
+      this.handlerError(err);
+    }
+  }
   async update<T extends object>(payload: T) {
     const id = _get(payload, 'id');
     const t = await db.sequelize.transaction();
