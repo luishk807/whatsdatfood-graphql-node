@@ -48,6 +48,18 @@ export const userResolvers = {
       const resp = await UserServices.findByUsername(args.username);
       return !!resp;
     },
+    checkUserFavoriteBySlug: async (
+      _: any,
+      args: CreateUserFavoritesInputArg,
+      context: {
+        user: User;
+      },
+    ) => {
+      const { slug } = args.input;
+      const { user } = context;
+      const userId = _get(user, 'id');
+      return await UserFavoriteServices.checkIsFavorite(slug as string, userId);
+    },
     getRatingByRestItemId: async (
       _: any,
       args: { restItemId: ID },

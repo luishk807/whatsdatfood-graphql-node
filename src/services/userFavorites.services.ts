@@ -13,6 +13,11 @@ const UserFavoriteServices = {
   },
   async createOrUpdateFavorite(slug: string, userId: number) {
     const rest = await RestaurantServices.findBySlug(slug as string);
+    const restId = Number(Array.isArray(rest) ? rest[0].id : rest.id);
+    return await UserFavoritesRepo.checkIsFavorite(restId, userId);
+  },
+  async checkIsFavorite(slug: string, userId: number) {
+    const rest = await RestaurantServices.findBySlug(slug as string);
     return await UserFavoritesRepo.createOrUpdateFavorite({
       restaurant_id: Array.isArray(rest) ? rest[0].id : rest.id,
       user_id: userId,

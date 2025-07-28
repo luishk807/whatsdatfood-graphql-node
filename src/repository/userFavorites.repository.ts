@@ -11,6 +11,25 @@ class UserFavoritesRepo extends Base {
     super(UserFavorites);
   }
 
+  async checkIsFavorite(restId: number, userId: number) {
+    try {
+      const resp = await this.model.findOne({
+        where: {
+          restaurant_id: restId,
+          user_id: userId,
+        },
+      });
+
+      return resp ? true : false;
+    } catch (err) {
+      if (err instanceof Error) {
+        throw new Error(`ERROR: ${err.message}`);
+      }
+
+      throw new Error('ERROR: unable to check favorites');
+    }
+  }
+
   async createOrUpdateFavorite(payload: UserFavoriteInt) {
     const t = await db.sequelize.transaction();
 

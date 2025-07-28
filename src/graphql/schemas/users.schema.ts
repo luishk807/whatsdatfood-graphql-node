@@ -122,6 +122,7 @@ export const userDefs = gql`
     getUserByEmail(email: String): User
     getUserByUsername(username: String): User
     getRatingByRestItemId(restItemId: ID): UserRating
+    checkUserFavoriteBySlug(slug: String!): Boolean
     ratings: [UserRating]
     checkUsername(username: String): Boolean
   }
