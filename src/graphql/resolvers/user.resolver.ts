@@ -62,6 +62,13 @@ export const userResolvers = {
       const userId = _get(user, 'id');
       return await UserFavoriteServices.checkIsFavorite(slug as string, userId);
     },
+    allRatingsByItemId: async (
+      _: any,
+      args: { restItemId: number; page: number },
+    ) => {
+      const { restItemId, page } = args;
+      return await UserRatingServices.getAllByRestItemId(restItemId, page);
+    },
     getRatingByRestItemId: async (
       _: any,
       args: { restItemId: ID },

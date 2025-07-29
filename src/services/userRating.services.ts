@@ -1,6 +1,7 @@
 import { UserRatingsInput } from 'db/models/userRatings';
 import { buildUserRatingResponse } from 'helpers/users.sequelize';
 import UserRating from 'repository/userRating.repository';
+import { LIMIT } from 'constants/sequelize';
 const UserRatingRepo = new UserRating();
 
 const UserServices = {
@@ -25,6 +26,21 @@ const UserServices = {
   async getAll() {
     const resp = await UserRatingRepo.getAll();
     return buildUserRatingResponse(resp);
+  },
+  async getAllByRestItemId(restItemId: number, page: number) {
+    const resp = await UserRatingRepo.getAllByRestItemId(restItemId, page);
+
+    const totalPages = Math.ceil(resp.count / LIMIT);
+    const data = resp.rows;
+    const totalItems = resp.count;
+
+    const formatData = await buildUserRatingResponse(data);
+    return {
+      data: formatData,
+      totalItems,
+      totalPages,
+      currentPage: page,
+    };
   },
 };
 

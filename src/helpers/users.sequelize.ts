@@ -72,10 +72,7 @@ export const buildUserRatingResponse = async (
     return item;
   }
 
-  if (Array.isArray(item)) {
-    const test = item[0];
-    console.log('test', test);
-  }
+  console.log(item);
 
   return Array.isArray(item)
     ? item.map((data: any) => ({
@@ -87,6 +84,8 @@ export const buildUserRatingResponse = async (
         status_id: _get(data, 'status_id'),
         restaurant_menu_item_id: _get(data, 'restaurant_menu_item_id'),
         restaurantMenuItem: _get(data, dbAliases.userRatings.restaurantItem),
+        createdAt: _get(data, 'createdAt'),
+        updatedAt: _get(data, 'updatedAt'),
         status: _get(data, dbAliases.userRatings.status),
         user: _get(data, dbAliases.userRatings.user),
       }))
@@ -98,6 +97,8 @@ export const buildUserRatingResponse = async (
         title: _get(item, 'title'),
         status_id: _get(item, 'status_id'),
         restaurant_menu_item_id: _get(item, 'restaurant_menu_item_id'),
+        createdAt: _get(item, 'createdAt'),
+        updatedAt: _get(item, 'updatedAt'),
         restaurantMenuItem: _get(item, dbAliases.userRatings.restaurantItem),
         status: _get(item, dbAliases.userRatings.status),
         user: _get(item, dbAliases.userRatings.user),

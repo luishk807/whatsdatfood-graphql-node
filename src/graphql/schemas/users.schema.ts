@@ -116,6 +116,13 @@ export const userDefs = gql`
     dob: String
   }
 
+  type AllRatingByItemResponse {
+    data: [UserRating]
+    totalItems: Int
+    totalPages: Int
+    currentPage: Int
+  }
+
   extend type Query {
     users: [User]
     user(id: ID): User
@@ -125,6 +132,11 @@ export const userDefs = gql`
     checkUserFavoriteBySlug(slug: String!): Boolean
     ratings: [UserRating]
     checkUsername(username: String): Boolean
+    allRatingsByItemId(
+      restItemId: ID!
+      page: Int!
+      limit: Int
+    ): AllRatingByItemResponse
   }
 
   extend type Mutation {
