@@ -50,13 +50,15 @@ export const userResolvers = {
     },
     checkUserFavoriteBySlug: async (
       _: any,
-      args: CreateUserFavoritesInputArg,
+      args: { slug: string },
       context: {
         user: User;
       },
     ) => {
-      const { slug } = args.input;
+      console.log('got in checkUserFavoriteBySlug');
+      const { slug } = args;
       const { user } = context;
+
       const userId = _get(user, 'id');
       return await UserFavoriteServices.checkIsFavorite(slug as string, userId);
     },
