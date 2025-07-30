@@ -82,6 +82,8 @@ export async function setupGraphQL(app: Application, httpServer: http.Server) {
           'signup',
           'logout',
           'checkAuth',
+          'checkUsername',
+          'addUser',
         ].includes(operationName);
         let userData = null;
         try {
