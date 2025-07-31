@@ -2,6 +2,7 @@ import { dbAliases } from 'db';
 import { _get } from 'helpers';
 import { Holiday } from 'interfaces/holidays';
 import { DEFAULT_STATUS } from 'constants/sequelize';
+import { date } from 'zod';
 export const buildHolidayPayload = (item: string) => {
   if (!item) {
     return null;
@@ -9,6 +10,7 @@ export const buildHolidayPayload = (item: string) => {
 
   return {
     name: item.trim().toLowerCase(),
+    date_assigned: date().parse(new Date()),
     status_id: DEFAULT_STATUS,
   };
 };

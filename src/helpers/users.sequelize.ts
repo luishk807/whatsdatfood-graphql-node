@@ -7,6 +7,8 @@ import {
   UserRatingInput,
   UserFavorites,
   UserFavoritesInput,
+  UserFriend,
+  UserFriendsInput,
 } from 'interfaces/user';
 import { USER_ROLE_DEFAULT, DEFAULT_STATUS } from 'constants/sequelize';
 import { dbAliases } from 'db';
@@ -40,6 +42,20 @@ export const buildUserFavoritesEntry = (input: UserFavoritesInput) => {
   return {
     ...(id && { id: id }),
     restaurant_id: BigInt(input.restaurant_id),
+    user_id: BigInt(input.user_id),
+  };
+};
+
+export const buildUserFriendsEntry = (input: UserFriendsInput) => {
+  if (!input.user_id || !input.user_id) {
+    throw new Error('Missing required fields: user_id, user_id, name');
+  }
+  const id = _get(input, 'id');
+  return {
+    ...(id && { id: id }),
+    phone: _get(input, 'phone'),
+    email: _get(input, 'email'),
+    name: _get(input, 'name'),
     user_id: BigInt(input.user_id),
   };
 };
@@ -130,6 +146,7 @@ export const buildUserResponse = (item: User | User[]) => {
         status: _get(data, dbAliases.users.status),
         role: _get(data, dbAliases.users.userRole),
         rating: _get(data, dbAliases.users.userFavorites),
+        friends: _get(data, dbAliases.users.friends),
       }))
     : {
         id: _get(item, 'id'),
@@ -150,6 +167,7 @@ export const buildUserResponse = (item: User | User[]) => {
         status: _get(item, dbAliases.users.status),
         role: _get(item, dbAliases.users.userRole),
         rating: _get(item, dbAliases.users.userFavorites),
+        friends: _get(item, dbAliases.users.friends),
       };
 };
 
@@ -178,5 +196,33 @@ export const buildUserFavoritesResponse = (
         updatedAt: _get(item, 'updatedAt'),
         user: _get(item, dbAliases.userFavorites.user),
         restaurant: _get(item, dbAliases.userFavorites.restaurant),
+      };
+};
+
+export const buildUserFriendsResponse = (item: UserFriend | UserFriend[]) => {
+  if (!item || (Array.isArray(item) && !item.length)) {
+    return item;
+  }
+
+  return Array.isArray(item)
+    ? item.map((data: User) => ({
+        id: _get(data, 'id'),
+        name: _get(data, 'name'),
+        email: _get(data, 'email'),
+        phone: _get(data, 'phone'),
+        user_id: _get(data, 'user_id'),
+        createdAt: _get(data, 'createdAt'),
+        updatedAt: _get(data, 'updatedAt'),
+        user: _get(data, dbAliases.userFriends.user),
+      }))
+    : {
+        id: _get(item, 'id'),
+        name: _get(item, 'name'),
+        email: _get(item, 'email'),
+        phone: _get(item, 'phone'),
+        user_id: _get(item, 'user_id'),
+        createdAt: _get(item, 'createdAt'),
+        updatedAt: _get(item, 'updatedAt'),
+        user: _get(item, dbAliases.userFavorites.user),
       };
 };

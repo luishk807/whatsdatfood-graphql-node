@@ -39,6 +39,26 @@ class RestaurantsRepo extends Base {
           model: db.RestaurantBusinessHours,
           as: dbAliases.restaurant.restaurantBusinessHours,
         },
+        {
+          model: db.RestaurantCategories,
+          as: dbAliases.restaurant.restaurantCategories,
+          include: [
+            {
+              model: db.FoodCategories,
+              as: dbAliases.restaurantCategories.foodCategory,
+            },
+          ],
+        },
+        {
+          model: db.RestaurantHolidays,
+          as: dbAliases.restaurant.restaurantHolidays,
+          include: [
+            {
+              model: db.Holidays,
+              as: dbAliases.restaurantHoliday.holiday,
+            },
+          ],
+        },
       ],
     });
   }
@@ -101,6 +121,26 @@ class RestaurantsRepo extends Base {
         {
           model: db.RestaurantBusinessHours,
           as: dbAliases.restaurant.restaurantBusinessHours,
+        },
+        {
+          model: db.RestaurantCategories,
+          as: dbAliases.restaurant.restaurantCategories,
+          include: [
+            {
+              model: db.FoodCategories,
+              as: dbAliases.restaurantCategories.foodCategory,
+            },
+          ],
+        },
+        {
+          model: db.RestaurantHolidays,
+          as: dbAliases.restaurant.restaurantHolidays,
+          include: [
+            {
+              model: db.Holidays,
+              as: dbAliases.restaurantHoliday.holiday,
+            },
+          ],
         },
       ],
     })) as unknown as Restaurant;

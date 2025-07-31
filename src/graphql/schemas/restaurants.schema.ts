@@ -34,6 +34,32 @@ export const restaurantDefs = gql`
     delivery_option: Boolean
     restaurantMenuItems: [RestaurantMenuItem]
     businessHours: [RestaurantBusinessHours]
+    holidays: [RestaurantHolidays]
+    foodCategories: [RestaurantCategories]
+  }
+
+  type RestaurantCategories {
+    id: ID
+    food_category_id: ID
+    restaurant_id: ID
+    status_id: ID
+    createdAt: DateTime
+    updatedAt: DateTime
+    status: Status
+    foodCategory: FoodCategory
+    restaurant: Restaurant
+  }
+
+  type RestaurantHolidays {
+    id: ID
+    restaurant_id: ID
+    holiday_id: ID
+    status_id: ID
+    createdAt: DateTime
+    updatedAt: DateTime
+    status: Status
+    holiday: Holiday
+    restaurant: Restaurant
   }
 
   type RestaurantBusinessHours {

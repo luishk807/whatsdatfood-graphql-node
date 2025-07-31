@@ -15,6 +15,8 @@ export const dbAliases = {
   restaurant: {
     restaurantItems: 'restRestaurantItems',
     restaurantBusinessHours: 'restaurantRestaurantBusinessHours',
+    restaurantHolidays: 'restaurantRestaurantHolidays',
+    restaurantCategories: 'restaurantRestaurantCategories',
   },
   restaurantItems: {
     restaurant: 'restaurantItemRest',
@@ -33,6 +35,7 @@ export const dbAliases = {
     userRatings: 'userUserRatings',
     userFavorites: 'userUserFavorites',
     userSearches: 'userUserSearches',
+    friends: 'userUserFriends',
   },
   userRole: {
     user: 'userRoleUser',
@@ -69,5 +72,8 @@ export const dbAliases = {
     status: 'restaurantHolidayStatus',
     restaurant: 'restaurantHolidayRestaurant',
     holiday: 'restaurantHolidayHoliday',
+  },
+  userFriends: {
+    user: 'userFriendsUser',
   },
 };

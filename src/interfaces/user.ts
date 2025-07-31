@@ -10,6 +10,17 @@ export interface UserRoleBase {
   deletedAt?: Date;
 }
 
+export interface UserFriendsBase {
+  id?: ID;
+  name: string;
+  email: string;
+  phone: string;
+  user_id: ID;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
+
 export interface UserFavoritesBase {
   id?: ID;
   user_id: ID;
@@ -64,7 +75,12 @@ export interface User extends Partial<UserBase> {
   status?: Status;
   role?: UserRole;
   searches?: UserSearch[];
+  friends?: UserFriend[];
   favorites?: UserFavorites[];
+}
+
+export interface UserFriend extends Partial<UserFriendsBase> {
+  user?: User[];
 }
 
 export interface UserRating extends Partial<UserRatingBase> {
@@ -87,6 +103,9 @@ export interface UserRatingInput
   extends Partial<Omit<UserRatingBase, 'id' | 'createdAt' | 'updatedAt'>> {}
 export interface UserFavoritesInput
   extends Partial<Omit<UserFavoritesBase, 'id' | 'createdAt' | 'updatedAt'>> {}
+
+export interface UserFriendsInput
+  extends Partial<Omit<UserFriendsBase, 'id' | 'createdAt' | 'updatedAt'>> {}
 
 export interface CreateUserFavoriteInput {
   slug: String;
@@ -117,4 +136,8 @@ export interface CreateUserFavoritesInputArg {
 
 export interface UserFavoritesInputArg {
   input: UserFavoritesInput;
+}
+
+export interface UserFriendsInputArg {
+  input: UserFriendsInput;
 }

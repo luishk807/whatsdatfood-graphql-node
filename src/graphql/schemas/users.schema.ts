@@ -21,6 +21,7 @@ export const userDefs = gql`
     favorites: [UserFavorites]
     status: Status
     role: UserRole
+    friends: [UserFriends]
   }
 
   type UserFavorites {
@@ -29,6 +30,14 @@ export const userDefs = gql`
     restaurant_id: ID
     user: User
     restaurant: Restaurant
+  }
+
+  type UserFriends {
+    id: ID
+    name: String
+    email: String
+    user_id: ID
+    user: User
   }
 
   type UserRating {
@@ -95,6 +104,14 @@ export const userDefs = gql`
     rating: Float
     comment: String
   }
+
+  input CreateUserFriendsInput {
+    name: String!
+    email: String
+    phone: String
+    user_id: ID!
+  }
+
   input UpdateUserRatingInput {
     id: ID!
     user_id: ID!
@@ -102,6 +119,14 @@ export const userDefs = gql`
     comment: String
     restaurant_menu_item_id: ID!
     rating: Float
+  }
+
+  input UpdateUserFriendsInput {
+    id: ID!
+    name: String
+    email: String
+    phone: String
+    user_id: ID!
   }
 
   input UpdateUserInput {
@@ -129,6 +154,7 @@ export const userDefs = gql`
     getUserByEmail(email: String): User
     getUserByUsername(username: String): User
     getRatingByRestItemId(restItemId: ID): UserRating
+    getFriendsByUserId(page: Int!, limit: Int): [UserFriends]
     checkUserFavoriteBySlug(slug: String!): Boolean
     ratings: [UserRating]
     checkUsername(username: String): Boolean
@@ -142,12 +168,15 @@ export const userDefs = gql`
   extend type Mutation {
     addUser(input: CreateUserInput): User
     addUserRating(input: CreateUserRatingInput): UserRating
-    updateUserRating(input: UpdateUserRatingInput): UserRating
-    updateUser(input: UpdateUserInput): User
-    deleteUserRating(id: ID): Boolean
     addUserSearches(input: CreateUserSearchInput): UserSearch
     addUserFavorites(input: CreateUserFavoritesInput): UserFavorites
+    addUserFriend(input: CreateUserFriendsInput): UserFriends
+    updateUserRating(input: UpdateUserRatingInput): UserRating
+    updateUserFriend(input: UpdateUserFriendsInput): UserFriends
+    updateUser(input: UpdateUserInput): User
+    deleteUserRating(id: ID): Boolean
     deleteUserFavorites(id: ID): Boolean
+    deleteUserFriend(id: ID): Boolean
   }
 
   extend type Subscription {

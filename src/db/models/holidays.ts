@@ -4,6 +4,7 @@ import { dbAliases } from 'db/index';
 interface HolidaysInterface {
   id: number;
   name: string;
+  date_assigned: Date;
   status_id: number;
   created_at?: Date;
   updated_at?: Date;
@@ -20,6 +21,7 @@ class Holidays
   public id!: number;
   public status_id!: number;
   public name!: string;
+  public date_assigned!: Date;
 
   // timestamps!
   public readonly created_at!: Date;
@@ -44,6 +46,9 @@ Holidays.init(
     name: {
       allowNull: false,
       type: DataTypes.STRING,
+    },
+    date_assigned: {
+      type: DataTypes.DATEONLY,
     },
     status_id: {
       type: DataTypes.BIGINT,

@@ -11,6 +11,8 @@ import {
   CreateUserFavoritesInputArg,
   UserFavorites,
   UserFavoritesInputArg,
+  UserFriendsInputArg,
+  UserFriend,
 } from 'interfaces/user';
 import { validateUserData } from 'middlewares/user';
 import { SUBSCRIPTION_EVENTS } from 'constants/graphql';
@@ -18,11 +20,13 @@ import {
   buildUserEntry,
   buildUserFavoritesEntry,
   buildUserRatingEntry,
+  buildUserFriendsEntry,
 } from 'helpers/users.sequelize';
+import DataLoader from 'dataloader';
 import { DateTimeResolver } from 'graphql-scalars';
-import RestaurantServices from 'services/restaurants.service';
 import { ID } from 'types';
 import { _get } from 'helpers';
+import UserFriendServices from 'services/userFriends.services';
 
 type Events = {
   USER_ADDED: { userAdded: User }; // Use your actual UserType here
@@ -40,6 +44,21 @@ export const userResolvers = {
     },
     getUserByUsername: async (_: any, args: { username: string }) => {
       return await UserServices.findByUsername(args.username);
+    },
+    getFriendsByUserId: async (
+      _: any,
+      args: { page: number; limit: number },
+      context: {
+        user: DataLoader<string, User>;
+      },
+    ) => {
+      const { page, limit } = args;
+      const { user } = context;
+      const userId = _get(user, 'id');
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+      return await UserFriendServices.getAllByUserId(userId, page, limit);
     },
     checkUsername: async (
       _: any,
@@ -94,6 +113,7 @@ export const userResolvers = {
     role: async (parent: User) => parent.role,
     ratings: async (parent: User) => parent.ratings,
     favorites: async (parent: User) => parent.favorites,
+    friends: async (parent: User) => parent.friends,
   },
   UserRating: {
     restaurantMenuItem: async (parent: UserRating) => parent.restaurantMenuItem,
@@ -107,6 +127,9 @@ export const userResolvers = {
   UserFavorites: {
     user: async (parent: UserFavorites) => parent.user,
     restaurant: async (parent: UserFavorites) => parent.restaurant,
+  },
+  UserFriends: {
+    user: async (parent: UserFriend) => parent.user,
   },
   Mutation: {
     addUser: validateUserData(
@@ -129,10 +152,35 @@ export const userResolvers = {
         return resp;
       },
     ),
+    addUserFriend: async (
+      _parent: any,
+      args: UserFriendsInputArg,
+      context: {
+        user: User;
+      },
+    ): Promise<User> => {
+      const { user } = context;
+      const userId = _get(user, 'id');
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+      const { input } = args;
+
+      const payload = await buildUserFavoritesEntry(input);
+      return await UserFriendServices.create(payload);
+    },
     updateUser: async (_: any, args: CreateUserInputArg): Promise<User> => {
       const { input } = args;
       const payload = await buildUserEntry(input);
       return await UserServices.update(payload);
+    },
+    updateUserFriend: async (
+      _: any,
+      args: UserFriendsInputArg,
+    ): Promise<UserFriend> => {
+      const { input } = args;
+      const payload = buildUserFriendsEntry(input);
+      return await UserFriendServices.update(payload);
     },
     addUserFavorites: async (
       _: any,
@@ -169,6 +217,9 @@ export const userResolvers = {
     },
     deleteUserRating: async (_: any, args: { id: number }) => {
       return await UserRatingServices.deleteById(args.id);
+    },
+    deleteUserFriend: async (_: any, args: { id: number }) => {
+      return await UserFriendServices.deleteById(args.id);
     },
     addUserRating: async (
       _: any,

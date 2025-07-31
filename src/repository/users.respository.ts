@@ -39,6 +39,16 @@ class UsersRepo extends Base {
           ],
         },
         {
+          model: db.UserFriends,
+          as: dbAliases.users.friends,
+          include: [
+            {
+              model: db.Users,
+              as: dbAliases.userFriends.user,
+            },
+          ],
+        },
+        {
           model: db.UserRatings,
           as: dbAliases.users.userRatings,
           include: [

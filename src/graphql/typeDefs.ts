@@ -4,6 +4,8 @@ import { restaurantDefs } from './schemas/restaurants.schema';
 import { userDefs } from './schemas/users.schema';
 import { statusDefs } from './schemas/statuses.schema';
 import { loginDef } from './schemas/login.schema';
+import { holidayDef } from './schemas/holidays.schema';
+import { foodCategoriesDef } from './schemas/foodCategories.schema';
 
 const baseTypeDefs = gql`
   type Query
@@ -17,4 +19,6 @@ export const typeDefs = mergeTypeDefs([
   restaurantDefs,
   userDefs,
   loginDef,
+  holidayDef,
+  foodCategoriesDef,
 ]);

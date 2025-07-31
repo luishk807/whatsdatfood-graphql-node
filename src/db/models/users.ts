@@ -59,6 +59,10 @@ class Users extends Model<UserInterface, UserInput> implements UserInterface {
       foreignKey: 'user_id',
       as: dbAliases.users.userFavorites,
     });
+    Users.hasMany(models.UserFriends, {
+      foreignKey: 'user_id',
+      as: dbAliases.users.friends,
+    });
   }
 }
 

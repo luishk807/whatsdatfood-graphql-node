@@ -11,6 +11,7 @@ import {
   RestaurantMenuItem,
   Restaurant,
   RestaurantHoliday,
+  RestaurantCategory,
 } from 'interfaces/restaurant';
 import { Holiday } from 'interfaces/holidays';
 import { FoodCategory } from 'interfaces/foodCategory';
@@ -21,7 +22,6 @@ import { RestaurantMenuItemImagesInput } from 'db/models/restaurantMenuItemImage
 import RestaurantBusinessHours, {
   RestaurantBusinessHoursInput,
 } from 'db/models/restaurantBusinessHours';
-import RestaurantHolidays from 'db/models/restaurantHolidays';
 
 export const buildRestaurantPayload = (item: RestaurantsInput) => {
   const address_data = {
@@ -175,7 +175,7 @@ export const buildRestaurantItemResponse = (
     : getRestaurantItemResponse(item);
 };
 
-export const getRestaurantCategoryResponse = (data: RestaurantHolidays) => {
+export const getRestaurantCategoryResponse = (data: RestaurantCategory) => {
   return {
     id: _get(data, 'id'),
     restaurant_id: _get(data, 'restaurant_id'),
@@ -190,7 +190,7 @@ export const getRestaurantCategoryResponse = (data: RestaurantHolidays) => {
   };
 };
 
-export const getRestaurantHolidayResponse = (data: RestaurantHolidays) => {
+export const getRestaurantHolidayResponse = (data: RestaurantHoliday) => {
   return {
     id: _get(data, 'id'),
     restaurant_id: _get(data, 'restaurant_id'),
@@ -244,6 +244,18 @@ export const getRestaurantResponse = (data: Restaurant) => {
     return getRestaurantItemResponse(item);
   });
 
+  const holidaysItem = _get(data, dbAliases.restaurant.restaurantHolidays);
+  const formatHolidays = holidaysItem.map((item: RestaurantHoliday) => {
+    return getRestaurantHolidayResponse(item);
+  });
+
+  const foodCategories = _get(data, dbAliases.restaurant.restaurantCategories);
+  const formatFoodCategories = foodCategories.map(
+    (item: RestaurantCategory) => {
+      return getRestaurantCategoryResponse(item);
+    },
+  );
+
   return {
     id: _get(data, 'id'),
     name: _get(data, 'name'),
@@ -276,6 +288,8 @@ export const getRestaurantResponse = (data: Restaurant) => {
     drive_through: _get(data, 'drive_through'),
     delivery_option: _get(data, 'delivery_option'),
     restaurantMenuItems: formatItems,
+    holidays: formatHolidays,
+    foodCategories: formatFoodCategories,
     businessHours: _get(data, dbAliases.restaurant.restaurantBusinessHours),
   };
 };

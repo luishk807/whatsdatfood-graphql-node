@@ -56,6 +56,8 @@ export const restaurantResolvers: IResolvers = {
       return parent.restaurantMenuItems ?? [];
     },
     businessHours: async (parent: Restaurant) => parent.businessHours,
+    holidays: async (parent: Restaurant) => parent.holidays,
+    foodCategories: async (parent: Restaurant) => parent.foodCategories,
   },
   RestaurantMenuItem: {
     ratings: async (parent: RestaurantMenuItem) => parent.ratings,

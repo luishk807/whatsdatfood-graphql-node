@@ -1,4 +1,7 @@
 import { UserRating, User } from 'interfaces/user';
+import { Holiday } from 'interfaces/holidays';
+import { FoodCategory } from 'interfaces/foodCategory';
+import { Status } from 'interfaces/index';
 import { ID } from 'types';
 export interface RestaurantMenuItemImagesBase {
   id?: ID;
@@ -27,7 +30,14 @@ export interface RestaurantMenuItemBase {
   createdAt?: string;
   updatedAt?: string;
 }
-
+export interface RestaurantHolidayBase {
+  id: number;
+  holiday_id: number;
+  restaurant_id: number;
+  status_id: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
 export interface RestaurantBase {
   id?: ID;
   name?: string;
@@ -61,6 +71,15 @@ export interface RestaurantBase {
   updatedAt?: string;
 }
 
+export interface RestaurantCategoryBase {
+  id?: ID;
+  food_category_id: ID;
+  restaurant_id: ID;
+  status_id: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface RestaurantBusinessHours {
   id: number;
   restaurant_id: number;
@@ -70,13 +89,15 @@ export interface RestaurantBusinessHours {
   status_id: number;
 }
 
-export interface RestaurantHoliday {
-  id: number;
-  food_category_id: number;
-  restaurant_id: number;
-  status_id: number;
-  createdAt?: string;
-  updatedAt?: string;
+export interface RestaurantHoliday extends RestaurantHolidayBase {
+  restaurant?: Restaurant;
+  holiday?: Holiday;
+}
+
+export interface RestaurantCategory extends RestaurantCategoryBase {
+  restaurant?: Restaurant;
+  foodCategory?: FoodCategory;
+  status?: Status;
 }
 export interface RestaurantMenuItemImages extends RestaurantMenuItemImagesBase {
   restaurantMenuItem: RestaurantMenuItem;
@@ -90,6 +111,8 @@ export interface RestaurantMenuItem extends RestaurantMenuItemBase {
 export interface Restaurant extends RestaurantBase {
   restaurantMenuItems?: RestaurantMenuItem[];
   businessHours?: RestaurantBusinessHours[];
+  holidays?: RestaurantHoliday[];
+  foodCategories?: RestaurantCategory[];
 }
 
 export interface CreateRestaurantMenuItemInput

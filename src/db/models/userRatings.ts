@@ -16,7 +16,7 @@ interface UserRatingsInterface {
 
 export interface UserRatingsInput
   extends Optional<UserRatingsInterface, 'id'> {}
-export interface UserRoleOutput extends Required<UserRatingsInterface> {}
+export interface UserRatingsOutput extends Required<UserRatingsInterface> {}
 
 class UserRatings
   extends Model<UserRatingsInterface, UserRatingsInput>
