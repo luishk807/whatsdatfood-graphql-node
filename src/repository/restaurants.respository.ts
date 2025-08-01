@@ -47,6 +47,14 @@ class RestaurantsRepo extends Base {
               model: db.FoodCategories,
               as: dbAliases.restaurantCategories.foodCategory,
             },
+            {
+              model: db.Statuses,
+              as: dbAliases.restaurantCategories.status,
+            },
+            {
+              model: db.Restaurants,
+              as: dbAliases.restaurantCategories.restaurant,
+            },
           ],
         },
         {
@@ -129,6 +137,14 @@ class RestaurantsRepo extends Base {
             {
               model: db.FoodCategories,
               as: dbAliases.restaurantCategories.foodCategory,
+            },
+            {
+              model: db.Statuses,
+              as: dbAliases.restaurantCategories.status,
+            },
+            {
+              model: db.Restaurants,
+              as: dbAliases.restaurantCategories.restaurant,
             },
           ],
         },

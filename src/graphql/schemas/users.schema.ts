@@ -55,10 +55,6 @@ export const userDefs = gql`
     restaurantMenuItem: RestaurantMenuItem
   }
 
-  type Subscription {
-    userAdded: User
-  }
-
   type UserRole {
     id: ID!
     name: String
@@ -151,6 +147,7 @@ export const userDefs = gql`
   extend type Query {
     users: [User]
     user(id: ID): User
+    userDetail: User
     getUserByEmail(email: String): User
     getUserByUsername(username: String): User
     getRatingByRestItemId(restItemId: ID): UserRating

@@ -200,6 +200,8 @@ export const getRestaurantHolidayResponse = (data: RestaurantHoliday) => {
     updatedAt: _get(data, 'updatedAt'),
     deletedAt: _get(data, 'deletedAt'),
     status: _get(data, dbAliases.restaurantHoliday.status),
+    holiday: _get(data, dbAliases.restaurantHoliday.holiday),
+    restaurant: _get(data, dbAliases.restaurantHoliday.restaurant),
   };
 };
 
@@ -240,21 +242,31 @@ export const getRestaurantItemResponse = (data: RestaurantMenuItem) => {
 
 export const getRestaurantResponse = (data: Restaurant) => {
   const restaurantItems = _get(data, dbAliases.restaurant.restaurantItems);
-  const formatItems = restaurantItems.map((item: RestaurantMenuItem) => {
-    return getRestaurantItemResponse(item);
-  });
+  let formatItems = [];
+  if (restaurantItems || restaurantItems.length) {
+    formatItems = restaurantItems.map((item: RestaurantMenuItem) => {
+      return getRestaurantItemResponse(item);
+    });
+  }
 
   const holidaysItem = _get(data, dbAliases.restaurant.restaurantHolidays);
-  const formatHolidays = holidaysItem.map((item: RestaurantHoliday) => {
-    return getRestaurantHolidayResponse(item);
-  });
+  let formatHolidays = [];
+  if (holidaysItem && holidaysItem.length) {
+    formatHolidays = holidaysItem.map((item: RestaurantHoliday) => {
+      return getRestaurantHolidayResponse(item);
+    });
+  }
 
   const foodCategories = _get(data, dbAliases.restaurant.restaurantCategories);
-  const formatFoodCategories = foodCategories.map(
-    (item: RestaurantCategory) => {
+  let formatFoodCategories = [];
+  if (foodCategories && !foodCategories.length) {
+    formatFoodCategories = foodCategories.map((item: RestaurantCategory) => {
       return getRestaurantCategoryResponse(item);
-    },
-  );
+    });
+  }
+
+  console.log(foodCategories, 'format food categories');
+  console.log(formatFoodCategories, 'format food categories response');
 
   return {
     id: _get(data, 'id'),

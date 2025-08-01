@@ -39,6 +39,15 @@ export const userResolvers = {
   Query: {
     users: async () => await UserServices.getAll(),
     ratings: async () => await UserRatingServices.getAll(),
+    userDetail: async (_: any, args: any, context: { user: User }) => {
+      const { user } = context;
+      if (!user) {
+        throw new Error('User not authenticated');
+      }
+
+      const userId = _get(user, 'id');
+      return await UserServices.findById(userId);
+    },
     getUserByEmail: async (_: any, args: { email: string }) => {
       return await UserServices.findByEmail(args.email);
     },

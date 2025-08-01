@@ -16,6 +16,14 @@ class RestaurantHoliday extends Base {
           model: db.Statuses,
           as: dbAliases.restaurantCategories.status,
         },
+        {
+          model: db.Restaurants,
+          as: dbAliases.restaurantCategories.restaurant,
+        },
+        {
+          model: db.FoodCategories,
+          as: dbAliases.restaurantCategories.foodCategory,
+        },
       ],
     });
   }
