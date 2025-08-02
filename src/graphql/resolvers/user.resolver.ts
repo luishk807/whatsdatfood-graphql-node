@@ -27,6 +27,7 @@ import { DateTimeResolver } from 'graphql-scalars';
 import { ID } from 'types';
 import { _get } from 'helpers';
 import UserFriendServices from 'services/userFriends.services';
+import { RestaurantMenuItem } from 'interfaces/restaurant';
 
 type Events = {
   USER_ADDED: { userAdded: User }; // Use your actual UserType here
@@ -104,12 +105,20 @@ export const userResolvers = {
       const userId = _get(user, 'id');
       return await UserFavoriteServices.checkIsFavorite(slug as string, userId);
     },
-    allRatingsByItemId: async (
+    getRatingsByUser: async (
       _: any,
-      args: { restItemId: number; page: number },
+      args: { page: number; limit?: number },
+      context: { user: User },
     ) => {
-      const { restItemId, page } = args;
-      return await UserRatingServices.getAllByRestItemId(restItemId, page);
+      const { limit, page } = args;
+      const { user } = context;
+
+      const userId = _get(user, 'id');
+
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+      return await UserRatingServices.getAllByUserId(userId, page, limit);
     },
     getRatingByRestItemId: async (
       _: any,
@@ -117,7 +126,7 @@ export const userResolvers = {
       context: {
         user: User;
       },
-    ): Promise<UserRating | null> => {
+    ) => {
       const { restItemId } = args;
       const { user } = context;
       if (user && restItemId) {
@@ -137,6 +146,11 @@ export const userResolvers = {
     ratings: async (parent: User) => parent.ratings,
     favorites: async (parent: User) => parent.favorites,
     friends: async (parent: User) => parent.friends,
+  },
+  RestaurantMenuItem: {
+    images: async (parent: RestaurantMenuItem) => parent.images,
+    ratings: async (parent: RestaurantMenuItem) => parent.ratings,
+    restaurant: async (parent: RestaurantMenuItem) => parent.restaurant,
   },
   UserRating: {
     restaurantMenuItem: async (parent: UserRating) => parent.restaurantMenuItem,

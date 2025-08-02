@@ -11,6 +11,7 @@ import {
   UserFriendsInput,
 } from 'interfaces/user';
 import { USER_ROLE_DEFAULT, DEFAULT_STATUS } from 'constants/sequelize';
+import { getRestaurantItemResponse } from 'helpers/restaurants.sequelize';
 import { dbAliases } from 'db';
 export const buildUserEntry = async (item: UserInput) => {
   if (!item.first_name || !item.last_name || typeof item.email !== 'string') {
@@ -88,37 +89,9 @@ export const buildUserRatingResponse = async (
     return item;
   }
 
-  console.log(item);
-
   return Array.isArray(item)
-    ? item.map((data: any) => ({
-        id: _get(data, 'id'),
-        rating: parseFloat(_get(data, 'rating')),
-        user_id: _get(data, 'user_id'),
-        comment: _get(data, 'comment'),
-        title: _get(data, 'title'),
-        status_id: _get(data, 'status_id'),
-        restaurant_menu_item_id: _get(data, 'restaurant_menu_item_id'),
-        restaurantMenuItem: _get(data, dbAliases.userRatings.restaurantItem),
-        createdAt: _get(data, 'createdAt'),
-        updatedAt: _get(data, 'updatedAt'),
-        status: _get(data, dbAliases.userRatings.status),
-        user: _get(data, dbAliases.userRatings.user),
-      }))
-    : {
-        id: _get(item, 'id'),
-        rating: parseFloat(_get(item, 'rating')),
-        user_id: _get(item, 'user_id'),
-        comment: _get(item, 'comment'),
-        title: _get(item, 'title'),
-        status_id: _get(item, 'status_id'),
-        restaurant_menu_item_id: _get(item, 'restaurant_menu_item_id'),
-        createdAt: _get(item, 'createdAt'),
-        updatedAt: _get(item, 'updatedAt'),
-        restaurantMenuItem: _get(item, dbAliases.userRatings.restaurantItem),
-        status: _get(item, dbAliases.userRatings.status),
-        user: _get(item, dbAliases.userRatings.user),
-      };
+    ? item.map((data: any) => getUserRatingResponse(data))
+    : getUserRatingResponse(item);
 };
 
 export const buildUserResponse = (item: User | User[]) => {
@@ -225,4 +198,30 @@ export const buildUserFriendsResponse = (item: UserFriend | UserFriend[]) => {
         updatedAt: _get(item, 'updatedAt'),
         user: _get(item, dbAliases.userFavorites.user),
       };
+};
+
+export const getUserRatingResponse = (data: UserRating) => {
+  const restaurantItems = _get(data, dbAliases.userRatings.restaurantItem);
+
+  const formatItems = getRestaurantItemResponse(
+    restaurantItems,
+    dbAliases.restaurantItems.restaurant,
+    dbAliases.restaurantItems.restaurantItemImages,
+    dbAliases.restaurantItems.userRatings,
+  );
+
+  return {
+    id: _get(data, 'id'),
+    rating: parseFloat(_get(data, 'rating')),
+    user_id: _get(data, 'user_id'),
+    comment: _get(data, 'comment'),
+    title: _get(data, 'title'),
+    status_id: _get(data, 'status_id'),
+    restaurant_menu_item_id: _get(data, 'restaurant_menu_item_id'),
+    restaurantMenuItem: formatItems,
+    createdAt: _get(data, 'createdAt'),
+    updatedAt: _get(data, 'updatedAt'),
+    status: _get(data, dbAliases.userRatings.status),
+    user: _get(data, dbAliases.userRatings.user),
+  };
 };

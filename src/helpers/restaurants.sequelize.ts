@@ -170,9 +170,19 @@ export const buildRestaurantItemResponse = (
 
   return Array.isArray(item)
     ? item.map((data: RestaurantMenuItem) => {
-        return getRestaurantItemResponse(data);
+        return getRestaurantItemResponse(
+          data,
+          dbAliases.restaurantItems.restaurant,
+          dbAliases.restaurantItems.restaurantItemImages,
+          dbAliases.restaurantItems.userRatings,
+        );
       })
-    : getRestaurantItemResponse(item);
+    : getRestaurantItemResponse(
+        item,
+        dbAliases.restaurantItems.restaurant,
+        dbAliases.restaurantItems.restaurantItemImages,
+        dbAliases.restaurantItems.userRatings,
+      );
 };
 
 export const getRestaurantCategoryResponse = (data: RestaurantCategory) => {
@@ -222,7 +232,12 @@ export const getRestaurantBusinessHoursResponse = (
   };
 };
 
-export const getRestaurantItemResponse = (data: RestaurantMenuItem) => {
+export const getRestaurantItemResponse = (
+  data: RestaurantMenuItem,
+  restKey: string,
+  itemKey: string,
+  ratingKey: string,
+) => {
   return {
     id: _get(data, 'id'),
     restaurant_id: _get(data, 'restaurant_id'),
@@ -234,9 +249,9 @@ export const getRestaurantItemResponse = (data: RestaurantMenuItem) => {
     createdAt: _get(data, 'createdAt'),
     updatedAt: _get(data, 'updatedAt'),
     deletedAt: _get(data, 'deletedAt'),
-    restaurant: _get(data, dbAliases.restaurantItems.restaurant),
-    images: _get(data, dbAliases.restaurantItems.restaurantItemImages),
-    ratings: _get(data, dbAliases.restaurantItems.userRatings),
+    restaurant: _get(data, restKey),
+    images: _get(data, itemKey),
+    ratings: _get(data, ratingKey),
   };
 };
 
@@ -245,7 +260,12 @@ export const getRestaurantResponse = (data: Restaurant) => {
   let formatItems = [];
   if (restaurantItems || restaurantItems.length) {
     formatItems = restaurantItems.map((item: RestaurantMenuItem) => {
-      return getRestaurantItemResponse(item);
+      return getRestaurantItemResponse(
+        item,
+        dbAliases.restaurantItems.restaurant,
+        dbAliases.restaurantItems.restaurantItemImages,
+        dbAliases.restaurantItems.userRatings,
+      );
     });
   }
 

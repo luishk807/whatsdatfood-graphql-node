@@ -169,16 +169,16 @@ export const userDefs = gql`
     getUserByEmail(email: String): User
     getUserByUsername(username: String): User
     getUserFavoritesByUser(page: Int, limit: Int): AllFavoritesByUserResponse
-    getRatingByRestItemId(restItemId: ID): UserRating
-    getFriendsByUser(page: Int, limit: Int): AllFriendsByUserResponse
-    checkUserFavoriteBySlug(slug: String!): Boolean
-    ratings: [UserRating]
-    checkUsername(username: String): Boolean
-    allRatingsByItemId(
+    getRatingsByUser(page: Int!, limit: Int): AllRatingByItemResponse
+    getRatingByRestItemId(
       restItemId: ID!
       page: Int!
       limit: Int
     ): AllRatingByItemResponse
+    getFriendsByUser(page: Int, limit: Int): AllFriendsByUserResponse
+    checkUserFavoriteBySlug(slug: String!): Boolean
+    ratings: [UserRating]
+    checkUsername(username: String): Boolean
   }
 
   extend type Mutation {

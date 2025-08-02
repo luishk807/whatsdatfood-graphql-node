@@ -33,6 +33,16 @@ class UserRatingRepo extends Base {
         {
           model: db.RestaurantMenuItems,
           as: dbAliases.userRatings.restaurantItem,
+          include: [
+            {
+              model: db.Restaurants,
+              as: dbAliases.restaurantItems.restaurant,
+            },
+            {
+              model: db.RestaurantMenuItemImages,
+              as: dbAliases.restaurantItems.restaurantItemImages,
+            },
+          ],
         },
         {
           model: db.Users,
@@ -60,6 +70,16 @@ class UserRatingRepo extends Base {
         {
           model: db.RestaurantMenuItems,
           as: dbAliases.userRatings.restaurantItem,
+          include: [
+            {
+              model: db.Restaurants,
+              as: dbAliases.restaurantItems.restaurant,
+            },
+            {
+              model: db.RestaurantMenuItemImages,
+              as: dbAliases.restaurantItems.restaurantItemImages,
+            },
+          ],
         },
         {
           model: db.Users,
