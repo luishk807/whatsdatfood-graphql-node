@@ -179,7 +179,7 @@ export const buildUserFavoritesResponse = (
   }
 
   return Array.isArray(item)
-    ? item.map((data: User) => ({
+    ? item.map((data: UserFavorites) => ({
         id: _get(data, 'id'),
         restaurant_id: _get(data, 'restaurant_id'),
         user_id: _get(data, 'user_id'),
@@ -205,7 +205,7 @@ export const buildUserFriendsResponse = (item: UserFriend | UserFriend[]) => {
   }
 
   return Array.isArray(item)
-    ? item.map((data: User) => ({
+    ? item.map((data: UserFriend) => ({
         id: _get(data, 'id'),
         name: _get(data, 'name'),
         email: _get(data, 'email'),

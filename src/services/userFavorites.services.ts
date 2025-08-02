@@ -38,6 +38,7 @@ const UserFavoriteServices = {
     const totalItems = resp.count;
 
     const formatData = buildUserFavoritesResponse(data);
+
     return {
       data: formatData,
       totalItems,

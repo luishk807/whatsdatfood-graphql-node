@@ -28,6 +28,8 @@ export const userDefs = gql`
     id: ID
     user_id: ID
     restaurant_id: ID
+    createdAt: DateTime
+    updatedAt: DateTime
     user: User
     restaurant: Restaurant
   }
@@ -36,6 +38,9 @@ export const userDefs = gql`
     id: ID
     name: String
     email: String
+    phone: String
+    createdAt: DateTime
+    updatedAt: DateTime
     user_id: ID
     user: User
   }
@@ -144,15 +149,28 @@ export const userDefs = gql`
     currentPage: Int
   }
 
+  type AllFavoritesByUserResponse {
+    data: [UserFavorites]
+    totalItems: Int
+    totalPages: Int
+    currentPage: Int
+  }
+  type AllFriendsByUserResponse {
+    data: [UserFriends]
+    totalItems: Int
+    totalPages: Int
+    currentPage: Int
+  }
+
   extend type Query {
     users: [User]
     user(id: ID): User
     userDetail: User
     getUserByEmail(email: String): User
     getUserByUsername(username: String): User
-    getUserFavoritesByUser: [UserFavorites]
+    getUserFavoritesByUser(page: Int, limit: Int): AllFavoritesByUserResponse
     getRatingByRestItemId(restItemId: ID): UserRating
-    getFriendsByUserId(page: Int!, limit: Int): [UserFriends]
+    getFriendsByUser(page: Int, limit: Int): AllFriendsByUserResponse
     checkUserFavoriteBySlug(slug: String!): Boolean
     ratings: [UserRating]
     checkUsername(username: String): Boolean

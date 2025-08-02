@@ -24,14 +24,14 @@ const UserFriendServices = {
     const resp = await UserFriendRepo.getAll();
     return buildUserFriendsResponse(resp);
   },
-  async getAllByUserId(userId: number, page: number, limit?: number) {
+  async getAllByUserId(userId: number, page?: number, limit?: number) {
     const resp = await UserFriendRepo.getAllByUserId(userId, page, limit);
 
     const totalPages = Math.ceil(resp.count / LIMIT);
     const data = resp.rows;
     const totalItems = resp.count;
 
-    const formatData = await buildUserFriendsResponse(data);
+    const formatData = buildUserFriendsResponse(data);
     return {
       data: formatData,
       totalItems,

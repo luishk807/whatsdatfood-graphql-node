@@ -50,16 +50,17 @@ export const userResolvers = {
     },
     getUserFavoritesByUser: async (
       _: any,
-      args: any,
+      args: { page?: number; limit?: number },
       context: { user: User },
     ) => {
       const { user } = context;
+      const { page, limit } = args;
       if (!user) {
         throw new Error('User not authenticated');
       }
 
       const userId = _get(user, 'id');
-      return await UserFavoriteServices.getAllByUserId(userId);
+      return await UserFavoriteServices.getAllByUserId(userId, page, limit);
     },
     getUserByEmail: async (_: any, args: { email: string }) => {
       return await UserServices.findByEmail(args.email);
@@ -67,9 +68,9 @@ export const userResolvers = {
     getUserByUsername: async (_: any, args: { username: string }) => {
       return await UserServices.findByUsername(args.username);
     },
-    getFriendsByUserId: async (
+    getFriendsByUser: async (
       _: any,
-      args: { page: number; limit: number },
+      args: { page?: number; limit?: number },
       context: {
         user: DataLoader<string, User>;
       },
