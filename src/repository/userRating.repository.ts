@@ -5,7 +5,7 @@ import UserRatings from 'db/models/userRatings';
 import { dbAliases } from 'db/index';
 import { _get } from 'helpers';
 import { getPageOffset } from 'helpers/sequelize';
-import { LIMIT } from 'constants/sequelize';
+import { LIMIT, PAGE } from 'constants/sequelize';
 
 class UserRatingRepo extends Base {
   constructor() {
@@ -21,8 +21,37 @@ class UserRatingRepo extends Base {
     });
   }
 
+  async getAllByUserId(userId: number, page?: number, limit?: number) {
+    page = page || PAGE;
+    limit = limit || LIMIT;
+    const offset = getPageOffset(limit, page);
+    return await this.model.findAndCountAll({
+      where: {
+        user_id: userId,
+      },
+      include: [
+        {
+          model: db.RestaurantMenuItems,
+          as: dbAliases.userRatings.restaurantItem,
+        },
+        {
+          model: db.Users,
+          as: dbAliases.userRatings.user,
+        },
+        {
+          model: db.Statuses,
+          as: dbAliases.userRatings.status,
+        },
+      ],
+      limit: limit,
+      offset: offset,
+      order: [['createdAt', 'desc']],
+    });
+  }
+
   async getAllByRestItemId(restItemId: number, page: number, limit?: number) {
-    const offset = getPageOffset(LIMIT, page);
+    limit = limit || LIMIT;
+    const offset = getPageOffset(limit, page);
     return await this.model.findAndCountAll({
       where: {
         restaurant_menu_item_id: restItemId,
@@ -41,13 +70,16 @@ class UserRatingRepo extends Base {
           as: dbAliases.userRatings.status,
         },
       ],
-      limit: limit || LIMIT,
+      limit: limit,
       offset: offset,
       order: [['createdAt', 'desc']],
     });
   }
 
-  async getAll() {
+  async getAll(page?: number, limit?: number) {
+    page = page || PAGE;
+    limit = limit || LIMIT;
+    const offset = getPageOffset(limit, page);
     return await this.model.findAll({
       include: [
         {
@@ -63,6 +95,9 @@ class UserRatingRepo extends Base {
           as: dbAliases.userRatings.status,
         },
       ],
+      limit: limit,
+      offset: offset,
+      order: [['createdAt', 'desc']],
     });
   }
 }

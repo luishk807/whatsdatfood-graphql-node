@@ -5,7 +5,8 @@ import UserFavorites from 'db/models/userFavorites';
 import { UserFavorites as UserFavoriteInt } from 'interfaces/user';
 import { dbAliases } from 'db/index';
 import { _get } from 'helpers';
-
+import { getPageOffset } from 'helpers/sequelize';
+import { LIMIT, PAGE } from 'constants/sequelize';
 class UserFavoritesRepo extends Base {
   constructor() {
     super(UserFavorites);
@@ -65,8 +66,14 @@ class UserFavoritesRepo extends Base {
       this.handlerError(err);
     }
   }
-  async getAll() {
-    return await this.model.findAll({
+  async getAllByUserId(userId: number, page?: number, limit?: number) {
+    page = page || PAGE;
+    limit = limit || LIMIT;
+    const offset = getPageOffset(limit, page);
+    return await this.model.findAndCountAll({
+      where: {
+        user_id: userId,
+      },
       include: [
         {
           model: db.Restaurants,
@@ -77,6 +84,29 @@ class UserFavoritesRepo extends Base {
           as: dbAliases.userFavorites.user,
         },
       ],
+      limit: limit || LIMIT,
+      offset: offset,
+      order: [['createdAt', 'desc']],
+    });
+  }
+  async getAll(page?: number, limit?: number) {
+    page = page || PAGE;
+    limit = limit || LIMIT;
+    const offset = getPageOffset(limit, page);
+    return await this.model.findAndCountAll({
+      include: [
+        {
+          model: db.Restaurants,
+          as: dbAliases.userFavorites.restaurant,
+        },
+        {
+          model: db.Users,
+          as: dbAliases.userFavorites.user,
+        },
+      ],
+      limit: limit || LIMIT,
+      offset: offset,
+      order: [['createdAt', 'desc']],
     });
   }
 }

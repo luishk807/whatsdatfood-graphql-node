@@ -2,6 +2,7 @@ import { UserFavoritesInput } from 'db/models/userFavorites';
 import { buildUserFavoritesResponse } from 'helpers/users.sequelize';
 import UserFavoritesRepository from 'repository/userFavorites.repository';
 import RestaurantServices from 'services/restaurants.service';
+import { LIMIT } from 'constants/sequelize';
 const UserFavoritesRepo = new UserFavoritesRepository();
 
 const UserFavoriteServices = {
@@ -29,9 +30,35 @@ const UserFavoriteServices = {
   async findById(id: number) {
     return await UserFavoritesRepo.getOneById(id);
   },
-  async getAll() {
-    const resp = await UserFavoritesRepo.getAll();
-    return buildUserFavoritesResponse(resp);
+  async getAllByUserId(userId: number, page?: number, limit?: number) {
+    const resp = await UserFavoritesRepo.getAllByUserId(userId, page, limit);
+
+    const totalPages = Math.ceil(resp.count / LIMIT);
+    const data = resp.rows;
+    const totalItems = resp.count;
+
+    const formatData = buildUserFavoritesResponse(data);
+    return {
+      data: formatData,
+      totalItems,
+      totalPages,
+      currentPage: page,
+    };
+  },
+  async getAll(page?: number, limit?: number) {
+    const resp = await UserFavoritesRepo.getAll(page, limit);
+
+    const totalPages = Math.ceil(resp.count / LIMIT);
+    const data = resp.rows;
+    const totalItems = resp.count;
+
+    const formatData = buildUserFavoritesResponse(data);
+    return {
+      data: formatData,
+      totalItems,
+      totalPages,
+      currentPage: page,
+    };
   },
 };
 

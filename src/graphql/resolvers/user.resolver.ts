@@ -48,6 +48,19 @@ export const userResolvers = {
       const userId = _get(user, 'id');
       return await UserServices.findById(userId);
     },
+    getUserFavoritesByUser: async (
+      _: any,
+      args: any,
+      context: { user: User },
+    ) => {
+      const { user } = context;
+      if (!user) {
+        throw new Error('User not authenticated');
+      }
+
+      const userId = _get(user, 'id');
+      return await UserFavoriteServices.getAllByUserId(userId);
+    },
     getUserByEmail: async (_: any, args: { email: string }) => {
       return await UserServices.findByEmail(args.email);
     },
