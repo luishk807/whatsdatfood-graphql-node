@@ -34,6 +34,13 @@ export const userDefs = gql`
     restaurant: Restaurant
   }
 
+  type UserSearchType {
+    id: ID
+    name: String
+    createdAt: DateTime
+    updatedAt: DateTime
+  }
+
   type UserFriends {
     id: ID
     name: String
@@ -69,8 +76,10 @@ export const userDefs = gql`
     id: ID!
     user_id: ID
     restaurant_id: ID!
+    user_search_type_id: ID
     user: User
     restaurant: Restaurant
+    searchType: UserSearchType
     createdAt: DateTime
     updatedAt: DateTime
     deletedAt: DateTime
@@ -162,12 +171,25 @@ export const userDefs = gql`
     currentPage: Int
   }
 
+  type AllUserSearchResponse {
+    data: [UserSearch]
+    totalItems: Int
+    totalPages: Int
+    currentPage: Int
+  }
+
   extend type Query {
     users: [User]
     user(id: ID): User
     userDetail: User
     getUserByEmail(email: String): User
     getUserByUsername(username: String): User
+    getUserSearchByUser(page: Int, limit: Int): AllUserSearchResponse
+    getUserSearchByRestaurant(
+      restId: Int!
+      page: Int
+      limit: Int
+    ): AllUserSearchResponse
     getUserFavoritesByUser(page: Int, limit: Int): AllFavoritesByUserResponse
     getRatingsByUser(page: Int!, limit: Int): AllRatingByItemResponse
     getRatingByRestItemId(

@@ -1,5 +1,6 @@
 import sequelize from 'db/sequelize';
 import Restaurants from 'db/models/restaurants';
+import UserSearchTypes from './models/userSearchTypes';
 export const initDB = async () => {
   try {
     await sequelize.authenticate();
@@ -43,6 +44,7 @@ export const dbAliases = {
   userSearches: {
     restaurant: 'userSearchesRestaurant',
     user: 'userSearchesUser',
+    userSearchTypes: 'userSearchUserSearchType',
   },
   userFavorites: {
     user: 'userFavoritesUser',

@@ -9,6 +9,8 @@ import {
   UserFavoritesInput,
   UserFriend,
   UserFriendsInput,
+  UserSearchInput,
+  UserSearch,
 } from 'interfaces/user';
 import { USER_ROLE_DEFAULT, DEFAULT_STATUS } from 'constants/sequelize';
 import { getRestaurantItemResponse } from 'helpers/restaurants.sequelize';
@@ -30,6 +32,21 @@ export const buildUserEntry = async (item: UserInput) => {
     phone: _get(item, 'phone'),
     email: _get(item, 'email'),
     dob: _get(item, 'dob'),
+  };
+};
+
+export const buildUserSearchEntry = async (item: UserSearchInput) => {
+  if (!item.user_id || !item.restaurant_id || !item.user_search_type_id) {
+    throw new Error(
+      'Missing required fields: user_id, restaurant_id, user_search_type_id',
+    );
+  }
+  const id = _get(item, 'id');
+  return {
+    ...(id && { id: id }),
+    restaurant_id: _get(item, 'restaurant_id'),
+    user_id: _get(item, 'user_id'),
+    user_search_type_id: _get(item, 'user_search_type_id'),
   };
 };
 
@@ -141,6 +158,36 @@ export const buildUserResponse = (item: User | User[]) => {
         role: _get(item, dbAliases.users.userRole),
         rating: _get(item, dbAliases.users.userFavorites),
         friends: _get(item, dbAliases.users.friends),
+      };
+};
+
+export const buildUserSearchResponse = (item: UserSearch | UserSearch[]) => {
+  if (!item || (Array.isArray(item) && !item.length)) {
+    return item;
+  }
+
+  return Array.isArray(item)
+    ? item.map((data: UserSearch) => ({
+        id: _get(data, 'id'),
+        restaurant_id: _get(data, 'restaurant_id'),
+        user_id: _get(data, 'user_id'),
+        user_search_type_id: _get(data, 'user_search_type_id'),
+        createdAt: _get(data, 'createdAt'),
+        updatedAt: _get(data, 'updatedAt'),
+        user: _get(data, dbAliases.userFavorites.user),
+        restaurant: _get(data, dbAliases.userFavorites.restaurant),
+        searchType: _get(data, dbAliases.userSearches.userSearchTypes),
+      }))
+    : {
+        id: _get(item, 'id'),
+        restaurant_id: _get(item, 'restaurant_id'),
+        user_id: _get(item, 'user_id'),
+        user_search_type_id: _get(item, 'user_search_type_id'),
+        createdAt: _get(item, 'createdAt'),
+        updatedAt: _get(item, 'updatedAt'),
+        user: _get(item, dbAliases.userSearches.user),
+        restaurant: _get(item, dbAliases.userSearches.restaurant),
+        searchType: _get(item, dbAliases.userSearches.userSearchTypes),
       };
 };
 

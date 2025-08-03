@@ -27,6 +27,7 @@ import { DateTimeResolver } from 'graphql-scalars';
 import { ID } from 'types';
 import { _get } from 'helpers';
 import UserFriendServices from 'services/userFriends.services';
+import UserSearchServices from 'services/userSearches.services';
 import { RestaurantMenuItem } from 'interfaces/restaurant';
 
 type Events = {
@@ -48,6 +49,33 @@ export const userResolvers = {
 
       const userId = _get(user, 'id');
       return await UserServices.findById(userId);
+    },
+    getUserSearchByUser: async (
+      _: any,
+      args: { page?: number; limit?: number },
+      context: { user: User },
+    ) => {
+      const { page, limit } = args;
+      const { user } = context;
+      const userId = _get(user, 'id');
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+      return await UserSearchServices.getAllByUser(userId, page, limit);
+    },
+    getUserSearchByRestaurant: async (
+      _: any,
+      args: { restId: ID; page?: number; limit?: number },
+    ) => {
+      const { restId, page, limit } = args;
+      if (!restId) {
+        throw new Error('User not authenticated');
+      }
+      return await UserSearchServices.getAllByRestaurantId(
+        Number(restId),
+        page,
+        limit,
+      );
     },
     getUserFavoritesByUser: async (
       _: any,
@@ -160,6 +188,7 @@ export const userResolvers = {
   UserSearch: {
     restaurant: async (parent: UserSearch) => parent.restaurant,
     user: async (parent: UserSearch) => parent.user,
+    searchType: async (parent: UserSearch) => parent.searchType,
   },
   UserFavorites: {
     user: async (parent: UserFavorites) => parent.user,

@@ -6,6 +6,7 @@ interface UserSearchesInterface {
   id: number;
   user_id: number;
   restaurant_id: number;
+  user_search_type_id: number;
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
@@ -21,6 +22,7 @@ class UserSearches
 {
   public id!: number;
   public user_id!: number;
+  public user_search_type_id!: number;
   public restaurant_id!: number;
 
   // timestamps!
@@ -37,6 +39,10 @@ class UserSearches
       foreignKey: 'restaurant_id',
       as: dbAliases.userSearches.restaurant,
     });
+    UserSearches.belongsTo(models.UserSearchTypes, {
+      foreignKey: 'user_search_type_id',
+      as: dbAliases.userSearches.userSearchTypes,
+    });
   }
 }
 
@@ -46,6 +52,7 @@ UserSearches.init(
       type: DataTypes.BIGINT,
       allowNull: false,
       primaryKey: true,
+      autoIncrement: true,
     },
     user_id: {
       type: DataTypes.BIGINT,
@@ -64,6 +71,15 @@ UserSearches.init(
         key: 'id',
       },
       onDelete: 'CASCADE',
+    },
+    user_search_type_id: {
+      type: DataTypes.BIGINT,
+      defaultValue: 1,
+      references: {
+        model: 'user_search_types',
+        key: 'id',
+      },
+      onDelete: 'SET NULL',
     },
     created_at: {
       type: DataTypes.DATE,
