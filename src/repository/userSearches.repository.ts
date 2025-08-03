@@ -1,24 +1,26 @@
 import Base from './base.repository';
 import db from '../db/models/index';
 import { Op } from 'sequelize';
-import UserViews from 'db/models/userViews';
+import UserSearches from 'db/models/userSearches';
 import { dbAliases } from 'db/index';
 import { _get } from 'helpers';
 import { getPageOffset } from 'helpers/sequelize';
 import { LIMIT, PAGE } from 'constants/sequelize';
 import { todayDates } from 'helpers';
 
-class UserViewRepo extends Base {
+class UserSearchRepo extends Base {
   constructor() {
-    super(UserViews);
+    super(UserSearches);
   }
 
-  async checkIfExists(userId: number, restId: number, isToday?: boolean) {
+  async checkIfExists(userId: number, name: string, isToday?: boolean) {
     const dates = todayDates();
     return await this.model.findOne({
       where: {
         user_id: userId,
-        restaurant_id: restId,
+        name: {
+          [Op.iLike]: name,
+        },
         ...(isToday && {
           createdAt: {
             [Op.between]: [dates.startOftoday, dates.endOftoday],
@@ -35,39 +37,8 @@ class UserViewRepo extends Base {
     return await this.model.findAndCountAll({
       include: [
         {
-          model: db.Restaurants,
-          as: dbAliases.userViews.restaurant,
-        },
-        {
           model: db.Users,
-          as: dbAliases.userViews.user,
-        },
-      ],
-      limit: limit,
-      offset: offset,
-      order: [['createdAt', 'desc']],
-    });
-  }
-  async getAllByRestaurantId(
-    restaurantId: number,
-    page?: number,
-    limit?: number,
-  ) {
-    page = page || PAGE;
-    limit = limit || LIMIT;
-    const offset = getPageOffset(limit, page);
-    return await this.model.findAndCountAll({
-      where: {
-        restaurant_id: restaurantId,
-      },
-      include: [
-        {
-          model: db.Restaurants,
-          as: dbAliases.userViews.restaurant,
-        },
-        {
-          model: db.Users,
-          as: dbAliases.userViews.user,
+          as: dbAliases.userSearches.user,
         },
       ],
       limit: limit,
@@ -85,12 +56,8 @@ class UserViewRepo extends Base {
       },
       include: [
         {
-          model: db.Restaurants,
-          as: dbAliases.userViews.restaurant,
-        },
-        {
           model: db.Users,
-          as: dbAliases.userViews.user,
+          as: dbAliases.userSearches.user,
         },
       ],
       limit: limit,
@@ -100,4 +67,4 @@ class UserViewRepo extends Base {
   }
 }
 
-export default UserViewRepo;
+export default UserSearchRepo;

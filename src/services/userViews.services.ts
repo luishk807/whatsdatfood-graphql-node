@@ -12,7 +12,20 @@ const UserViewsRepo = new UserView();
 const UserViewServices = {
   async create(payload: UserViewsInput) {
     const new_payload = await buildUserViewEntry(payload);
+    const isExists = await this.checkIfExists(
+      new_payload.user_id,
+      new_payload.restaurant_id,
+      true,
+    );
+
+    console.log('isExists viewws', isExists);
+    if (isExists) {
+      return null;
+    }
     return await UserViewsRepo.create<UserViewsInput>(new_payload);
+  },
+  async checkIfExists(userId: number, restId: number, isToday?: boolean) {
+    return await UserViewsRepo.checkIfExists(userId, restId, isToday);
   },
   async getAllByRestaurantId(restId: number, page?: number, limit?: number) {
     const resp = await UserViewsRepo.getAllByRestaurantId(restId, page, limit);

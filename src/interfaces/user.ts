@@ -53,6 +53,15 @@ export interface UserViewBase {
   updatedAt?: Date;
   deletedAt?: Date;
 }
+
+export interface UserSearchBase {
+  id?: ID;
+  user_id: ID;
+  name: String;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}
 export interface UserRatingBase {
   id?: ID;
   restaurant_menu_item_id: ID;
@@ -99,8 +108,14 @@ export interface UserView extends Partial<UserViewBase> {
   status?: Status;
 }
 
+export interface UserSearch extends Partial<UserSearchBase> {
+  user?: User;
+}
+
 export interface UserViewInput
   extends Partial<Omit<UserViewBase, 'id' | 'createdAt' | 'updatedAt'>> {}
+export interface UserSearchInput
+  extends Partial<Omit<UserSearchBase, 'id' | 'createdAt' | 'updatedAt'>> {}
 export interface UserRatingInput
   extends Partial<Omit<UserRatingBase, 'id' | 'createdAt' | 'updatedAt'>> {}
 export interface UserFavoritesInput
@@ -138,4 +153,7 @@ export interface UserFriendsInputArg {
 }
 export interface UserViewInputArg {
   input: UserViewInput;
+}
+export interface UserSearchInputArg {
+  input: UserSearchInput;
 }

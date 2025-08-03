@@ -11,6 +11,8 @@ import {
   UserFriendsInput,
   UserViewInput,
   UserView,
+  UserSearch,
+  UserSearchInput,
 } from 'interfaces/user';
 import { USER_ROLE_DEFAULT, DEFAULT_STATUS } from 'constants/sequelize';
 import { getRestaurantItemResponse } from 'helpers/restaurants.sequelize';
@@ -43,6 +45,18 @@ export const buildUserViewEntry = async (item: UserViewInput) => {
   return {
     ...(id && { id: id }),
     restaurant_id: _get(item, 'restaurant_id'),
+    user_id: _get(item, 'user_id'),
+  };
+};
+
+export const buildUserSearchEntry = async (item: UserSearchInput) => {
+  if (!item.user_id || !item.name) {
+    throw new Error('Missing required fields: user_id, name');
+  }
+  const id = _get(item, 'id');
+  return {
+    ...(id && { id: id }),
+    name: _get(item, 'name'),
     user_id: _get(item, 'user_id'),
   };
 };
@@ -181,6 +195,30 @@ export const buildUserViewResponse = (item: UserView | UserView[]) => {
         updatedAt: _get(item, 'updatedAt'),
         user: _get(item, dbAliases.userViews.user),
         restaurant: _get(item, dbAliases.userViews.restaurant),
+      };
+};
+
+export const buildUserSearchResponse = (item: UserSearch | UserSearch[]) => {
+  if (!item || (Array.isArray(item) && !item.length)) {
+    return item;
+  }
+
+  return Array.isArray(item)
+    ? item.map((data: UserSearch) => ({
+        id: _get(data, 'id'),
+        name: _get(data, 'name'),
+        user_id: _get(data, 'user_id'),
+        createdAt: _get(data, 'createdAt'),
+        updatedAt: _get(data, 'updatedAt'),
+        user: _get(data, dbAliases.userSearches.user),
+      }))
+    : {
+        id: _get(item, 'id'),
+        name: _get(item, 'name'),
+        user_id: _get(item, 'user_id'),
+        createdAt: _get(item, 'createdAt'),
+        updatedAt: _get(item, 'updatedAt'),
+        user: _get(item, dbAliases.userSearches.user),
       };
 };
 

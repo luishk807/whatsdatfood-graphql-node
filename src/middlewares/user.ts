@@ -2,8 +2,8 @@ import { ApolloError } from 'apollo-server-errors';
 import { CreateUserInputArg } from 'interfaces/user';
 import validator from 'validator';
 
-import { _get } from 'helpers';
-import dayjs from 'dayjs';
+import { _get, isValidDate } from 'helpers';
+
 export const validateUserData =
   <TArgs = any, TContext = any, TResult = any>(
     resolver: (
@@ -33,7 +33,7 @@ export const validateUserData =
     }
 
     // Example validation: check if it's a valid ISO date
-    if (!dob || !dayjs(dob).isValid()) {
+    if (!dob || !isValidDate(dob)) {
       throw new ApolloError('Invalid date of birth', 'BAD_USER_INPUT'); // prefer 400, not 500
     }
 

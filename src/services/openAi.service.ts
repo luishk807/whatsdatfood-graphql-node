@@ -15,6 +15,7 @@ import { getBuiltAddress } from 'helpers';
 import RestaurantHolidayService from 'services/restaurantHolidays.services';
 import RestaurantCategoryService from 'services/restaurantCategories.services';
 import UserViewServices from './userViews.services';
+import UserSearchServices from './userSearches.services';
 import { dbAliases } from 'db';
 
 type AIMenuType = {
@@ -149,7 +150,7 @@ const OpenAiFn = {
       console.error('Error generating image:', error);
     }
   },
-  async getAIRestaurantMenuBySlug(slug: string) {
+  async getAIRestaurantMenuBySlug(slug: string, userId?: number) {
     const restData = await RestaurantServices.findBySlug(slug);
     const results = [];
 
@@ -182,6 +183,14 @@ const OpenAiFn = {
       drive_through,
       delivery_option,
     } = Array.isArray(restData) ? restData[0] : restData;
+
+    console.log('UserId', userId);
+    if (userId) {
+      await UserViewServices.create({
+        user_id: userId,
+        restaurant_id: Number(restId),
+      });
+    }
 
     const wholeAddress = getBuiltAddress({
       address: address ?? '',
@@ -257,7 +266,14 @@ const OpenAiFn = {
       restaurantMenuItems: results,
     };
   },
-  async getAIRestaurantList(restName: string) {
+  async getAIRestaurantList(restName: string, userId?: number) {
+    if (userId) {
+      await UserSearchServices.create({
+        user_id: userId,
+        name: restName,
+      });
+    }
+
     const foundRest = await RestaurantServices.findByName(restName);
 
     if (Array.isArray(foundRest) && foundRest.length) {

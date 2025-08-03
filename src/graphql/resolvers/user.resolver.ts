@@ -50,6 +50,22 @@ export const userResolvers = {
       const userId = _get(user, 'id');
       return await UserServices.findById(userId);
     },
+    getUserSearches: async (
+      _: any,
+      args: { page?: number; limit?: number },
+    ) => {
+      const { page, limit } = args;
+    },
+    getUserSearchesByUser: async (
+      _: any,
+      args: { page?: number; limit?: number },
+      context: { user: User },
+    ) => {
+      const { user } = context;
+      const { page, limit } = args;
+
+      const userId = _get(user, 'id');
+    },
     getUserViewsByUser: async (
       _: any,
       args: { page?: number; limit?: number },

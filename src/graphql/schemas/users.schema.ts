@@ -65,6 +65,13 @@ export const userDefs = gql`
     name: String
   }
 
+  type UserSearch {
+    id: ID!
+    name: String
+    createdAt: DateTime
+    updatedAt: DateTime
+  }
+
   type UserView {
     id: ID!
     user_id: ID
@@ -168,6 +175,12 @@ export const userDefs = gql`
     totalPages: Int
     currentPage: Int
   }
+  type AllUserSearchesResponse {
+    data: [UserSearch]
+    totalItems: Int
+    totalPages: Int
+    currentPage: Int
+  }
 
   extend type Query {
     users: [User]
@@ -175,6 +188,8 @@ export const userDefs = gql`
     userDetail: User
     getUserByEmail(email: String): User
     getUserByUsername(username: String): User
+    getUserSearchesByUser(page: Int, limit: Int): AllUserSearchesResponse
+    getUserSearches(page: Int, limit: Int): AllUserSearchesResponse
     getUserViewsByUser(page: Int, limit: Int): AllUserViewsResponse
     getUserViewsByRestaurant(
       restId: Int!

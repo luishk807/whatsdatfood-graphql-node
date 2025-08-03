@@ -52,6 +52,20 @@ export const getBuiltAddress: GetBuiltAddress = (address) => {
   return new_address.trim();
 };
 
+export const todayDates = () => {
+  const startOftoday = dayjs().startOf('day').toDate();
+  const endOftoday = dayjs().endOf('day').toDate();
+
+  return {
+    startOftoday,
+    endOftoday,
+  };
+};
+
+export const isValidDate = (date: string) => {
+  return dayjs(date).isValid();
+};
+
 export const getTimeSplit = (times: string) => {
   const times_split = times.split('-');
 

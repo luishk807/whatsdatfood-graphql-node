@@ -36,6 +36,9 @@ export const dbAliases = {
     userViews: 'userUserViews',
     friends: 'userUserFriends',
   },
+  userSearches: {
+    user: 'userSearchesUser',
+  },
   userRole: {
     user: 'userRoleUser',
   },

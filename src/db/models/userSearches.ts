@@ -2,25 +2,26 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import sequelizeConnection from 'db/sequelize';
 import { dbAliases } from 'db';
 
-interface UserViewsInterface {
+interface UserSearchesInterface {
   id: number;
   user_id: number;
-  restaurant_id: number;
+  name: string;
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
 }
 
-export interface UserViewsInput extends Optional<UserViewsInterface, 'id'> {}
-export interface UserViewsOutput extends Required<UserViewsInterface> {}
+export interface UserSearchesInput
+  extends Optional<UserSearchesInterface, 'id'> {}
+export interface UserSearchesOutput extends Required<UserSearchesInterface> {}
 
-class UserViews
-  extends Model<UserViewsInterface, UserViewsInput>
-  implements UserViewsInterface
+class UserSearches
+  extends Model<UserSearchesInterface, UserSearchesInput>
+  implements UserSearchesInterface
 {
   public id!: number;
   public user_id!: number;
-  public restaurant_id!: number;
+  public name!: string;
 
   // timestamps!
   public readonly created_at!: Date;
@@ -28,18 +29,14 @@ class UserViews
   public readonly deleted_at!: Date;
 
   static associate(models: any): void {
-    UserViews.belongsTo(models.Users, {
+    UserSearches.belongsTo(models.Users, {
       foreignKey: 'user_id',
-      as: dbAliases.userViews.user,
-    });
-    UserViews.belongsTo(models.Restaurants, {
-      foreignKey: 'restaurant_id',
-      as: dbAliases.userViews.restaurant,
+      as: dbAliases.userSearches.user,
     });
   }
 }
 
-UserViews.init(
+UserSearches.init(
   {
     id: {
       type: DataTypes.BIGINT,
@@ -56,14 +53,9 @@ UserViews.init(
       },
       onDelete: 'CASCADE',
     },
-    restaurant_id: {
-      type: DataTypes.BIGINT,
+    name: {
+      type: DataTypes.STRING(255),
       allowNull: false,
-      references: {
-        model: 'restaurants',
-        key: 'id',
-      },
-      onDelete: 'CASCADE',
     },
     created_at: {
       type: DataTypes.DATE,
@@ -83,4 +75,4 @@ UserViews.init(
   },
 );
 
-export default UserViews;
+export default UserSearches;

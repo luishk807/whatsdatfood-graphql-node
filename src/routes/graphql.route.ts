@@ -15,7 +15,7 @@ import RestaurantMenuItems from 'services/restaurantMenuItems.service';
 import RestaurantServices from 'services/restaurants.service';
 import OpenAiResturant from 'services/openAi.service';
 import { authenticate } from 'helpers/login';
-import { getDataIfArray } from 'helpers';
+import { _get, getDataIfArray } from 'helpers';
 
 export async function setupGraphQL(app: Application, httpServer: http.Server) {
   const schema = makeExecutableSchema({
@@ -106,10 +106,14 @@ export async function setupGraphQL(app: Application, httpServer: http.Server) {
             Promise.all(ids.map((id) => RestaurantServices.findById(id))),
         );
 
+        const userId = _get(userData, 'id', null);
+
         const aiRestaurantNameListData = new DataLoader(
           (names: readonly string[]) =>
             Promise.all(
-              names.map((name) => OpenAiResturant.getAIRestaurantList(name)),
+              names.map((name) =>
+                OpenAiResturant.getAIRestaurantList(name, userId),
+              ),
             ),
         );
 
@@ -117,7 +121,7 @@ export async function setupGraphQL(app: Application, httpServer: http.Server) {
           (slugs: readonly string[]) =>
             Promise.all(
               slugs.map((slug) =>
-                OpenAiResturant.getAIRestaurantMenuBySlug(slug),
+                OpenAiResturant.getAIRestaurantMenuBySlug(slug, userId),
               ),
             ),
         );
