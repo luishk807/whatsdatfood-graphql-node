@@ -1,31 +1,27 @@
-import { UserSearchesInput } from 'db/models/userSearches';
-import UserSearch from 'repository/userSearches.respository';
+import { UserViewsInput } from 'db/models/userViews';
+import UserView from 'repository/userViews.respository';
 import {
-  buildUserSearchEntry,
-  buildUserSearchResponse,
+  buildUserViewEntry,
+  buildUserViewResponse,
 } from 'helpers/users.sequelize';
 import { _get } from 'helpers';
 
 import { LIMIT } from 'constants/sequelize';
-const UserSearchesRepo = new UserSearch();
+const UserViewsRepo = new UserView();
 
-const UserSearchServices = {
-  async create(payload: UserSearchesInput) {
-    const new_payload = await buildUserSearchEntry(payload);
-    return await UserSearchesRepo.create<UserSearchesInput>(new_payload);
+const UserViewServices = {
+  async create(payload: UserViewsInput) {
+    const new_payload = await buildUserViewEntry(payload);
+    return await UserViewsRepo.create<UserViewsInput>(new_payload);
   },
   async getAllByRestaurantId(restId: number, page?: number, limit?: number) {
-    const resp = await UserSearchesRepo.getAllByResturantId(
-      restId,
-      page,
-      limit,
-    );
+    const resp = await UserViewsRepo.getAllByRestaurantId(restId, page, limit);
 
     const totalPages = Math.ceil(resp.count / LIMIT);
     const data = resp.rows;
     const totalItems = resp.count;
 
-    const formatData = buildUserSearchResponse(data);
+    const formatData = buildUserViewResponse(data);
     return {
       data: formatData,
       totalItems,
@@ -34,13 +30,13 @@ const UserSearchServices = {
     };
   },
   async getAllByUser(userId: number, page?: number, limit?: number) {
-    const resp = await UserSearchesRepo.getAllByUser(userId, page, limit);
+    const resp = await UserViewsRepo.getAllByUser(userId, page, limit);
 
     const totalPages = Math.ceil(resp.count / LIMIT);
     const data = resp.rows;
     const totalItems = resp.count;
 
-    const formatData = buildUserSearchResponse(data);
+    const formatData = buildUserViewResponse(data);
     return {
       data: formatData,
       totalItems,
@@ -49,13 +45,13 @@ const UserSearchServices = {
     };
   },
   async getAll(page?: number, limit?: number) {
-    const resp = await UserSearchesRepo.getAll(page, limit);
+    const resp = await UserViewsRepo.getAll(page, limit);
 
     const totalPages = Math.ceil(resp.count / LIMIT);
     const data = resp.rows;
     const totalItems = resp.count;
 
-    const formatData = buildUserSearchResponse(data);
+    const formatData = buildUserViewResponse(data);
     return {
       data: formatData,
       totalItems,
@@ -65,4 +61,4 @@ const UserSearchServices = {
   },
 };
 
-export default UserSearchServices;
+export default UserViewServices;

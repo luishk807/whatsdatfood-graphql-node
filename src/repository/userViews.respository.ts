@@ -1,15 +1,15 @@
 import Base from './base.repository';
 import db from '../db/models/index';
 
-import UserSearches from 'db/models/userSearches';
+import UserViews from 'db/models/userViews';
 import { dbAliases } from 'db/index';
 import { _get } from 'helpers';
 import { getPageOffset } from 'helpers/sequelize';
 import { LIMIT, PAGE } from 'constants/sequelize';
 
-class UserSearchRepo extends Base {
+class UserViewRepo extends Base {
   constructor() {
-    super(UserSearches);
+    super(UserViews);
   }
 
   async getAll(page?: number, limit?: number) {
@@ -19,16 +19,12 @@ class UserSearchRepo extends Base {
     return await this.model.findAndCountAll({
       include: [
         {
-          model: db.UserSearchTypes,
-          as: dbAliases.userSearches.userSearchTypes,
-        },
-        {
           model: db.Restaurants,
-          as: dbAliases.userSearches.restaurant,
+          as: dbAliases.userViews.restaurant,
         },
         {
           model: db.Users,
-          as: dbAliases.userSearches.user,
+          as: dbAliases.userViews.user,
         },
       ],
       limit: limit,
@@ -36,7 +32,7 @@ class UserSearchRepo extends Base {
       order: [['createdAt', 'desc']],
     });
   }
-  async getAllByResturantId(
+  async getAllByRestaurantId(
     restaurantId: number,
     page?: number,
     limit?: number,
@@ -50,16 +46,12 @@ class UserSearchRepo extends Base {
       },
       include: [
         {
-          model: db.UserSearchTypes,
-          as: dbAliases.userSearches.userSearchTypes,
-        },
-        {
           model: db.Restaurants,
-          as: dbAliases.userSearches.restaurant,
+          as: dbAliases.userViews.restaurant,
         },
         {
           model: db.Users,
-          as: dbAliases.userSearches.user,
+          as: dbAliases.userViews.user,
         },
       ],
       limit: limit,
@@ -77,16 +69,12 @@ class UserSearchRepo extends Base {
       },
       include: [
         {
-          model: db.UserSearchTypes,
-          as: dbAliases.userSearches.userSearchTypes,
-        },
-        {
           model: db.Restaurants,
-          as: dbAliases.userSearches.restaurant,
+          as: dbAliases.userViews.restaurant,
         },
         {
           model: db.Users,
-          as: dbAliases.userSearches.user,
+          as: dbAliases.userViews.user,
         },
       ],
       limit: limit,
@@ -96,4 +84,4 @@ class UserSearchRepo extends Base {
   }
 }
 
-export default UserSearchRepo;
+export default UserViewRepo;

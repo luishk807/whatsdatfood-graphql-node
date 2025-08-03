@@ -9,7 +9,7 @@ export default {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.createTable('user_search_types', {
+    await queryInterface.createTable('user_searches', {
       id: {
         type: DataTypes.BIGINT,
         primaryKey: true,
@@ -19,6 +19,15 @@ export default {
       name: {
         type: DataTypes.STRING(255),
         allowNull: false,
+      },
+      user_id: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
       },
       created_at: {
         type: DataTypes.DATE,
@@ -41,6 +50,6 @@ export default {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    queryInterface.dropTable('user_search_types');
+    queryInterface.dropTable('user_searches');
   },
 };

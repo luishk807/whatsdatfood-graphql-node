@@ -12,8 +12,9 @@ import RestaurantServices from 'services/restaurants.service';
 import RestaurantBusinesHourServices from 'services/restaurantBusinessHours.service';
 import RestaurantMenuItemsFn from 'services/restaurantMenuItems.service';
 import { getBuiltAddress } from 'helpers';
-import RestaurantHolidayService from './restaurantHolidays.services';
-import RestaurantCategoryService from './restaurantCategories.services';
+import RestaurantHolidayService from 'services/restaurantHolidays.services';
+import RestaurantCategoryService from 'services/restaurantCategories.services';
+import UserViewServices from './userViews.services';
 import { dbAliases } from 'db';
 
 type AIMenuType = {

@@ -25,16 +25,16 @@ class UsersRepo extends Base {
           as: dbAliases.users.userRole,
         },
         {
-          model: db.UserSearches,
-          as: dbAliases.users.userSearches,
+          model: db.UserViews,
+          as: dbAliases.users.userViews,
           include: [
             {
               model: db.Users,
-              as: dbAliases.userSearches.user,
+              as: dbAliases.userViews.user,
             },
             {
               model: db.Restaurants,
-              as: dbAliases.userSearches.restaurant,
+              as: dbAliases.userViews.restaurant,
             },
           ],
         },

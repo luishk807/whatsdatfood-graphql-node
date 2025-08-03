@@ -9,8 +9,8 @@ import {
   UserFavoritesInput,
   UserFriend,
   UserFriendsInput,
-  UserSearchInput,
-  UserSearch,
+  UserViewInput,
+  UserView,
 } from 'interfaces/user';
 import { USER_ROLE_DEFAULT, DEFAULT_STATUS } from 'constants/sequelize';
 import { getRestaurantItemResponse } from 'helpers/restaurants.sequelize';
@@ -35,18 +35,15 @@ export const buildUserEntry = async (item: UserInput) => {
   };
 };
 
-export const buildUserSearchEntry = async (item: UserSearchInput) => {
-  if (!item.user_id || !item.restaurant_id || !item.user_search_type_id) {
-    throw new Error(
-      'Missing required fields: user_id, restaurant_id, user_search_type_id',
-    );
+export const buildUserViewEntry = async (item: UserViewInput) => {
+  if (!item.user_id || !item.restaurant_id) {
+    throw new Error('Missing required fields: user_id, restaurant_id');
   }
   const id = _get(item, 'id');
   return {
     ...(id && { id: id }),
     restaurant_id: _get(item, 'restaurant_id'),
     user_id: _get(item, 'user_id'),
-    user_search_type_id: _get(item, 'user_search_type_id'),
   };
 };
 
@@ -131,7 +128,7 @@ export const buildUserResponse = (item: User | User[]) => {
         createdAt: _get(data, 'createdAt'),
         updatedAt: _get(data, 'updatedAt'),
         dob: _get(data, 'dob'),
-        searches: _get(data, dbAliases.users.userSearches),
+        views: _get(data, dbAliases.users.userViews),
         ratings: _get(data, dbAliases.users.userRatings),
         status: _get(data, dbAliases.users.status),
         role: _get(data, dbAliases.users.userRole),
@@ -152,7 +149,7 @@ export const buildUserResponse = (item: User | User[]) => {
         createdAt: _get(item, 'createdAt'),
         updatedAt: _get(item, 'updatedAt'),
         dob: _get(item, 'dob'),
-        searches: _get(item, dbAliases.users.userSearches),
+        views: _get(item, dbAliases.users.userViews),
         ratings: _get(item, dbAliases.users.userRatings),
         status: _get(item, dbAliases.users.status),
         role: _get(item, dbAliases.users.userRole),
@@ -161,33 +158,29 @@ export const buildUserResponse = (item: User | User[]) => {
       };
 };
 
-export const buildUserSearchResponse = (item: UserSearch | UserSearch[]) => {
+export const buildUserViewResponse = (item: UserView | UserView[]) => {
   if (!item || (Array.isArray(item) && !item.length)) {
     return item;
   }
 
   return Array.isArray(item)
-    ? item.map((data: UserSearch) => ({
+    ? item.map((data: UserView) => ({
         id: _get(data, 'id'),
         restaurant_id: _get(data, 'restaurant_id'),
         user_id: _get(data, 'user_id'),
-        user_search_type_id: _get(data, 'user_search_type_id'),
         createdAt: _get(data, 'createdAt'),
         updatedAt: _get(data, 'updatedAt'),
         user: _get(data, dbAliases.userFavorites.user),
         restaurant: _get(data, dbAliases.userFavorites.restaurant),
-        searchType: _get(data, dbAliases.userSearches.userSearchTypes),
       }))
     : {
         id: _get(item, 'id'),
         restaurant_id: _get(item, 'restaurant_id'),
         user_id: _get(item, 'user_id'),
-        user_search_type_id: _get(item, 'user_search_type_id'),
         createdAt: _get(item, 'createdAt'),
         updatedAt: _get(item, 'updatedAt'),
-        user: _get(item, dbAliases.userSearches.user),
-        restaurant: _get(item, dbAliases.userSearches.restaurant),
-        searchType: _get(item, dbAliases.userSearches.userSearchTypes),
+        user: _get(item, dbAliases.userViews.user),
+        restaurant: _get(item, dbAliases.userViews.restaurant),
       };
 };
 

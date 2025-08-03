@@ -9,15 +9,7 @@ export default {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.addColumn('user_searches', 'user_search_type_id', {
-      type: DataTypes.BIGINT,
-      defaultValue: 1,
-      references: {
-        model: 'user_search_types',
-        key: 'id',
-      },
-      onDelete: 'SET NULL',
-    });
+    await queryInterface.renameTable('user_searches', 'user_views');
   },
 
   async down(queryInterface: QueryInterface, Sequelize: Sequelize) {
@@ -27,6 +19,6 @@ export default {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.removeColumn('user_searches', 'user_search_type_id');
+    await queryInterface.renameTable('user_views', 'user_searches');
   },
 };

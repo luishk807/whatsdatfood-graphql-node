@@ -16,7 +16,7 @@ export const userDefs = gql`
     createdAt: DateTime
     updatedAt: DateTime
     dob: Date
-    searches: [UserSearch]
+    views: [UserView]
     ratings: [UserRating]
     favorites: [UserFavorites]
     status: Status
@@ -32,13 +32,6 @@ export const userDefs = gql`
     updatedAt: DateTime
     user: User
     restaurant: Restaurant
-  }
-
-  type UserSearchType {
-    id: ID
-    name: String
-    createdAt: DateTime
-    updatedAt: DateTime
   }
 
   type UserFriends {
@@ -72,14 +65,12 @@ export const userDefs = gql`
     name: String
   }
 
-  type UserSearch {
+  type UserView {
     id: ID!
     user_id: ID
     restaurant_id: ID!
-    user_search_type_id: ID
     user: User
     restaurant: Restaurant
-    searchType: UserSearchType
     createdAt: DateTime
     updatedAt: DateTime
     deletedAt: DateTime
@@ -97,7 +88,7 @@ export const userDefs = gql`
     dob: String!
   }
 
-  input CreateUserSearchInput {
+  input CreateUserViewInput {
     user_id: ID!
     restaurant_id: ID!
   }
@@ -171,8 +162,8 @@ export const userDefs = gql`
     currentPage: Int
   }
 
-  type AllUserSearchResponse {
-    data: [UserSearch]
+  type AllUserViewsResponse {
+    data: [UserView]
     totalItems: Int
     totalPages: Int
     currentPage: Int
@@ -184,12 +175,12 @@ export const userDefs = gql`
     userDetail: User
     getUserByEmail(email: String): User
     getUserByUsername(username: String): User
-    getUserSearchByUser(page: Int, limit: Int): AllUserSearchResponse
-    getUserSearchByRestaurant(
+    getUserViewsByUser(page: Int, limit: Int): AllUserViewsResponse
+    getUserViewsByRestaurant(
       restId: Int!
       page: Int
       limit: Int
-    ): AllUserSearchResponse
+    ): AllUserViewsResponse
     getUserFavoritesByUser(page: Int, limit: Int): AllFavoritesByUserResponse
     getRatingsByUser(page: Int!, limit: Int): AllRatingByItemResponse
     getRatingByRestItemId(
@@ -206,7 +197,7 @@ export const userDefs = gql`
   extend type Mutation {
     addUser(input: CreateUserInput): User
     addUserRating(input: CreateUserRatingInput): UserRating
-    addUserSearches(input: CreateUserSearchInput): UserSearch
+    addUserViews(input: CreateUserViewInput): UserView
     addUserFavorites(input: CreateUserFavoritesInput): UserFavorites
     addUserFriend(input: CreateUserFriendsInput): UserFriends
     updateUserRating(input: UpdateUserRatingInput): UserRating

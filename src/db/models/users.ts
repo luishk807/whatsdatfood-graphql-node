@@ -41,8 +41,8 @@ class Users extends Model<UserInterface, UserInput> implements UserInterface {
   public readonly deleted_at!: Date;
 
   static associate(models: any): void {
-    Users.hasMany(models.UserSearches, {
-      as: dbAliases.users.userSearches,
+    Users.hasMany(models.UserViews, {
+      as: dbAliases.users.userViews,
     });
     Users.hasMany(models.UserRatings, {
       as: dbAliases.users.userRatings,

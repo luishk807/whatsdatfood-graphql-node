@@ -45,11 +45,10 @@ export interface UserBase {
   deletedAt?: Date;
   status_id?: ID;
 }
-export interface UserSearchesBase {
+export interface UserViewBase {
   id?: ID;
   user_id: ID;
   restaurant_id: ID;
-  user_search_type_id: ID;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -66,14 +65,6 @@ export interface UserRatingBase {
   comment?: string;
 }
 
-export interface UserSearchType {
-  id?: ID;
-  name: string;
-  createdAt?: Date;
-  status_id?: ID;
-  updatedAt?: Date;
-}
-
 export interface UserFavorites extends Partial<UserFavoritesBase> {
   user?: User;
   restaurant?: Restaurant;
@@ -83,7 +74,7 @@ export interface User extends Partial<UserBase> {
   ratings?: UserRating[];
   status?: Status;
   role?: UserRole;
-  searches?: UserSearch[];
+  views?: UserView[];
   friends?: UserFriend[];
   favorites?: UserFavorites[];
 }
@@ -102,15 +93,14 @@ export interface UserRole {
   id: ID;
   name: string;
 }
-export interface UserSearch extends Partial<UserSearchesBase> {
+export interface UserView extends Partial<UserViewBase> {
   restaurant?: Restaurant;
   user?: User;
-  searchType?: UserSearchType;
   status?: Status;
 }
 
-export interface UserSearchInput
-  extends Partial<Omit<UserSearchesBase, 'id' | 'createdAt' | 'updatedAt'>> {}
+export interface UserViewInput
+  extends Partial<Omit<UserViewBase, 'id' | 'createdAt' | 'updatedAt'>> {}
 export interface UserRatingInput
   extends Partial<Omit<UserRatingBase, 'id' | 'createdAt' | 'updatedAt'>> {}
 export interface UserFavoritesInput
@@ -124,9 +114,6 @@ export interface CreateUserFavoriteInput {
 }
 export interface UserInput
   extends Partial<Omit<UserBase, 'id' | 'createdAt' | 'updatedAt'>> {}
-
-export interface UserSearchesInput
-  extends Partial<Omit<UserSearchesBase, 'id' | 'createdAt' | 'updatedAt'>> {}
 export interface UserRoleInput
   extends Partial<Omit<UserRoleBase, 'id' | 'createdAt' | 'updatedAt'>> {}
 export interface CreateUserRoleInputArg {
@@ -138,10 +125,6 @@ export interface CreateUserRatingInputArg {
 export interface CreateUserInputArg {
   input: UserInput;
 }
-export interface CreateUserSearchInputArg {
-  input: UserSearchesInput;
-}
-
 export interface CreateUserFavoritesInputArg {
   input: CreateUserFavoriteInput;
 }
@@ -153,6 +136,6 @@ export interface UserFavoritesInputArg {
 export interface UserFriendsInputArg {
   input: UserFriendsInput;
 }
-export interface UserSearchesInputArg {
-  input: UserSearchInput;
+export interface UserViewInputArg {
+  input: UserViewInput;
 }

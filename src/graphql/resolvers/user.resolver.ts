@@ -6,7 +6,7 @@ import {
   CreateUserInputArg,
   CreateUserRatingInputArg,
   UserRating,
-  UserSearch,
+  UserView,
   User,
   CreateUserFavoritesInputArg,
   UserFavorites,
@@ -27,7 +27,7 @@ import { DateTimeResolver } from 'graphql-scalars';
 import { ID } from 'types';
 import { _get } from 'helpers';
 import UserFriendServices from 'services/userFriends.services';
-import UserSearchServices from 'services/userSearches.services';
+import UserViewsServices from 'services/userViews.services';
 import { RestaurantMenuItem } from 'interfaces/restaurant';
 
 type Events = {
@@ -50,7 +50,7 @@ export const userResolvers = {
       const userId = _get(user, 'id');
       return await UserServices.findById(userId);
     },
-    getUserSearchByUser: async (
+    getUserViewsByUser: async (
       _: any,
       args: { page?: number; limit?: number },
       context: { user: User },
@@ -61,9 +61,9 @@ export const userResolvers = {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return await UserSearchServices.getAllByUser(userId, page, limit);
+      return await UserViewsServices.getAllByUser(userId, page, limit);
     },
-    getUserSearchByRestaurant: async (
+    getUserViewsByRestaurant: async (
       _: any,
       args: { restId: ID; page?: number; limit?: number },
     ) => {
@@ -71,7 +71,7 @@ export const userResolvers = {
       if (!restId) {
         throw new Error('User not authenticated');
       }
-      return await UserSearchServices.getAllByRestaurantId(
+      return await UserViewsServices.getAllByRestaurantId(
         Number(restId),
         page,
         limit,
@@ -169,7 +169,7 @@ export const userResolvers = {
   },
   User: {
     status: async (parent: User) => parent.status,
-    searches: async (parent: User) => parent.searches,
+    views: async (parent: User) => parent.views,
     role: async (parent: User) => parent.role,
     ratings: async (parent: User) => parent.ratings,
     favorites: async (parent: User) => parent.favorites,
@@ -185,10 +185,9 @@ export const userResolvers = {
     user: async (parent: UserRating) => parent.user,
     status: async (parent: UserRating) => parent.status,
   },
-  UserSearch: {
-    restaurant: async (parent: UserSearch) => parent.restaurant,
-    user: async (parent: UserSearch) => parent.user,
-    searchType: async (parent: UserSearch) => parent.searchType,
+  UserView: {
+    restaurant: async (parent: UserView) => parent.restaurant,
+    user: async (parent: UserView) => parent.user,
   },
   UserFavorites: {
     user: async (parent: UserFavorites) => parent.user,
