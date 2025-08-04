@@ -21,6 +21,7 @@ import {
   buildUserFavoritesEntry,
   buildUserRatingEntry,
   buildUserFriendsEntry,
+  getAuthenticatedUser,
 } from 'helpers/users.sequelize';
 import DataLoader from 'dataloader';
 import { DateTimeResolver } from 'graphql-scalars';
@@ -43,12 +44,7 @@ export const userResolvers = {
     users: async () => await UserServices.getAll(),
     ratings: async () => await UserRatingServices.getAll(),
     userDetail: async (_: any, args: any, context: { user: User }) => {
-      const { user } = context;
-      if (!user) {
-        throw new Error('User not authenticated');
-      }
-
-      const userId = _get(user, 'id');
+      const userId = Number(getAuthenticatedUser(context, 'id'));
       return await UserServices.findById(userId);
     },
     getUserSearches: async (
@@ -62,13 +58,9 @@ export const userResolvers = {
       args: { page?: number; limit?: number },
       context: { user: User },
     ) => {
-      const { user } = context;
       const { page, limit } = args;
 
-      const userId = _get(user, 'id');
-      if (!userId) {
-        throw new Error('User not authenticated');
-      }
+      const userId = Number(getAuthenticatedUser(context, 'id'));
       return await UserSearchServices.getAllByUser(userId, page, limit);
     },
     getUserViewsByUser: async (
@@ -77,11 +69,7 @@ export const userResolvers = {
       context: { user: User },
     ) => {
       const { page, limit } = args;
-      const { user } = context;
-      const userId = _get(user, 'id');
-      if (!userId) {
-        throw new Error('User not authenticated');
-      }
+      const userId = Number(getAuthenticatedUser(context, 'id'));
       return await UserViewsServices.getAllByUser(userId, page, limit);
     },
     getUserViewsByRestaurant: async (
@@ -103,13 +91,8 @@ export const userResolvers = {
       args: { page?: number; limit?: number },
       context: { user: User },
     ) => {
-      const { user } = context;
       const { page, limit } = args;
-      if (!user) {
-        throw new Error('User not authenticated');
-      }
-
-      const userId = _get(user, 'id');
+      const userId = Number(getAuthenticatedUser(context, 'id'));
       return await UserFavoriteServices.getAllByUserId(userId, page, limit);
     },
     getUserByEmail: async (_: any, args: { email: string }) => {
@@ -122,15 +105,11 @@ export const userResolvers = {
       _: any,
       args: { page?: number; limit?: number },
       context: {
-        user: DataLoader<string, User>;
+        user: User;
       },
     ) => {
       const { page, limit } = args;
-      const { user } = context;
-      const userId = _get(user, 'id');
-      if (!userId) {
-        throw new Error('User not authenticated');
-      }
+      const userId = Number(getAuthenticatedUser(context, 'id'));
       return await UserFriendServices.getAllByUserId(userId, page, limit);
     },
     checkUsername: async (
@@ -149,9 +128,7 @@ export const userResolvers = {
     ) => {
       console.log('got in checkUserFavoriteBySlug');
       const { slug } = args;
-      const { user } = context;
-
-      const userId = _get(user, 'id');
+      const userId = Number(getAuthenticatedUser(context, 'id'));
       return await UserFavoriteServices.checkIsFavorite(slug as string, userId);
     },
     getRatingsByUser: async (
@@ -160,13 +137,7 @@ export const userResolvers = {
       context: { user: User },
     ) => {
       const { limit, page } = args;
-      const { user } = context;
-
-      const userId = _get(user, 'id');
-
-      if (!userId) {
-        throw new Error('User not authenticated');
-      }
+      const userId = Number(getAuthenticatedUser(context, 'id'));
       return await UserRatingServices.getAllByUserId(userId, page, limit);
     },
     getRatingByRestItemId: async (
@@ -246,14 +217,16 @@ export const userResolvers = {
         user: User;
       },
     ): Promise<User> => {
-      const { user } = context;
-      const userId = _get(user, 'id');
-      if (!userId) {
-        throw new Error('User not authenticated');
-      }
+      console.log('adding new firends');
+      const userId = Number(getAuthenticatedUser(context, 'id'));
       const { input } = args;
 
-      const payload = await buildUserFavoritesEntry(input);
+      const payload = await buildUserFriendsEntry({
+        ...input,
+        user_id: userId,
+      });
+
+      console.log('add user payload', payload);
       return await UserFriendServices.create(payload);
     },
     updateUser: async (_: any, args: CreateUserInputArg): Promise<User> => {
@@ -264,9 +237,16 @@ export const userResolvers = {
     updateUserFriend: async (
       _: any,
       args: UserFriendsInputArg,
+      context: {
+        user: User;
+      },
     ): Promise<UserFriend> => {
       const { input } = args;
-      const payload = buildUserFriendsEntry(input);
+      const userId = Number(getAuthenticatedUser(context, 'id'));
+      const payload = buildUserFriendsEntry({
+        ...input,
+        user_id: userId,
+      });
       return await UserFriendServices.update(payload);
     },
     addUserFavorites: async (
@@ -275,13 +255,13 @@ export const userResolvers = {
       context: { user: User },
     ) => {
       const { slug } = args.input;
-      const { user } = context;
 
-      if (!slug || !user) {
-        throw new Error('user is not log in or slug is missing');
+      if (!slug) {
+        throw new Error('slug is missing');
       }
 
-      const userId = _get(user, 'id');
+      const userId = Number(getAuthenticatedUser(context, 'id'));
+
       if (slug) {
         return await UserFavoriteServices.createOrUpdateFavorite(
           slug as string,

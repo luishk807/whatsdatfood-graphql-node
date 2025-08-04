@@ -17,6 +17,31 @@ import {
 import { USER_ROLE_DEFAULT, DEFAULT_STATUS } from 'constants/sequelize';
 import { getRestaurantItemResponse } from 'helpers/restaurants.sequelize';
 import { dbAliases } from 'db';
+
+export const getAuthenticatedUser = <K extends keyof User = keyof User>(
+  context: {
+    user?: Partial<User>;
+  },
+  key?: K,
+): User | User[K] => {
+  const { user } = context;
+  if (!user || !user.id) {
+    throw new Error('User not authenticated');
+  }
+
+  if (key) {
+    const value = user[key];
+    if (value === undefined) {
+      throw new Error(`User property ${String(key)} not found`);
+    }
+
+    return value as any;
+  }
+
+  return user as User;
+};
+
+export const getUserId = () => {};
 export const buildUserEntry = async (item: UserInput) => {
   if (!item.first_name || !item.last_name || typeof item.email !== 'string') {
     throw new Error(

@@ -119,7 +119,7 @@ export const userDefs = gql`
     name: String!
     email: String
     phone: String
-    user_id: ID!
+    user_id: ID
   }
 
   input UpdateUserRatingInput {

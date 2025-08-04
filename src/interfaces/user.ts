@@ -15,7 +15,7 @@ export interface UserFriendsBase {
   name: string;
   email: string;
   phone: string;
-  user_id: ID;
+  user_id?: ID;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
