@@ -29,6 +29,7 @@ import { _get } from 'helpers';
 import UserFriendServices from 'services/userFriends.services';
 import UserViewsServices from 'services/userViews.services';
 import { RestaurantMenuItem } from 'interfaces/restaurant';
+import UserSearchServices from 'services/userSearches.services';
 
 type Events = {
   USER_ADDED: { userAdded: User }; // Use your actual UserType here
@@ -65,6 +66,10 @@ export const userResolvers = {
       const { page, limit } = args;
 
       const userId = _get(user, 'id');
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+      return await UserSearchServices.getAllByUser(userId, page, limit);
     },
     getUserViewsByUser: async (
       _: any,
