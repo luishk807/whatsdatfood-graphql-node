@@ -186,8 +186,8 @@ export const buildUserViewResponse = (item: UserView | UserView[]) => {
         user_id: _get(data, 'user_id'),
         createdAt: _get(data, 'createdAt'),
         updatedAt: _get(data, 'updatedAt'),
-        user: _get(data, dbAliases.userFavorites.user),
-        restaurant: _get(data, dbAliases.userFavorites.restaurant),
+        user: _get(data, dbAliases.userViews.user),
+        restaurant: _get(data, dbAliases.userViews.restaurant),
       }))
     : {
         id: _get(item, 'id'),
