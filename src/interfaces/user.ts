@@ -83,6 +83,7 @@ export interface User extends Partial<UserBase> {
   ratings?: UserRating[];
   status?: Status;
   role?: UserRole;
+  searches?: UserSearch[];
   views?: UserView[];
   friends?: UserFriend[];
   favorites?: UserFavorites[];

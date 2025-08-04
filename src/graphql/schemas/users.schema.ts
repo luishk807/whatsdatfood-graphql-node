@@ -19,6 +19,7 @@ export const userDefs = gql`
     views: [UserView]
     ratings: [UserRating]
     favorites: [UserFavorites]
+    searches: [UserSearch]
     status: Status
     role: UserRole
     friends: [UserFriends]
@@ -68,8 +69,10 @@ export const userDefs = gql`
   type UserSearch {
     id: ID!
     name: String
+    user_id: ID
     createdAt: DateTime
     updatedAt: DateTime
+    user: User
   }
 
   type UserView {
@@ -81,7 +84,6 @@ export const userDefs = gql`
     createdAt: DateTime
     updatedAt: DateTime
     deletedAt: DateTime
-    searches: Restaurant
   }
 
   input CreateUserInput {

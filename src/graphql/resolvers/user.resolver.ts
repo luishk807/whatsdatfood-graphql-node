@@ -186,6 +186,7 @@ export const userResolvers = {
   User: {
     status: async (parent: User) => parent.status,
     views: async (parent: User) => parent.views,
+    searches: async (parent: User) => parent.searches,
     role: async (parent: User) => parent.role,
     ratings: async (parent: User) => parent.ratings,
     favorites: async (parent: User) => parent.favorites,
