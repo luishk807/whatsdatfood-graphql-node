@@ -148,10 +148,10 @@ export const userResolvers = {
       },
     ) => {
       const { restItemId } = args;
-      const { user } = context;
-      if (user && restItemId) {
+      const userId = Number(getAuthenticatedUser(context, 'id'));
+      if (userId && restItemId) {
         return await UserRatingServices.findByUserAndRestItemId(
-          Number(user.id),
+          Number(userId),
           Number(restItemId),
         );
       }
