@@ -7,7 +7,7 @@ import { User } from 'interfaces/user';
 const UserRepo = new Users();
 
 const UserServices = {
-  async create(payload: UserInput) {
+  async create(payload: User) {
     const new_payload = await buildUserEntry(payload);
     return await UserRepo.create<UserInput>(new_payload);
   },

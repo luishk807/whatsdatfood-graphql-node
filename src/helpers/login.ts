@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { NotAuthorized } from 'graphql/customErrors';
 import { User } from 'interfaces/user';
 import cookie, { parse } from 'cookie';

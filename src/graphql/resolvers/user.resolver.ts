@@ -200,9 +200,7 @@ export const userResolvers = {
           //check authtenthication
         }
         const { input } = args;
-        console.log(input);
-        const payload = await buildUserEntry(input);
-        const resp = await UserServices.create(payload);
+        const resp = await UserServices.create(input);
 
         // publish the event
         pubsub.publish(SUBSCRIPTION_EVENTS.USER_ADDED, { userAdded: resp });
